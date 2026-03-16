@@ -495,10 +495,10 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
-                        <a href="{{ route('ckan.index') }}"><i class="fas fa-home"></i> Beranda</a>
+                        <a href="{{ route('frontend.index') }}"><i class="fas fa-home"></i> Beranda</a>
                     </li>
                     <li class="breadcrumb-item">
-                        <a href="{{ route('ckan.datasets') }}">Dataset</a>
+                        <a href="{{ route('frontend.datasets') }}">Dataset</a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">
                         {{ Str::limit($package['title'] ?? $package['name'], 50) }}
@@ -516,7 +516,7 @@
             </h1>
 
             <div class="dataset-meta-bar">
-                @if($package['organization'])
+                @if ($package['organization'])
                     <div class="meta-item">
                         <i class="fas fa-building"></i>
                         <span>{{ $package['organization']['title'] ?? $package['organization']['name'] }}</span>
@@ -533,7 +533,7 @@
                     <span>{{ number_format($package['metadata_views'] ?? 0) }} kali dilihat</span>
                 </div>
 
-                @if($package['license_id'])
+                @if ($package['license_id'])
                     <div class="meta-item">
                         <i class="fas fa-certificate"></i>
                         <span>{{ $package['license_title'] ?? $package['license_id'] }}</span>
@@ -541,7 +541,7 @@
                 @endif
 
                 <div class="ms-auto">
-                    @if($package['private'])
+                    @if ($package['private'])
                         <span class="badge badge-status badge-restricted">
                             <i class="fas fa-lock"></i> Akses Terbatas
                         </span>
@@ -568,14 +568,14 @@
                             {!! nl2br(e($package['notes'] ?? 'Tidak ada deskripsi tersedia.')) !!}
                         </div>
 
-                        @if(!empty($package['tags']))
+                        @if (!empty($package['tags']))
                             <div class="mt-4">
                                 <h6 class="mb-3 text-muted"><i class="fas fa-tags"></i> Tag:</h6>
                                 <div class="tags-cloud">
-                                    @foreach($package['tags'] as $tag)
-                                        <a href="{{ route('ckan.datasets', ['q' => is_array($tag) ? ($tag['name'] ?? $tag) : $tag]) }}"
+                                    @foreach ($package['tags'] as $tag)
+                                        <a href="{{ route('frontend.datasets', ['q' => is_array($tag) ? $tag['name'] ?? $tag : $tag]) }}"
                                             class="tag-pill">
-                                            {{ is_array($tag) ? ($tag['name'] ?? $tag) : $tag }}
+                                            {{ is_array($tag) ? $tag['name'] ?? $tag : $tag }}
                                         </a>
                                     @endforeach
                                 </div>
@@ -603,28 +603,28 @@
                                     </span>
                                 </div>
 
-                                @if($resource['description'])
+                                @if ($resource['description'])
                                     <div class="resource-description">
                                         {{ $resource['description'] }}
                                     </div>
                                 @endif
 
                                 <div class="resource-meta">
-                                    @if($resource['size'])
+                                    @if ($resource['size'])
                                         <div class="resource-meta-item">
                                             <i class="fas fa-hdd"></i>
                                             <span>{{ number_format($resource['size'] / 1024 / 1024, 2) }} MB</span>
                                         </div>
                                     @endif
 
-                                    @if($resource['created'])
+                                    @if ($resource['created'])
                                         <div class="resource-meta-item">
                                             <i class="fas fa-clock"></i>
                                             <span>{{ \Carbon\Carbon::parse($resource['created'])->format('d M Y') }}</span>
                                         </div>
                                     @endif
 
-                                    @if($resource['mimetype'])
+                                    @if ($resource['mimetype'])
                                         <div class="resource-meta-item">
                                             <i class="fas fa-file-code"></i>
                                             <span>{{ $resource['mimetype'] }}</span>
@@ -633,15 +633,15 @@
                                 </div>
 
                                 <div class="resource-actions">
-                                    @if($resource['url'])
+                                    @if ($resource['url'])
                                         <a href="{{ $resource['url'] }}" class="btn btn-primary" target="_blank" download>
                                             <i class="fas fa-download"></i> Unduh
                                         </a>
                                     @endif
 
-                                    @if($resource['datastore_active'] ?? false)
+                                    @if ($resource['datastore_active'] ?? false)
                                         <!-- ✅ NEW: Preview Button -->
-                                        <a href="{{ route('ckan.resource.preview', ['datasetId' => $package['id'], 'resourceId' => $resource['id']]) }}"
+                                        <a href="{{ route('frontend.resource.preview', ['datasetId' => $package['id'], 'resourceId' => $resource['id']]) }}"
                                             class="btn btn-outline-success" target="_blank">
                                             <i class="fas fa-table"></i> Preview Data
                                         </a>
@@ -663,7 +663,7 @@
                 </section>
 
                 <!-- Additional Information -->
-                @if(!empty($package['extras']))
+                @if (!empty($package['extras']))
                     <section class="content-section">
                         <div class="section-header">
                             <i class="fas fa-list-alt"></i>
@@ -671,10 +671,11 @@
                         </div>
                         <div class="section-body">
                             <div class="row">
-                                @foreach($package['extras'] as $extra)
+                                @foreach ($package['extras'] as $extra)
                                     <div class="col-md-6 mb-3">
                                         <div class="info-row">
-                                            <span class="info-label">{{ ucfirst(str_replace('_', ' ', $extra['key'])) }}</span>
+                                            <span
+                                                class="info-label">{{ ucfirst(str_replace('_', ' ', $extra['key'])) }}</span>
                                             <span class="info-value">{{ $extra['value'] }}</span>
                                         </div>
                                     </div>
@@ -688,7 +689,7 @@
             <!-- Sidebar -->
             <aside class="sidebar-info">
                 <!-- Organization Info -->
-                @if($package['organization'])
+                @if ($package['organization'])
                     <div class="info-card">
                         <div class="section-header">
                             <i class="fas fa-building"></i>
@@ -696,9 +697,9 @@
                         </div>
                         <div class="section-body">
                             <div class="organization-card">
-                                @if($package['organization']['image_url'] ?? false)
-                                    <img src="{{ $package['organization']['image_url'] }}" alt="Logo" class="organization-logo"
-                                        onerror="this.style.display='none'">
+                                @if ($package['organization']['image_url'] ?? false)
+                                    <img src="{{ $package['organization']['image_url'] }}" alt="Logo"
+                                        class="organization-logo" onerror="this.style.display='none'">
                                 @else
                                     <div
                                         class="organization-logo d-flex align-items-center justify-content-center bg-light text-muted">
@@ -711,7 +712,7 @@
                                 <div class="organization-type">
                                     {{ $package['organization']['type'] ?? 'Organisasi' }}
                                 </div>
-                                @if($package['organization']['description'])
+                                @if ($package['organization']['description'])
                                     <small class="text-muted mt-2 d-block">
                                         {{ Str::limit($package['organization']['description'], 100) }}
                                     </small>
@@ -756,18 +757,19 @@
                             </span>
                         </div>
 
-                        @if($package['version'])
+                        @if ($package['version'])
                             <div class="info-row">
                                 <span class="info-label">Versi</span>
                                 <span class="info-value">{{ $package['version'] }}</span>
                             </div>
                         @endif
 
-                        @if($package['state'])
+                        @if ($package['state'])
                             <div class="info-row">
                                 <span class="info-label">Status</span>
                                 <span class="info-value">
-                                    <span class="badge {{ $package['state'] === 'active' ? 'bg-success' : 'bg-secondary' }}">
+                                    <span
+                                        class="badge {{ $package['state'] === 'active' ? 'bg-success' : 'bg-secondary' }}">
                                         {{ ucfirst($package['state']) }}
                                     </span>
                                 </span>
@@ -854,9 +856,9 @@
                 </div>
 
                 <!-- Action Buttons -->
-                @if(auth()->check() && (auth()->user()->is_sysadmin || auth()->id() == ($package['creator_user_id'] ?? null)))
+                @if (auth()->check() && (auth()->user()->is_sysadmin || auth()->id() == ($package['creator_user_id'] ?? null)))
                     <div class="action-buttons">
-                        <a href="{{ route('ckan.edit', $package['id']) }}" class="btn btn-warning">
+                        <a href="{{ route('frontend.edit', $package['id']) }}" class="btn btn-warning">
                             <i class="fas fa-edit"></i> Edit
                         </a>
                         <button class="btn btn-danger" onclick="confirmDelete()">
@@ -864,7 +866,7 @@
                         </button>
                     </div>
 
-                    <form id="delete-form" action="{{ route('ckan.destroy', $package['id']) }}" method="POST"
+                    <form id="delete-form" action="{{ route('frontend.destroy', $package['id']) }}" method="POST"
                         style="display: none;">
                         @csrf
                         @method('DELETE')
@@ -918,7 +920,7 @@
 
         // Smooth scroll untuk anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
+            anchor.addEventListener('click', function(e) {
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) {
@@ -932,13 +934,13 @@
 
         // Track view (optional - untuk analytics)
         @auth
-            fetch('{{ route("ckan.track-view", $package["id"]) }}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                }
-            }).catch(err => console.error('Track view error:', err));
+        fetch('{{ route('frontend.track-view', $package['id']) }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            }
+        }).catch(err => console.error('Track view error:', err));
         @endauth
     </script>
 @endpush

@@ -14,14 +14,14 @@
     </div>
 
     <div class="container py-5">
-        @if(session('error'))
+        @if (session('error'))
             <div class="alert alert-danger alert-dismissible fade show">
                 {{ session('error') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         @endif
 
-        @if(session('success'))
+        @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show">
                 {{ session('success') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
@@ -33,7 +33,7 @@
             <div class="col-12 text-center">
                 <h1 class="display-4 fw-bold mb-3">Portal Data CKAN</h1>
                 <p class="lead text-muted">Akses dan kelola data terbuka dengan mudah</p>
-                <a href="{{ route('ckan.create') }}" class="btn btn-primary btn-lg mt-3">
+                <a href="{{ route('frontend.create') }}" class="btn btn-primary btn-lg mt-3">
                     <i class="fas fa-plus"></i> Tambah Dataset
                 </a>
             </div>
@@ -78,7 +78,7 @@
         <!-- Search Form -->
         <div class="row mb-5">
             <div class="col-md-8 mx-auto">
-                <form action="{{ route('ckan.search') }}" method="GET" class="card p-4 shadow-sm">
+                <form action="{{ route('frontend.search') }}" method="GET" class="card p-4 shadow-sm">
                     <div class="input-group input-group-lg">
                         <input type="text" name="q" class="form-control" placeholder="Cari dataset..."
                             value="{{ request('q') }}">
@@ -98,15 +98,15 @@
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h2>Dataset Terbaru</h2>
                         <div>
-                            <a href="{{ route('ckan.datasets') }}" class="btn btn-outline-primary btn-sm me-2">
+                            <a href="{{ route('frontend.datasets') }}" class="btn btn-outline-primary btn-sm me-2">
                                 <i class="fas fa-table"></i> Lihat Semua dalam Tabel
                             </a>
-                            <a href="{{ route('ckan.search') }}" class="btn btn-outline-secondary btn-sm">
+                            <a href="{{ route('frontend.search') }}" class="btn btn-outline-secondary btn-sm">
                                 <i class="fas fa-search"></i> Cari
                             </a>
                         </div>
                     </div>
-                    <a href="{{ route('ckan.search') }}" class="btn btn-outline-primary">Lihat Semua</a>
+                    <a href="{{ route('frontend.search') }}" class="btn btn-outline-primary">Lihat Semua</a>
                 </div>
             </div>
 
@@ -115,7 +115,7 @@
                     <div class="card h-100 shadow-sm">
                         <div class="card-body">
                             <h5 class="card-title">
-                                <a href="{{ route('ckan.show', $package['id']) }}" class="text-decoration-none">
+                                <a href="{{ route('frontend.show', $package['id']) }}" class="text-decoration-none">
                                     {{ $package['title'] ?? $package['name'] }}
                                 </a>
                             </h5>
@@ -143,7 +143,7 @@
             @empty
                 <div class="col-12">
                     <div class="alert alert-info">
-                        Belum ada dataset. <a href="{{ route('ckan.create') }}">Tambah dataset pertama</a>
+                        Belum ada dataset. <a href="{{ route('frontend.create') }}">Tambah dataset pertama</a>
                     </div>
                 </div>
             @endforelse
@@ -159,7 +159,7 @@
                 <div class="col-md-2 mb-3">
                     <div class="card text-center">
                         <div class="card-body">
-                            <a href="{{ route('ckan.organization', $org['id']) }}" class="text-decoration-none">
+                            <a href="{{ route('frontend.organization', $org['id']) }}" class="text-decoration-none">
                                 <h6 class="card-title">{{ Str::limit($org['title'] ?? $org['name'], 20) }}</h6>
                                 <small class="text-muted">{{ $org['package_count'] ?? 0 }} dataset</small>
                             </a>
