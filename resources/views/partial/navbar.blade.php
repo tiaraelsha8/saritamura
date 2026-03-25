@@ -13,7 +13,7 @@
 
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('frontend.datasets') }}">
-                        <i class="fas fa-table"></i> Datasets
+                        <i class="fas fa-table"></i> Dataset
                     </a>
                 </li>
 
