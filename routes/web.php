@@ -11,6 +11,8 @@ use App\Http\Controllers\auth\ResetPasswordController;
 use App\Http\Controllers\backend\DashboardController;
 use App\Http\Controllers\backend\UserController;
 use App\Http\Controllers\backend\VideoController;
+use App\Http\Controllers\backend\GrafikController;
+
 
 use App\Http\Controllers\CkanController;
 
@@ -41,6 +43,10 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
  Route::resource('/user', UserController::class);
 
  Route::resource('/video', VideoController::class);
+
+ Route::resource('/grafik', GrafikController::class);
+ Route::post('grafik-upload', [GrafikController::class, 'storeImage'])->name('grafik.upload');
+
 
 
   // Hanya superadmin yang boleh kelola
