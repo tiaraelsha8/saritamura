@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Daftar Dataset - Satu Data Kalteng')
+@section('title', 'Daftar Dataset - Satu Data Murung Raya')
 
 @push('styles')
 <style>
@@ -403,7 +403,7 @@
         <div class="row align-items-center">
             <div class="col-lg-8">
                 <h1><i class="fas fa-database"></i> Dataset</h1>
-                <p class="subtitle mb-0">Temukan dan eksplorasi data terbuka dari Pemerintah Provinsi Kalimantan Tengah</p>
+                <p class="subtitle mb-0">Temukan dan eksplorasi data terbuka dari Pemerintah Kabupaten Murung Raya</p>
             </div>
             <div class="col-lg-4">
                 <form action="{{ route('ckan.datasets') }}" method="GET" class="search-box">
