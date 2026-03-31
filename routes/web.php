@@ -12,6 +12,7 @@ use App\Http\Controllers\backend\DashboardController;
 use App\Http\Controllers\backend\UserController;
 use App\Http\Controllers\backend\VideoController;
 use App\Http\Controllers\backend\GrafikController;
+use App\Http\Controllers\backend\DokumenController;
 
 use App\Http\Controllers\CkanController;
 
@@ -48,6 +49,9 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 
         Route::resource('/grafik', GrafikController::class);
         Route::post('grafik-upload', [GrafikController::class, 'storeImage'])->name('grafik.upload');
+
+        Route::resource('/dokumen', DokumenController::class);
+        Route::get('/dokumen/download/{id}', [DokumenController::class, 'download'])->name('dokumen.download');
 
 });
 
