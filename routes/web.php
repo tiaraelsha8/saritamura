@@ -43,6 +43,12 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('backend.dashboard');
 
+        Route::resource('/dokumen', DokumenController::class);
+        Route::get('/dokumen/download/{id}', [DokumenController::class, 'download'])->name('dokumen.download');
+
+        // Hanya superadmin yang boleh kelola
+    Route::middleware(['role:superadmin'])->group(function () {
+
         Route::resource('/user', UserController::class);
 
         Route::resource('/video', VideoController::class);
@@ -50,17 +56,11 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         Route::resource('/grafik', GrafikController::class);
         Route::post('grafik-upload', [GrafikController::class, 'storeImage'])->name('grafik.upload');
 
-        Route::resource('/dokumen', DokumenController::class);
-        Route::get('/dokumen/download/{id}', [DokumenController::class, 'download'])->name('dokumen.download');
+    });
 
 });
 
-// Hanya superadmin yang boleh kelola
-// Route::middleware(['role:superadmin'])->group(function () {
 
-//     Route::resource('/user', UserController::class);
-
-// });
 
 Route::prefix('ckan')->controller(CkanController::class)->group(function () {
         // Main pages
