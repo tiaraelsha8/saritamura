@@ -13,6 +13,7 @@ use App\Http\Controllers\backend\UserController;
 use App\Http\Controllers\backend\VideoController;
 use App\Http\Controllers\backend\GrafikController;
 use App\Http\Controllers\backend\DokumenController;
+use App\Http\Controllers\backend\ProfileController;
 
 use App\Http\Controllers\CkanController;
 
@@ -45,6 +46,9 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 
         Route::resource('/dokumen', DokumenController::class);
         Route::get('/dokumen/download/{id}', [DokumenController::class, 'download'])->name('dokumen.download');
+
+        Route::get('/profile/edit/{id}', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::put('/profile/update/{id}', [ProfileController::class, 'update'])->name('profile.update');
 
         // Hanya superadmin yang boleh kelola
     Route::middleware(['role:superadmin'])->group(function () {
