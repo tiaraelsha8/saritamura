@@ -260,13 +260,13 @@
         <nav aria-label="breadcrumb" class="mb-4">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item">
-                    <a href="{{ route('ckan.index') }}"><i class="fas fa-home"></i> Beranda</a>
+                    <a href="{{ route('frontend.index') }}"><i class="fas fa-home"></i> Beranda</a>
                 </li>
                 <li class="breadcrumb-item">
-                    <a href="{{ route('ckan.datasets') }}">Dataset</a>
+                    <a href="{{ route('frontend.datasets') }}">Dataset</a>
                 </li>
                 <li class="breadcrumb-item">
-                    <a href="{{ route('ckan.show', $package['id']) }}">
+                    <a href="{{ route('frontend.show', $package['id']) }}">
                         {{ Str::limit($package['title'], 40) }}
                     </a>
                 </li>
@@ -286,13 +286,13 @@
                             <i class="fas fa-file"></i>
                             <span class="badge-format">{{ strtoupper($resource['format'] ?? 'UNKNOWN') }}</span>
                         </div>
-                        @if($resource['size'])
+                        @if ($resource['size'])
                             <div class="preview-meta-item">
                                 <i class="fas fa-hdd"></i>
                                 <span>{{ number_format($resource['size'] / 1024 / 1024, 2) }} MB</span>
                             </div>
                         @endif
-                        @if($resource['created'])
+                        @if ($resource['created'])
                             <div class="preview-meta-item">
                                 <i class="fas fa-clock"></i>
                                 <span>Ditambahkan {{ \Carbon\Carbon::parse($resource['created'])->format('d M Y') }}</span>
@@ -301,18 +301,18 @@
                     </div>
                 </div>
                 <div>
-                    <a href="{{ route('ckan.show', $package['id']) }}" class="btn btn-outline-secondary">
+                    <a href="{{ route('frontend.show', $package['id']) }}" class="btn btn-outline-secondary">
                         <i class="fas fa-arrow-left"></i> Kembali ke Dataset
                     </a>
                 </div>
             </div>
 
-            @if($resource['description'])
+            @if ($resource['description'])
                 <p class="text-muted mb-0 mt-3">{{ $resource['description'] }}</p>
             @endif
         </header>
 
-        @if(!$hasDataStore)
+        @if (!$hasDataStore)
             <!-- DataStore Not Available -->
             <div class="table-container">
                 <div class="empty-state">
@@ -327,8 +327,8 @@
                         <i class="fas fa-info-circle"></i>
                         <strong>Admin:</strong> Jalankan perintah berikut untuk memproses file ini:
                         <code class="d-block mt-2 bg-light p-2 rounded">
-                                                                                                            ckan -c production.ini xloader submit {{ $resource['id'] }}
-                                                                                                        </code>
+                            ckan -c production.ini xloader submit {{ $resource['id'] }}
+                        </code>
                     </div>
                     <a href="{{ $resource['url'] ?? '#' }}" class="btn btn-primary" target="_blank">
                         <i class="fas fa-external-link-alt"></i> Unduh File Langsung
@@ -448,7 +448,6 @@
 @endsection
 
 @push('scripts')
-
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
@@ -461,28 +460,31 @@
         let dataTable;
         let currentData = [];
         let currentFields = [];
-        let resourceId = '{{ $resource["id"] }}';
-        let datasetId = '{{ $package["id"] }}';
-        let apiEndpoint = '{{ route("ckan.resource.api", ["datasetId" => ":datasetId", "resourceId" => ":resourceId"]) }}'.replace(':datasetId', datasetId).replace(':resourceId', resourceId);
+        let resourceId = '{{ $resource['id'] }}';
+        let datasetId = '{{ $package['id'] }}';
+        let apiEndpoint =
+            '{{ route('frontend.resource.api', ['datasetId' => ':datasetId', 'resourceId' => ':resourceId']) }}'.replace(
+                ':datasetId', datasetId).replace(':resourceId', resourceId);
 
-        document.addEventListener('DOMContentLoaded', function () {
-            @if($hasDataStore)
+        document.addEventListener('DOMContentLoaded', function() {
+            @if ($hasDataStore)
                 // Initialize
                 loadData();
 
                 // Event listeners
-                document.getElementById('recordsPerPage').addEventListener('change', function () {
+                document.getElementById('recordsPerPage').addEventListener('change', function() {
                     loadData();
                 });
 
-                document.getElementById('tableSearch').addEventListener('input', function (e) {
+                document.getElementById('tableSearch').addEventListener('input', function(e) {
                     debounceLoadData(e.target.value, 300);
                 });
             @endif
-                                            });
+        });
 
         // Debounced search
         let searchTimeout;
+
         function debounceLoadData(searchTerm, delay) {
             clearTimeout(searchTimeout);
             searchTimeout = setTimeout(() => {
@@ -553,7 +555,7 @@
                 data: field.id,
                 title: field.label || field.id,
                 responsivePriority: 1,
-                render: function (data, type, row) {
+                render: function(data, type, row) {
                     if (data === null || data === undefined) return '<span class="text-muted">-</span>';
                     if (type === 'display' && typeof data === 'string' && data.length > 100) {
                         return `<span title="${escapeHtml(data)}">${escapeHtml(data.substring(0, 100))}...</span>`;
@@ -566,8 +568,8 @@
             dataTable = $(table).DataTable({
                 data: result.data,
                 columns: columns,
-                paging: false,  // We handle pagination manually
-                searching: false,  // We handle search manually
+                paging: false, // We handle pagination manually
+                searching: false, // We handle search manually
                 ordering: true,
                 responsive: true,
                 language: {
@@ -578,15 +580,16 @@
                     loadingRecords: "Memuat...",
                     zeroRecords: "Tidak ditemukan data yang cocok",
                 },
-                drawCallback: function (settings) {
+                drawCallback: function(settings) {
                     // Add click handlers for sorting
-                    $('.sorting').on('click', function () {
+                    $('.sorting').on('click', function() {
                         const colIdx = $(this).index();
                         const field = currentFields[colIdx];
                         if (field) {
                             // Reload with sort
                             const currentSort = new URL(apiEndpoint).searchParams.get('sort') || '';
-                            const newSort = field.id + (currentSort.includes('desc') ? ' asc' : ' desc');
+                            const newSort = field.id + (currentSort.includes('desc') ? ' asc' :
+                            ' desc');
                             loadData(1, document.getElementById('tableSearch').value);
                         }
                     });
@@ -639,7 +642,7 @@
 
         // Export data
         function exportData(format) {
-            const limit = 1000;  // Max for export
+            const limit = 1000; // Max for export
 
             fetch(`${apiEndpoint}?limit=${limit}&format=${format}`)
                 .then(response => response.blob())
@@ -673,7 +676,7 @@
         }
 
         // Copy cell value on click (optional)
-        document.addEventListener('click', function (e) {
+        document.addEventListener('click', function(e) {
             if (e.target.closest('#dataTable tbody td')) {
                 const cell = e.target.closest('td');
                 const text = cell.textContent.trim();

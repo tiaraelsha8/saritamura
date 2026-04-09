@@ -53,61 +53,16 @@
 </head>
 
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
-        <div class="container">
-            <a class="navbar-brand" href="{{ route('ckan.index') }}">
-                <i class="fas fa-database"></i> {{ config('app.name', 'Portal Data') }}
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('ckan.datasets') }}">
-                            <i class="fas fa-table"></i> Datasets
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('ckan.index') }}">
-                            <i class="fas fa-home"></i> Home
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('ckan.search') }}">
-                            <i class="fas fa-search"></i> Search
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('ckan.create') }}">
-                            <i class="fas fa-plus"></i> Add Dataset
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('ckan.organizations') }}">
-                            <i class="fas fa-building"></i> Organizations
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    {{-- Navbar --}}
+    @include('partial.navbar')
 
     <!-- Main Content -->
     <main class="container">
         @yield('content')
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-light py-4 mt-5">
-        <div class="container text-center text-muted">
-            <small>
-                &copy; {{ date('Y') }} {{ config('app.name', 'Portal Data') }}.
-                Powered by <a href="https://ckan.org" target="_blank" class="text-decoration-none">CKAN</a>.
-            </small>
-        </div>
-    </footer>
+    {{-- Footer --}}
+    @include('partial.footer')
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
