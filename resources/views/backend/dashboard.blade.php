@@ -88,7 +88,7 @@
                 <!-- small box -->
                 <div class="small-box" style="background-color: #34e45d">
                     <div class="inner">
-                        <h3></h3>
+                        <h3>{{ $statistik['total'] }}</h3>
 
                         <p>Total Pengunjung</p>
                     </div>
@@ -104,7 +104,7 @@
                 <!-- small box -->
                 <div class="small-box" style="background-color: #34e45d">
                     <div class="inner">
-                        <h3></h3>
+                        <h3>{{ $statistik['today'] }}</h3>
 
                         <p>Pengunjung Hari Ini</p>
                     </div>
@@ -119,7 +119,7 @@
                 <!-- small box -->
                 <div class="small-box" style="background-color: #34e45d">
                     <div class="inner">
-                        <h3></h3>
+                        <h3>{{ $statistik['online'] }}</h3>
 
                         <p>Pengunjung Online</p>
                     </div>

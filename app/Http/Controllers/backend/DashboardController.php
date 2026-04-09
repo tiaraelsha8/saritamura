@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\backend;
 
-// use App\Helpers\VisitorCounter;
+use App\Helpers\VisitorCounter;
 use App\Http\Controllers\Controller;
 use App\Models\Dokumen;
 use App\Models\Grafik;
@@ -18,8 +18,8 @@ class DashboardController extends Controller
         $jumlahgrafik = Grafik::count();
         $jumlahvideo = Video::count();
         $jumlahadmin = User::where('role', 'admin')->count();
-        // $statistik = VisitorCounter::count();
-        return view('backend.dashboard', compact('jumlahdokumen','jumlahgrafik','jumlahvideo','jumlahadmin'));
+        $statistik = VisitorCounter::count();
+        return view('backend.dashboard', compact('jumlahdokumen','jumlahgrafik','jumlahvideo','jumlahadmin','statistik'));
 
         return view('backend.dashboard');
     }
