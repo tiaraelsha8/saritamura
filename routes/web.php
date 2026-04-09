@@ -13,6 +13,7 @@ use App\Http\Controllers\backend\UserController;
 use App\Http\Controllers\backend\VideoController;
 use App\Http\Controllers\backend\GrafikController;
 use App\Http\Controllers\backend\DokumenController;
+use App\Http\Controllers\backend\ProfileController;
 
 use App\Http\Controllers\CkanController;
 
@@ -47,24 +48,29 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('backend.dashboard');
 
-    Route::resource('/user', UserController::class);
-
-    Route::resource('/video', VideoController::class);
-
-    Route::resource('/grafik', GrafikController::class);
-    Route::post('grafik-upload', [GrafikController::class, 'storeImage'])->name('grafik.upload');
-
     Route::resource('/dokumen', DokumenController::class);
     Route::get('/dokumen/download/{id}', [DokumenController::class, 'download'])->name('dokumen.download');
 
+    Route::get('/profile/edit/{id}', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile/update/{id}', [ProfileController::class, 'update'])->name('profile.update');
+
+    // Hanya superadmin yang boleh kelola
+    Route::middleware(['role:superadmin'])->group(function () {
+
+        Route::resource('/user', UserController::class);
+
+        Route::resource('/video', VideoController::class);
+
+        Route::resource('/grafik', GrafikController::class);
+        Route::post('grafik-upload', [GrafikController::class, 'storeImage'])->name('grafik.upload');
+
+        Route::resource('/dokumen', DokumenController::class);
+        Route::get('/dokumen/download/{id}', [DokumenController::class, 'download'])->name('dokumen.download');
+    });
+
 });
 
-// Hanya superadmin yang boleh kelola
-// Route::middleware(['role:superadmin'])->group(function () {
 
-//     Route::resource('/user', UserController::class);
-
-// });
 
 Route::prefix('ckan')->controller(CkanController::class)->group(function () {
     // Main pages
@@ -111,6 +117,7 @@ Route::prefix('ckan')->controller(CkanController::class)->group(function () {
 | API Routes (for external access)
 |--------------------------------------------------------------------------
 */
+
 Route::prefix('api/ckan')->group(function () {
     Route::get('/health', [CkanController::class, 'health']);
     Route::get('/datasets', [CkanController::class, 'search']);

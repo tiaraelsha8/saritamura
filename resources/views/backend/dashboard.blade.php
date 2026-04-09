@@ -16,7 +16,7 @@
                         <!-- small box -->
                         <div class="small-box bg-danger">
                             <div class="inner">
-                                <h3></h3>
+                                <h3>{{ $jumlahadmin }}</h3>
 
                                 <p>Data Admin</p>
                             </div>
@@ -34,9 +34,9 @@
                 <!-- small box -->
                 <div class="small-box bg-info">
                     <div class="inner">
-                        <h3></h3>
+                        <h3>{{ $jumlahdokumen }}</h3>
 
-                        <p>Data Kategori Layanan</p>
+                        <p>Data Dokumen</p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-stats-bars"></i>
@@ -50,9 +50,9 @@
                 <!-- small box -->
                 <div class="small-box bg-success">
                     <div class="inner">
-                        <h3></h3>
+                        <h3>{{ $jumlahvideo }}</h3>
 
-                        <p>Data Layanan</p>
+                        <p>Data Video</p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-stats-bars"></i>
@@ -61,6 +61,27 @@
                 </div>
             </div>
         </div>
+
+        <div class="row">
+
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-danger">
+                    <div class="inner">
+                        <h3>{{ $jumlahgrafik }}</h3>
+
+                        <p>Data Grafik</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-stats-bars"></i>
+                    </div>
+                    {{-- <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> --}}
+                </div>
+            </div>
+
+        </div>
+
+
         <div class="row">
             <!-- ./col -->
             <div class="col-lg-3 col-6">
