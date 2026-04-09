@@ -54,7 +54,7 @@
 
 <body>
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-danger mb-4">
         <div class="container">
             <a class="navbar-brand" href="{{ route('ckan.index') }}">
                 <i class="fas fa-database"></i> {{ config('app.name', 'Portal Data') }}
