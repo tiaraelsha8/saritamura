@@ -30,8 +30,8 @@
 
             <div class="form-group">
                 <label for="file">Dokumen</label>
-                <input type="file" class="form-control-file" name="file" accept=".pdf">
-                <p>pdf. max 5 MB</p>
+                <input type="file" class="form-control-file" name="file" accept=".pdf,.xls,.xlsx">
+                <p>pdf / excel max 5 MB</p>
             </div>
             @error('file')
                 <div class="alert alert-danger">{{ $message }}</div>
