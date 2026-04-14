@@ -1,7 +1,7 @@
 @extends('backend.layouts.master')
 
 @section('judul')
-    Halaman Tambah Grafik
+    Halaman Tambah Grafis
 @endsection
 
 @section('content')

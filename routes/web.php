@@ -64,8 +64,6 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         Route::resource('/grafik', GrafikController::class);
         Route::post('grafik-upload', [GrafikController::class, 'storeImage'])->name('grafik.upload');
 
-        Route::resource('/dokumen', DokumenController::class);
-        Route::get('/dokumen/download/{id}', [DokumenController::class, 'download'])->name('dokumen.download');
     });
 
 });

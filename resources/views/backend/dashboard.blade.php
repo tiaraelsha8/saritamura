@@ -26,40 +26,40 @@
                             {{-- <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> --}}
                         </div>
                     </div>
+
+                    <div class="col-lg-3 col-6">
+                        <!-- small box -->
+                        <div class="small-box bg-info">
+                            <div class="inner">
+                                <h3>{{ $jumlahdokumen }}</h3>
+
+                                <p>Data Dokumen</p>
+                            </div>
+                            <div class="icon">
+                                <i class="ion ion-stats-bars"></i>
+                            </div>
+                            {{-- <a href="{{ route('bidang.index') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> --}}
+                        </div>
+                    </div>
+
+                    <!-- ./col -->
+                    <div class="col-lg-3 col-6">
+                        <!-- small box -->
+                        <div class="small-box bg-success">
+                            <div class="inner">
+                                <h3>{{ $jumlahvideo }}</h3>
+
+                                <p>Data Video</p>
+                            </div>
+                            <div class="icon">
+                                <i class="ion ion-stats-bars"></i>
+                            </div>
+                            {{-- <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> --}}
+                        </div>
+                    </div>
                 @endif
             @endauth
 
-
-            <div class="col-lg-3 col-6">
-                <!-- small box -->
-                <div class="small-box bg-info">
-                    <div class="inner">
-                        <h3>{{ $jumlahdokumen }}</h3>
-
-                        <p>Data Dokumen</p>
-                    </div>
-                    <div class="icon">
-                        <i class="ion ion-stats-bars"></i>
-                    </div>
-                    {{-- <a href="{{ route('bidang.index') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> --}}
-                </div>
-            </div>
-
-            <!-- ./col -->
-            <div class="col-lg-3 col-6">
-                <!-- small box -->
-                <div class="small-box bg-success">
-                    <div class="inner">
-                        <h3>{{ $jumlahvideo }}</h3>
-
-                        <p>Data Video</p>
-                    </div>
-                    <div class="icon">
-                        <i class="ion ion-stats-bars"></i>
-                    </div>
-                    {{-- <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> --}}
-                </div>
-            </div>
         </div>
 
         <div class="row">
@@ -70,7 +70,7 @@
                     <div class="inner">
                         <h3>{{ $jumlahgrafik }}</h3>
 
-                        <p>Data Grafik</p>
+                        <p>Data Grafis</p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-stats-bars"></i>

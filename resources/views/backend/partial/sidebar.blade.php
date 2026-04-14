@@ -59,7 +59,7 @@
             <a href="{{ route ('grafik.index') }}" class="nav-link">
               <i class="nav-icon fas fa-table"></i>
               <p>
-                Info Grafik
+                Info Grafis
               </p>
             </a>
           </li>
