@@ -16,7 +16,7 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('templateadmin/dist/css/adminlte.min.css') }}">
     <!-- Favicon -->
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('image/tingang.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('image/logo-murung-raya.png') }}">
     <!-- Google reCAPTCHA Script -->
     {!! NoCaptcha::renderJs() !!}
 </head>
@@ -28,10 +28,10 @@
             <div class="login-box">
                 <div class="login-logo">
                     <a href="" style="font-size: 25px; line-height: 1.3; text-align: center; display: inline-block;">
-                        <b>Tempat Informasi dan<br>Gerbang Pelayanan Digital</b>
+                        <b>SARITAMURA<br>KABUPATEN MURUNG RAYA</b>
                     </a>
                     <div class="text-center mt-2">
-                        <img src="{{ asset('image/tingang.png') }}" alt="Logo" style="height: 80px;">
+                        <img src="{{ asset('image/logo-murung-raya.png') }}" alt="Logo" style="height: 80px;">
                     </div>
                 </div>
 
