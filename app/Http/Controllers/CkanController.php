@@ -24,18 +24,18 @@ class CkanController extends Controller
     /**
      * Display homepage with CKAN data
      */
-    public function index()
+    public function home()
     {
         try {
             $stats = $this->ckan->getStatistics();
             $recentPackages = $this->ckan->getRecentPackages(6);
             $organizations = $this->ckan->getOrganizations();
 
-            return view('ckan.index', compact('stats', 'recentPackages', 'organizations'));
+            return view('frontend.home', compact('stats', 'recentPackages', 'organizations'));
         } catch (Exception $e) {
             Log::error('CKAN Index Error', ['error' => $e->getMessage()]);
 
-            return view('ckan.index', [
+            return view('frontend.home', [
                 'error' => 'Gagal mengambil data dari CKAN: ' . $e->getMessage(),
                 'stats' => [],
                 'recentPackages' => [],
@@ -51,9 +51,9 @@ class CkanController extends Controller
     {
         try {
             $organizations = $this->ckan->getOrganizations();
-            return view('ckan.create', compact('organizations'));
+            return view('frontend.create', compact('organizations'));
         } catch (Exception $e) {
-            return redirect()->route('ckan.index')
+            return redirect()->route('frontend.home')
                 ->with('error', 'Gagal memuat form: ' . $e->getMessage());
         }
     }
@@ -121,7 +121,7 @@ class CkanController extends Controller
                 }
             }
 
-            return redirect()->route('ckan.show', $result['id'])
+            return redirect()->route('frontend.show', $result['id'])
                 ->with('success', 'Dataset berhasil dibuat!');
 
         } catch (Exception $e) {
@@ -142,7 +142,7 @@ class CkanController extends Controller
     {
         try {
             $package = $this->ckan->getPackage($id);
-            return view('ckan.show', compact('package'));
+            return view('frontend.show', compact('package'));
         } catch (Exception $e) {
             abort(404, 'Dataset tidak ditemukan');
         }
@@ -156,9 +156,9 @@ class CkanController extends Controller
         try {
             $package = $this->ckan->getPackage($id);
             $organizations = $this->ckan->getOrganizations();
-            return view('ckan.edit', compact('package', 'organizations'));
+            return view('frontend.edit', compact('package', 'organizations'));
         } catch (Exception $e) {
-            return redirect()->route('ckan.index')
+            return redirect()->route('frontend.home')
                 ->with('error', 'Gagal memuat form: ' . $e->getMessage());
         }
     }
@@ -182,7 +182,7 @@ class CkanController extends Controller
 
             $this->ckan->updatePackage($data);
 
-            return redirect()->route('ckan.show', $id)
+            return redirect()->route('frontend.show', $id)
                 ->with('success', 'Dataset berhasil diupdate!');
 
         } catch (Exception $e) {
@@ -198,7 +198,7 @@ class CkanController extends Controller
     {
         try {
             $this->ckan->deletePackage($id);
-            return redirect()->route('ckan.index')
+            return redirect()->route('frontend.home')
                 ->with('success', 'Dataset berhasil dihapus!');
         } catch (Exception $e) {
             return back()->with('error', 'Gagal menghapus dataset: ' . $e->getMessage());
@@ -220,7 +220,7 @@ class CkanController extends Controller
                 'start' => ($page - 1) * $rows,
             ]);
 
-            return view('ckan.search', [
+            return view('frontend.search', [
                 'packages' => $result['results'],
                 'count' => $result['count'],
                 'query' => $query,
@@ -262,7 +262,7 @@ class CkanController extends Controller
                 ]);
             }
 
-            return redirect()->route('ckan.show', $validated['package_id'])
+            return redirect()->route('frontend.show', $validated['package_id'])
                 ->with('success', 'Resource berhasil diupload!');
 
         } catch (Exception $e) {
@@ -292,6 +292,37 @@ class CkanController extends Controller
         }
     }
 
+    public function index()
+{
+    $docs = Sipd::latest()->get();
+    return view('sipd.index', compact('docs'));
+}
+
+    public function infografis()
+    {
+    try {
+        // ambil data dari CKAN (contoh)
+        $stats = $this->ckan->getStatistics();
+        $datasets = $this->ckan->searchPackages('', ['rows' => 100]);
+
+        return view('frontend.infografis', [
+            'stats' => $stats,
+            'datasets' => $datasets['results'] ?? [],
+        ]);
+
+    } catch (\Exception $e) {
+        \Log::error('Infografis error', [
+            'error' => $e->getMessage()
+        ]);
+
+        return view('frontend.infografis', [
+            'stats' => [],
+            'datasets' => [],
+            'error' => 'Gagal memuat data'
+        ]);
+    }
+}
+
     /**
      * Get organizations list
      */
@@ -299,7 +330,7 @@ class CkanController extends Controller
     {
         try {
             $organizations = $this->ckan->getOrganizations();
-            return view('ckan.organizations', compact('organizations'));
+            return view('frontend.organizations', compact('organizations'));
         } catch (Exception $e) {
             return back()->with('error', 'Gagal mengambil data organisasi');
         }
@@ -312,7 +343,7 @@ class CkanController extends Controller
     {
         try {
             $organization = $this->ckan->getOrganization($id);
-            return view('ckan.organization', compact('organization'));
+            return view('frontend.organization', compact('organization'));
         } catch (Exception $e) {
             abort(404, 'Organisasi tidak ditemukan');
         }
@@ -456,7 +487,7 @@ class CkanController extends Controller
                 // Tags optional
             }
 
-            return view('ckan.datasets', [
+            return view('frontend.datasets', [
                 'datasets' => $datasets,
                 'pagination' => [
                     'total' => $result['count'] ?? 0,
@@ -484,7 +515,7 @@ class CkanController extends Controller
                 'params' => $request->all()
             ]);
 
-            return view('ckan.datasets', [
+            return view('frontend.datasets', [
                 'datasets' => collect(),
                 'pagination' => ['total' => 0, 'current_page' => 1, 'last_page' => 1, 'from' => 0, 'to' => 0],
                 'filters' => $request->all(),
@@ -529,7 +560,7 @@ class CkanController extends Controller
                 // DataStore not available for this resource
             }
 
-            return view('ckan.preview', [
+            return view('frontend.preview', [
                 'package' => $package,
                 'resource' => $resource,
                 'datastoreInfo' => $datastoreInfo,
@@ -543,7 +574,7 @@ class CkanController extends Controller
                 'error' => $e->getMessage()
             ]);
 
-            return redirect()->route('ckan.show', $datasetId)
+            return redirect()->route('frontend.show', $datasetId)
                 ->with('error', 'Gagal memuat preview data: ' . $e->getMessage());
         }
     }

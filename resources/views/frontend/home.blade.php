@@ -1,11 +1,62 @@
-<!-- @push('styles')
+@push('styles')
     <style>
         /* ===== HERO SECTION ===== */
         .hero-section {
-            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
-            padding: 5rem 0;
-            text-align: center;
+            background:
+                repeating-linear-gradient(120deg,
+                    rgba(255, 255, 255, 0.06) 0px,
+                    rgba(255, 255, 255, 0.06) 1px,
+                    transparent 1px,
+                    transparent 35px),
+
+                repeating-linear-gradient(-120deg,
+                    rgba(255, 255, 255, 0.04) 0px,
+                    rgba(255, 255, 255, 0.04) 1px,
+                    transparent 1px,
+                    transparent 55px),
+
+                linear-gradient(120deg,
+                    transparent 0%,
+                    rgba(255, 255, 255, 0.08) 30%,
+                    transparent 60%),
+
+                linear-gradient(135deg, #1E3A8A, #2563EB);
+
+            padding: 3rem 0;
             color: white;
+            min-height: 500px;
+            max-height: 500px;
+            display: flex;
+            align-items: center;
+        }
+
+        .hero-section .row {
+            height: 100%;
+        }
+
+        .hero-section .col-md-6:last-child {
+            position: relative;
+        }
+
+        .hero-image {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 460px;
+            width: auto;
+            max-height: none;
+        }
+
+        .hero-image-animate {
+            opacity: 0;
+            transform: translateY(-50%) translateX(40px);
+            transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .hero-image-animate.show {
+            opacity: 1;
+            transform: translateY(-50%) translateX(0);
         }
 
         .hero-title {
@@ -13,6 +64,7 @@
             font-weight: 800;
             margin-bottom: 1rem;
             line-height: 1.2;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
 
         .hero-subtitle {
@@ -24,8 +76,8 @@
 
         .hero-description {
             font-size: 1.1rem;
-            margin-bottom: 3rem;
             opacity: 0.9;
+            margin: 0;
         }
 
         /* ===== SEARCH BOX ===== */
@@ -35,8 +87,9 @@
             padding: 0.5rem;
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
             max-width: 800px;
-            margin: 0 auto;
+            margin: 0;
             position: relative;
+            z-index: 9999;
         }
 
         .search-form .input-group {
@@ -59,7 +112,7 @@
         }
 
         .search-form .btn-search {
-            background: linear-gradient(135deg, #f59e0b, #ef4444);
+            background: linear-gradient(135deg, #1E3A8A, #2563EB);
             color: white;
             border: none;
             padding: 1rem 2.5rem;
@@ -85,7 +138,7 @@
             border-radius: 12px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
             margin-top: 0.5rem;
-            z-index: 1000;
+            z-index: 9999;
             overflow: hidden;
             animation: slideDown 0.2s ease-out;
         }
@@ -259,8 +312,159 @@
                 border-radius: 0 0 12px 12px;
             }
         }
+
+        /* ===== VIDEO SECTION ===== */
+        .video-section {
+            padding-top: 3rem;
+            padding-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #212529;
+            margin: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        .video-card {
+            padding: 12px;
+            transition: transform 0.25s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .video-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .video-card:hover .video-title {
+            color: #1E40AF;
+        }
+
+        .video-card .ratio {
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.25s ease;
+        }
+
+        .video-card:hover .ratio {
+            transform: scale(1.02);
+        }
+
+        .video-card .ratio iframe {
+            display: block;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        .video-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #000000;
+            text-align: center;
+            min-height: 48px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            line-height: 1.4;
+        }
+
+        /* ===== INFOGRAFIS SECTION ===== */
+        .infografis-section {
+            padding-top: 2rem;
+            padding-bottom: 3rem;
+        }
+
+        .infografis-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .infografis-card {
+            padding: 12px;
+            text-align: center;
+            transition: transform 0.25s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .infografis-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .infografis-card:hover .infografis-desc {
+            color: #1E40AF;
+        }
+
+        .infografis-media {
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .infografis-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.25s ease;
+        }
+
+        .infografis-card:hover .infografis-img {
+            transform: scale(1.05);
+        }
+
+        .infografis-desc {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #000000;
+            margin: 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 5;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-align: justify;
+            line-height: 1.4;
+        }
+
+        /* ===== GLOBAL ANIMATION ===== */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .fade-up.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .delay-1 {
+            transition-delay: 0.1s;
+        }
+
+        .delay-2 {
+            transition-delay: 0.2s;
+        }
+
+        .delay-3 {
+            transition-delay: 0.3s;
+        }
+
+        .delay-4 {
+            transition-delay: 0.4s;
+        }
+
+        .delay-5 {
+            transition-delay: 0.5s;
+        }
     </style>
-@endpush -->
+@endpush
 
 @extends('layouts.app')
 
@@ -268,170 +472,181 @@
 
 @section('content')
 
-    <div class="container py-5">
-        @if(session('error'))
-            <div class="alert alert-danger alert-dismissible fade show">
-                {{ session('error') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        @endif
+    <div class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-start">
+                    <h1 class="hero-title fade-up hero-auto">
+                        <span class="d-block">SATU DATA KABUPATEN</span>
+                        <span class="d-block">MURUNG RAYA</span>
+                    </h1>
+                    <p class="hero-description fade-up delay-1 hero-auto">
+                        Silahkan ketik data yang ingin anda cari di dalam kotak pencarian
+                    </p>
+                    <div class="hero-search position-relative fade-up delay-2 hero-auto">
+                        <form action="{{ route('frontend.datasets') }}" method="GET" class="search-form">
+                            <div class="input-group">
+                                <input type="text" name="q" class="form-control search-input" id="heroSearchInput"
+                                    placeholder="Cari dataset, topik, atau instansi..." autocomplete="off">
 
-        @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show">
-                {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        @endif
+                                <button type="submit" class="btn btn-search">
+                                    <i class="fas fa-search"></i> Cari
+                                </button>
+                            </div>
+                        </form>
+                        <div class="autocomplete-dropdown" id="autocompleteDropdown" style="display: none;">
+                            <div class="autocomplete-header">
+                                <i class="fas fa-history"></i> Saran Pencarian
+                            </div>
 
+                            <div class="autocomplete-results" id="autocompleteResults"></div>
 
-        <!-- Statistics -->
-        <div class="row mb-5">
-            <div class="col-md-3 mb-3">
-                <div class="card text-center h-100">
-                    <div class="card-body">
-                        <h2 class="text-primary">{{ $stats['package_count'] ?? 0 }}</h2>
-                        <p class="text-muted">Dataset</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 mb-3">
-                <div class="card text-center h-100">
-                    <div class="card-body">
-                        <h2 class="text-success">{{ $stats['organization_count'] ?? 0 }}</h2>
-                        <p class="text-muted">Organisasi</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 mb-3">
-                <div class="card text-center h-100">
-                    <div class="card-body">
-                        <h2 class="text-info">{{ $stats['group_count'] ?? 0 }}</h2>
-                        <p class="text-muted">Grup</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 mb-3">
-                <div class="card text-center h-100">
-                    <div class="card-body">
-                        <h2 class="text-warning">{{ $stats['resource_count'] ?? 0 }}</h2>
-                        <p class="text-muted">Resource</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Search Form -->
-        <div class="row mb-5">
-            <div class="col-md-8 mx-auto">
-                <div class="hero-search position-relative">
-                    <form action="{{ route('ckan.datasets') }}" method="GET" class="search-form">
-                        <div class="input-group">
-                            <input type="text" name="q" class="form-control search-input" id="heroSearchInput"
-                                placeholder="Cari dataset, topik, atau instansi..." autocomplete="off"
-                                aria-label="Cari dataset" aria-describedby="searchButton">
-                            <button type="submit" class="btn btn-search" id="searchButton">
-                                <i class="fas fa-search"></i> Cari
-                            </button>
-                        </div>
-                    </form>
-
-                    <div class="autocomplete-dropdown" id="autocompleteDropdown" style="display: none;">
-                        <div class="autocomplete-header">
-                            <i class="fas fa-history"></i> Saran Pencarian
-                        </div>
-                        <div class="autocomplete-results" id="autocompleteResults">
-                        </div>
-                        <div class="autocomplete-footer">
-                            <a href="{{ route('ckan.datasets') }}" class="view-all-link">
-                                <i class="fas fa-th"></i> Lihat Semua Dataset
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Recent Packages -->
-        <div class="row">
-            <div class="col-12">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h2>Dataset Terbaru</h2>
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h2>Dataset Terbaru</h2>
-                        <div>
-                            <a href="{{ route('ckan.datasets') }}" class="btn btn-outline-primary btn-sm me-2">
-                                <i class="fas fa-table"></i> Lihat Semua dalam Tabel
-                            </a>
-                            <a href="{{ route('ckan.search') }}" class="btn btn-outline-secondary btn-sm">
-                                <i class="fas fa-search"></i> Cari
-                            </a>
-                        </div>
-                    </div>
-                    <a href="{{ route('ckan.search') }}" class="btn btn-outline-primary">Lihat Semua</a>
-                </div>
-            </div>
-
-            @forelse($recentPackages as $package)
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100 shadow-sm">
-                        <div class="card-body">
-                            <h5 class="card-title">
-                                <a href="{{ route('ckan.show', $package['id']) }}" class="text-decoration-none">
-                                    {{ $package['title'] ?? $package['name'] }}
+                            <div class="autocomplete-footer">
+                                <a href="{{ route('frontend.datasets') }}" class="view-all-link">
+                                    <i class="fas fa-th"></i> Lihat Semua Dataset
                                 </a>
-                            </h5>
-                            <p class="card-text text-muted">
-                                {{ Str::limit($package['notes'] ?? 'Tidak ada deskripsi', 150) }}
-                            </p>
-                            <div class="d-flex justify-content-between align-items-center mt-3">
-                                <small class="text-muted">
-                                    <i class="fas fa-building"></i>
-                                    {{ $package['organization']['title'] ?? 'Tanpa Organisasi' }}
-                                </small>
-                                <span class="badge bg-primary">
-                                    {{ $package['resources'] ? count($package['resources']) : 0 }} Resource
-                                </span>
                             </div>
                         </div>
-                        <div class="card-footer bg-white">
-                            <small class="text-muted">
-                                <i class="fas fa-clock"></i>
-                                {{ \Carbon\Carbon::parse($package['metadata_modified'])->diffForHumans() }}
-                            </small>
-                        </div>
-                    </div>
-                </div>
-            @empty
-                <div class="col-12">
-                    <div class="alert alert-info">
-                        Belum ada dataset. <a href="{{ route('ckan.create') }}">Tambah dataset pertama</a>
-                    </div>
-                </div>
-            @endforelse
-        </div>
 
-        <!-- Organizations -->
-        <div class="row mt-5">
-            <div class="col-12">
-                <h2 class="mb-4">Organisasi</h2>
+                    </div>
+                </div>
+                <div class="col-md-6 text-center">
+                    <img src="{{ asset('assets/images/data.png') }}" alt="Hero Image"
+                        class="img-fluid hero-image hero-image-animate hero-auto">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== VIDEO SECTION ===== -->
+    <div class="video-section">
+        <div class="container">
+            <div class="text-center mb-4">
+                <h2 class="section-title fade-up delay-1">Lebih Dekat Dengan Satu Data Murung Raya</h2>
             </div>
 
-            @forelse(array_slice($organizations, 0, 6) as $org)
-                <div class="col-md-2 mb-3">
-                    <div class="card text-center">
-                        <div class="card-body">
-                            <a href="{{ route('ckan.organization', $org['id']) }}" class="text-decoration-none">
-                                <h6 class="card-title">{{ Str::limit($org['title'] ?? $org['name'], 20) }}</h6>
-                                <small class="text-muted">{{ $org['package_count'] ?? 0 }} dataset</small>
-                            </a>
+            <div class="row gx-4 gy-0">
+                <!-- Video Item -->
+                <div class="col-md-4 fade-up delay-1">
+                    <div class="video-card">
+                        <div class="ratio ratio-16x9">
+                            <iframe src="https://www.youtube.com/embed/TDutYeYq9M4?si=5DZAoV28k96TDXRO" title="Video 1"
+                                allowfullscreen></iframe>
                         </div>
+                        <h6 class="video-title mt-2">Sejarah Singkat Kabupaten Murung Raya</h6>
                     </div>
                 </div>
-            @empty
-                <div class="col-12">
-                    <p class="text-muted">Belum ada organisasi</p>
+
+                <div class="col-md-4 fade-up delay-2">
+                    <div class="video-card">
+                        <div class="ratio ratio-16x9">
+                            <iframe src="https://www.youtube.com/embed/hLBh2AvRQ9Q?si=gALEZ8a8Q8uZw011" title="Video 2"
+                                allowfullscreen></iframe>
+                        </div>
+                        <h6 class="video-title mt-2">Bupati Heriyus Lantik 148 Pejabat Administrator, Pengawas dan
+                            Fungsional</h6>
+                    </div>
                 </div>
-            @endforelse
+
+                <div class="col-md-4 fade-up delay-3">
+                    <div class="video-card">
+                        <div class="ratio ratio-16x9">
+                            <iframe src="https://www.youtube.com/embed/E_5ICuKFkEk?si=bTmlNKfAZiTfut1Q" title="Video 3"
+                                allowfullscreen></iframe>
+                        </div>
+                        <h6 class="video-title mt-2">Pemkab Mura Gelar Buka Puasa Bersama, Sekaligus Syukuran 1 Tahun
+                            Pemerintahan HEBAT</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== INFOGRAFIS SECTION ===== -->
+    <div class="infografis-section">
+        <div class="container">
+            <div class="text-center mb-4">
+                <h2 class="section-title fade-up delay-1">Infografis Satu Data Murung Raya</h2>
+            </div>
+
+            <div class="row gx-4 gy-0">
+                <!-- Item -->
+                <div class="col-md-3 fade-up delay-1">
+                    <a href="{{ route('frontend.infografis') }}" class="infografis-link">
+                        <div class="infografis-card">
+                            <div class="infografis-media">
+                                <img src="{{ asset('assets/images/infografis5.png') }}" class="infografis-img"
+                                    alt="">
+                                <p class="infografis-desc mt-2">Infografis adalah representasi visual dari data atau
+                                    informasi
+                                    kompleks
+                                    yang disajikan dalam bentuk grafis (gambar, ikon, bagan, dan teks minimal) agar mudah
+                                    dipahami,
+                                    menarik, dan cepat dimengerti sekilas. Infografis mengubah angka kaku dan fakta rumit
+                                    menjadi
+                                    cerita visual yang memikat.</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-md-3 fade-up delay-2">
+                    <a href="{{ route('frontend.infografis') }}" class="infografis-link">
+                        <div class="infografis-card">
+                            <div class="infografis-media">
+                                <img src="{{ asset('assets/images/infografis5.png') }}" class="infografis-img"
+                                    alt="">
+                                <p class="infografis-desc mt-2">Infografis adalah representasi visual dari data atau
+                                    informasi
+                                    kompleks
+                                    yang disajikan dalam bentuk grafis (gambar, ikon, bagan, dan teks minimal) agar mudah
+                                    dipahami,
+                                    menarik, dan cepat dimengerti sekilas. Infografis mengubah angka kaku dan fakta rumit
+                                    menjadi
+                                    cerita visual yang memikat.</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-md-3 fade-up delay-3">
+                    <a href="{{ route('frontend.infografis') }}" class="infografis-link">
+                        <div class="infografis-card">
+                            <div class="infografis-media">
+                                <img src="{{ asset('assets/images/infografis5.png') }}" class="infografis-img"
+                                    alt="">
+                                <p class="infografis-desc mt-2">Infografis adalah representasi visual dari data atau
+                                    informasi
+                                    kompleks
+                                    yang disajikan dalam bentuk grafis (gambar, ikon, bagan, dan teks minimal) agar mudah
+                                    dipahami,
+                                    menarik, dan cepat dimengerti sekilas. Infografis mengubah angka kaku dan fakta rumit
+                                    menjadi
+                                    cerita visual yang memikat.</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-md-3 fade-up delay-4">
+                    <a href="{{ route('frontend.infografis') }}" class="infografis-link">
+                        <div class="infografis-card">
+                            <div class="infografis-media">
+                                <img src="{{ asset('assets/images/infografis5.png') }}" class="infografis-img"
+                                    alt="">
+                                <p class="infografis-desc mt-2">Infografis adalah representasi visual dari data atau
+                                    informasi
+                                    kompleks
+                                    yang disajikan dalam bentuk grafis (gambar, ikon, bagan, dan teks minimal) agar mudah
+                                    dipahami,
+                                    menarik, dan cepat dimengerti sekilas. Infografis mengubah angka kaku dan fakta rumit
+                                    menjadi
+                                    cerita visual yang memikat.</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 @endsection
@@ -610,7 +825,7 @@
 
                 suggestions.forEach((item, index) => {
                     html += `
-                                                                                                    <a href="{{ route('ckan.datasets') }}?q=${encodeURIComponent(item.title)}" 
+                                                                                                    <a href="{{ route('frontend.datasets') }}?q=${encodeURIComponent(item.title)}" 
                                                                                                        class="autocomplete-item"
                                                                                                        data-index="${index}">
                                                                                                         <div class="autocomplete-item-icon">
@@ -657,7 +872,7 @@
         }
 
         // Initialize on page load
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             if (document.getElementById('heroSearchInput')) {
                 window.autocompleteSearch = new AutocompleteSearch({
                     inputId: 'heroSearchInput',
@@ -666,9 +881,39 @@
                     apiUrl: "{{ route('ckan.api.autocomplete') }}",
                     delay: 300,
                     minChars: 2,
-                    maxSuggestions: 10,  // ✅ Only show 3 suggestions
+                    maxSuggestions: 3, // ✅ Only show 3 suggestions
                 });
             }
+        });
+
+        // ===== SCROLL ANIMATION =====
+        document.addEventListener("DOMContentLoaded", function() {
+
+            // ===== HERO: langsung tampil TANPA observer =====
+            const heroElements = document.querySelectorAll(".hero-auto");
+            heroElements.forEach((el, index) => {
+                setTimeout(() => {
+                    el.classList.add("show");
+                }, index * 150); // biar ada delay halus
+            });
+
+            // ===== NON-HERO: hanya muncul saat scroll =====
+            const scrollElements = document.querySelectorAll(
+                ".fade-up:not(.hero-auto), .hero-image-animate:not(.hero-auto)"
+            );
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("show");
+                    }
+                });
+            }, {
+                threshold: 0.2,
+                rootMargin: "0px 0px -100px 0px"
+            });
+
+            scrollElements.forEach(el => observer.observe(el));
         });
     </script>
 @endpush
