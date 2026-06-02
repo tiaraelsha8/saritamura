@@ -11,11 +11,18 @@ use App\Http\Controllers\auth\ResetPasswordController;
 use App\Http\Controllers\backend\DashboardController;
 use App\Http\Controllers\backend\UserController;
 use App\Http\Controllers\backend\VideoController;
+use App\Http\Controllers\backend\GrafikController;
+use App\Http\Controllers\backend\DokumenController;
+use App\Http\Controllers\backend\ProfileController;
 
 use App\Http\Controllers\CkanController;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::get('/login-ckan', function () {
+    return redirect()->away('https://dev-egovt.murungrayakab.go.id/user/login');
 });
 
 // ==================== LOGIN ====================
@@ -36,26 +43,42 @@ Route::middleware('guest')->group(function () {
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // ==================== BACKEND ====================
- Route::get('/dashboard', [DashboardController::class, 'index'])->name('backend.dashboard');
 
- Route::resource('/user', UserController::class);
+Route::prefix('admin')->middleware('auth')->group(function () {
 
- Route::resource('/video', VideoController::class);
+    Route::get('/dashboard', [DashboardController::class, 'home'])->name('backend.dashboard');
 
+    Route::resource('/dokumen', DokumenController::class);
+    Route::get('/dokumen/download/{id}', [DokumenController::class, 'download'])->name('dokumen.download');
 
-  // Hanya superadmin yang boleh kelola
-    // Route::middleware(['role:superadmin'])->group(function () {
+    Route::get('/profile/edit/{id}', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile/update/{id}', [ProfileController::class, 'update'])->name('profile.update');
 
-    //     Route::resource('/user', UserController::class);
-        
-    // });
+    // Hanya superadmin yang boleh kelola
+    Route::middleware(['role:superadmin'])->group(function () {
+
+        Route::resource('/user', UserController::class);
+
+        Route::resource('/video', VideoController::class);
+
+        Route::resource('/grafik', GrafikController::class);
+        Route::post('grafik-upload', [GrafikController::class, 'storeImage'])->name('grafik.upload');
+
+        Route::resource('/dokumen', DokumenController::class);
+        Route::get('/dokumen/download/{id}', [DokumenController::class, 'download'])->name('dokumen.download');
+    });
+
+});
 
 
 
 Route::prefix('ckan')->controller(CkanController::class)->group(function () {
     // Main pages
-    Route::get('/', 'index')->name('frontend.index');
+    Route::get('/', 'home')->name('frontend.home');
     Route::get('/search', 'search')->name('frontend.search');
+    Route::get('/datasets', 'datasets')->name('frontend.datasets');
+    Route::get('/dataset/{id}', 'show')->name('frontend.show');
+    Route::get('/infografis', 'infografis')->name('frontend.infografis');
 
     // Datasets CRUD
     Route::get('/create', 'create')->name('frontend.create');
@@ -80,12 +103,14 @@ Route::prefix('ckan')->controller(CkanController::class)->group(function () {
 
     Route::post('/dataset/{id}/track-view', 'trackView')->name('frontend.track-view');
 
-    Route::get('/dataset/{datasetId}/resource/{resourceId}/preview', 'previewData')
-        ->name('frontend.resource.preview');
+    Route::get('/dataset/{datasetId}/resource/{resourceId}/preview', 'previewData')->name('frontend.resource.preview');
 
     // ✅ API endpoint untuk AJAX load data
-    Route::get('/api/dataset/{datasetId}/resource/{resourceId}/data', 'apiGetData')
-        ->name('frontend.resource.api');
+    Route::get('/api/dataset/{datasetId}/resource/{resourceId}/data', 'apiGetData')->name('ckan.resource.api');
+
+    Route::get('/api/search', 'apiSearch')->name('ckan.api.search');
+
+    Route::get('/api/autocomplete', 'apiAutocomplete')->name('ckan.api.autocomplete');
 });
 
 /*
@@ -93,10 +118,14 @@ Route::prefix('ckan')->controller(CkanController::class)->group(function () {
 | API Routes (for external access)
 |--------------------------------------------------------------------------
 */
+
 Route::prefix('api/ckan')->group(function () {
     Route::get('/health', [CkanController::class, 'health']);
     Route::get('/datasets', [CkanController::class, 'search']);
     Route::get('/datasets/{id}', [CkanController::class, 'show']);
     Route::get('/organizations', [CkanController::class, 'organizations']);
     Route::get('/organizations/{id}', [CkanController::class, 'showOrganization']);
+    Route::get('/sipd-walidata', function () {
+    return view('frontend.sipd-walidata');
+})->name('frontend.sipd-walidata');
 });

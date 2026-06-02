@@ -8,7 +8,7 @@
 
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
-        <a href="" class="btn btn-outline-light btn-sm mr-2">
+        <a href="{{ route('profile.edit', Auth::user()->id) }}" class="btn btn-outline-light btn-sm mr-2">
             <i class="fas fa-user mr-2"></i> Profile
         </a>
         <form id="auto-logout-form" method="POST" action="{{ route('logout') }}">

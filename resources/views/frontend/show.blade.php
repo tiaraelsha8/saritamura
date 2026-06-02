@@ -495,7 +495,7 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
-                        <a href="{{ route('frontend.index') }}"><i class="fas fa-home"></i> Beranda</a>
+                        <a href="{{ route('frontend.home') }}"><i class="fas fa-home"></i> Beranda</a>
                     </li>
                     <li class="breadcrumb-item">
                         <a href="{{ route('frontend.datasets') }}">Dataset</a>

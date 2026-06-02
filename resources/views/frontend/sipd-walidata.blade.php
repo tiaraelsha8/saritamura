@@ -1,0 +1,496 @@
+@extends('layouts.app')
+
+@section('title', 'SIPD Walidata')
+
+@section('content')
+
+    <header class="page-header">
+        <div class="container">
+            <h1 class="section-title text-white">
+                <i class="fas fa-folder-open me-2"></i>
+                Dokumen SIPD Walidata
+            </h1>
+
+            <p class="subtitle mb-0">
+                Pusat dokumen dan pengelolaan data SIPD Walidata Kabupaten Murung Raya
+            </p>
+        </div>
+    </header>
+
+    <div class="container py-5">
+
+        <div class="document-wrapper">
+
+            {{-- Header --}}
+            <div class="top-area">
+
+                <div>
+                    <h4 class="mb-1">
+                        Daftar Dokumen
+                    </h4>
+
+                    <small class="text-muted">
+                        Total 3 dokumen tersedia
+                    </small>
+                </div>
+
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+
+                    <input type="text" placeholder="Cari dokumen...">
+                </div>
+
+            </div>
+
+
+            <div class="table-responsive">
+
+                <table class="table document-table align-middle">
+
+                    <thead>
+                        <tr>
+                            <th width="60">No</th>
+                            <th>Dokumen</th>
+                            <th width="150">Kategori</th>
+                            <th width="150">Tanggal</th>
+                            <th width="120">Status</th>
+                            <th width="150">Aksi</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+
+                            <td>1</td>
+
+                            <td>
+
+                                <div class="doc-info">
+
+                                    <div class="doc-icon">
+                                        <i class="fas fa-file-pdf"></i>
+                                    </div>
+
+                                    <div>
+
+                                        <div class="doc-title">
+                                            Pedoman Walidata 2025
+                                        </div>
+
+                                        <small class="text-muted">
+                                            PDF • 2.3 MB
+                                        </small>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+                            <td>
+                                <span class="badge-category">
+                                    Pedoman
+                                </span>
+                            </td>
+
+                            <td>
+                                12 Jan 2025
+                            </td>
+
+                            <td>
+                                <span class="badge-status">
+                                    Aktif
+                                </span>
+                            </td>
+
+                            <td>
+
+                                <a href="#" class="btn-download">
+
+                                    <i class="fas fa-download"></i>
+                                    Download
+
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>2</td>
+
+                            <td>
+
+                                <div class="doc-info">
+
+                                    <div class="doc-icon">
+                                        <i class="fas fa-file-pdf"></i>
+                                    </div>
+
+                                    <div>
+
+                                        <div class="doc-title">
+                                            Laporan Statistik Daerah
+                                        </div>
+
+                                        <small class="text-muted">
+                                            PDF • 1.8 MB
+                                        </small>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+                            <td>
+                                <span class="badge-category">
+                                    Laporan
+                                </span>
+                            </td>
+
+                            <td>
+                                20 Feb 2025
+                            </td>
+
+                            <td>
+                                <span class="badge-status">
+                                    Aktif
+                                </span>
+                            </td>
+
+                            <td>
+
+                                <a href="#" class="btn-download">
+
+                                    <i class="fas fa-download"></i>
+                                    Download
+
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>3</td>
+
+                            <td>
+
+                                <div class="doc-info">
+
+                                    <div class="doc-icon">
+                                        <i class="fas fa-file-pdf"></i>
+                                    </div>
+
+                                    <div>
+
+                                        <div class="doc-title">
+                                            Standar Metadata SIPD
+                                        </div>
+
+                                        <small class="text-muted">
+                                            PDF • 3.1 MB
+                                        </small>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+                            <td>
+                                <span class="badge-category">
+                                    Regulasi
+                                </span>
+                            </td>
+
+                            <td>
+                                10 Mar 2025
+                            </td>
+
+                            <td>
+                                <span class="badge-status">
+                                    Aktif
+                                </span>
+                            </td>
+
+                            <td>
+
+                                <a href="#" class="btn-download">
+
+                                    <i class="fas fa-download"></i>
+                                    Download
+
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <style>
+        .page-header {
+            background:
+                repeating-linear-gradient(120deg,
+                    rgba(255, 255, 255, .06) 0px,
+                    rgba(255, 255, 255, .06) 1px,
+                    transparent 1px,
+                    transparent 35px),
+
+                repeating-linear-gradient(-120deg,
+                    rgba(255, 255, 255, .04) 0px,
+                    rgba(255, 255, 255, .04) 1px,
+                    transparent 1px,
+                    transparent 55px),
+
+                linear-gradient(120deg,
+                    transparent 0%,
+                    rgba(255, 255, 255, .08) 30%,
+                    transparent 60%),
+
+                linear-gradient(135deg, #1E3A8A, #2563EB);
+
+            color: white;
+            padding: 2.5rem 0;
+            overflow: hidden;
+
+            animation: heroFade .7s ease;
+        }
+
+        @keyframes heroFade {
+
+            from {
+                opacity: .7;
+                transform: scale(1.02);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .section-title {
+            font-weight: 700;
+        }
+
+        .subtitle {
+            opacity: .9;
+        }
+
+        .document-wrapper {
+            background: #fff;
+            border-radius: 20px;
+            padding: 30px;
+            overflow: hidden;
+
+            box-shadow:
+                0 10px 30px rgba(0, 0, 0, .05);
+        }
+
+        .top-area {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 30px;
+            gap: 20px;
+        }
+
+        .search-box {
+            position: relative;
+            width: 320px;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94A3B8;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 15px 12px 42px;
+
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+
+            background: white;
+            transition: .3s;
+        }
+
+        .search-box input:focus {
+            outline: none;
+
+            border-color: #2563EB;
+
+            box-shadow:
+                0 0 0 4px rgba(37, 99, 235, .1);
+        }
+
+        .document-table {
+            margin: 0;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .document-table thead th {
+
+            background: #F8FAFC;
+
+            color: #64748B;
+
+            font-size: .9rem;
+            font-weight: 600;
+
+            padding: 18px;
+
+            border: none;
+
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        .document-table thead th:first-child {
+            border-top-left-radius: 12px;
+        }
+
+        .document-table thead th:last-child {
+            border-top-right-radius: 12px;
+        }
+
+        .document-table td {
+            padding: 18px;
+            border: none;
+            vertical-align: middle;
+        }
+
+        .document-table tbody tr {
+            border-bottom: 1px solid #EEF2F7;
+            transition: .25s;
+        }
+
+        .document-table tbody tr:nth-child(even) {
+            background: #FAFBFC;
+        }
+
+        .document-table tbody tr:hover {
+            background: #F1F5F9;
+        }
+
+        .doc-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .doc-icon {
+            width: 50px;
+            height: 50px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 12px;
+
+            background: #FEE2E2;
+            color: #DC2626;
+
+            font-size: 20px;
+        }
+
+        .doc-title {
+            font-weight: 600;
+            color: #1E293B;
+        }
+
+        .badge-category {
+            background: #DBEAFE;
+            color: #1D4ED8;
+
+            padding: 6px 14px;
+
+            border-radius: 30px;
+
+            font-size: .75rem;
+        }
+
+        .badge-status {
+            background: #DCFCE7;
+            color: #166534;
+
+            padding: 6px 14px;
+
+            border-radius: 30px;
+
+            font-size: .75rem;
+        }
+
+        .btn-download {
+
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+
+            padding: 9px 15px;
+
+            border-radius: 10px;
+
+            background:
+                linear-gradient(135deg,
+                    #1E3A8A,
+                    #2563EB);
+
+            border: 1px solid rgba(255, 255, 255, .15);
+
+            color: white;
+            text-decoration: none;
+
+            transition: .3s;
+        }
+
+        .btn-download:hover {
+
+            transform: translateY(-2px);
+
+            color: white;
+
+            box-shadow:
+                0 8px 20px rgba(37, 99, 235, .3);
+        }
+
+        @media(max-width:768px) {
+
+            .top-area {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+
+        }
+    </style>
+
+@endsection

@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'Daftar Dataset - Satu Data Kalteng')
+@section('title', 'Daftar Dataset - Satu Data Murung Raya')
 
 @push('styles')
     <style>
-        /* ===== THEME COLORS (Satu Data Kalteng Style) ===== */
+        /* ===== THEME COLORS ===== */
         :root {
             --primary-color: #0d6efd;
             --primary-dark: #0a58ca;
@@ -18,27 +18,76 @@
             --text-secondary: #6c757d;
         }
 
-        body {
-            background: var(--light-bg);
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-        }
-
         /* ===== PAGE HEADER ===== */
         .page-header {
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            background:
+                repeating-linear-gradient(120deg,
+                    rgba(255, 255, 255, 0.06) 0px,
+                    rgba(255, 255, 255, 0.06) 1px,
+                    transparent 1px,
+                    transparent 35px),
+
+                repeating-linear-gradient(-120deg,
+                    rgba(255, 255, 255, 0.04) 0px,
+                    rgba(255, 255, 255, 0.04) 1px,
+                    transparent 1px,
+                    transparent 55px),
+
+                linear-gradient(120deg,
+                    transparent 0%,
+                    rgba(255, 255, 255, 0.08) 30%,
+                    transparent 60%),
+
+                linear-gradient(135deg, #1E3A8A, #2563EB);
             color: white;
             padding: 2rem 0;
             margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .page-header.show {
+            animation: fadeHero 0.8s ease;
+        }
+
+        @keyframes fadeHero {
+            from {
+                opacity: 0.7;
+                transform: scale(1.02);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
         .page-header h1 {
             font-weight: 700;
             margin-bottom: 0.5rem;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
 
         .page-header .subtitle {
             opacity: 0.9;
             font-size: 1.1rem;
+        }
+
+        .page-header h1,
+        .page-header .subtitle {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease;
+        }
+
+        .page-header.show h1 {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .page-header.show .subtitle {
+            opacity: 1;
+            transform: translateY(0);
+            transition-delay: 0.15s;
         }
 
         .search-box {
@@ -62,6 +111,39 @@
         .search-box .btn {
             padding: 0.75rem 1.5rem;
             font-weight: 500;
+        }
+
+        .btn-search {
+            background: linear-gradient(135deg, #1E3A8A, #2563EB);
+            color: white;
+            border: none;
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .btn-search:hover {
+            transform: translateY(-2px);
+            color: white;
+        }
+
+        .search-box {
+            opacity: 0;
+            transform: translateY(30px) scale(0.95);
+            transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .search-box.show {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .search-box:focus-within {
+            box-shadow: 0 6px 20px rgba(13, 110, 253, 0.25);
+            transform: translateY(-2px) scale(1.01);
         }
 
         /* ===== LAYOUT ===== */
@@ -90,6 +172,14 @@
         .sidebar {
             position: sticky;
             top: 20px;
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .sidebar.show {
+            opacity: 1;
+            transform: translateX(0);
         }
 
         .filter-card {
@@ -98,6 +188,14 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
             margin-bottom: 1rem;
             overflow: hidden;
+            opacity: 0;
+            transform: translateY(20px) scale(0.96);
+            transition: all 0.5s ease;
+        }
+
+        .filter-card.show {
+            opacity: 1;
+            transform: translateY(0) scale(1);
         }
 
         .filter-card .card-header {
@@ -187,17 +285,6 @@
             padding: 0.4rem 2rem 0.4rem 0.75rem;
         }
 
-        .view-toggle .btn {
-            padding: 0.4rem 0.75rem;
-            font-size: 0.9rem;
-        }
-
-        .view-toggle .btn.active {
-            background: var(--primary-color);
-            color: white;
-            border-color: var(--primary-color);
-        }
-
         .dataset-card {
             background: white;
             border-radius: 8px;
@@ -206,6 +293,18 @@
             margin-bottom: 1rem;
             transition: transform 0.2s, box-shadow 0.2s;
             border-left: 4px solid transparent;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .dataset-card:hover {
@@ -240,6 +339,17 @@
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
+        }
+
+        .dataset-card {
+            opacity: 0;
+            transform: translateY(25px) scale(0.95);
+            transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .dataset-card.show {
+            opacity: 1;
+            transform: translateY(0) scale(1);
         }
 
         .dataset-meta {
@@ -342,6 +452,7 @@
             border-color: var(--border-color);
             padding: 0.5rem 0.85rem;
             font-size: 0.9rem;
+            cursor: pointer;
         }
 
         .pagination .page-item.active .page-link {
@@ -371,44 +482,49 @@
             margin-top: 1rem;
         }
 
-        /* ===== LOADING STATE ===== */
-        .loading-card {
-            background: white;
-            border-radius: 8px;
-            padding: 1.25rem;
-            margin-bottom: 1rem;
-            animation: pulse 1.5s infinite;
+        /* ===== LOADING ===== */
+        .search-loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
         }
 
-        @keyframes pulse {
+        .search-loading .spinner-border {
+            width: 2rem;
+            height: 2rem;
+            color: var(--primary-color);
+        }
 
-            0%,
-            100% {
-                opacity: 1;
+        /* ===== SEARCH INDICATOR ===== */
+        #searchIndicator {
+            font-size: 0.85rem;
+            color: var(--light-bg);
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        #searchIndicator.show {
+            display: block;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .datasets-header {
+                flex-direction: column;
+                align-items: stretch;
             }
 
-            50% {
-                opacity: 0.6;
+            .view-controls {
+                justify-content: space-between;
             }
-        }
 
-        .loading-line {
-            height: 1rem;
-            background: #e9ecef;
-            border-radius: 4px;
-            margin-bottom: 0.5rem;
-        }
+            .dataset-card {
+                padding: 1rem;
+            }
 
-        .loading-line.short {
-            width: 60%;
-        }
-
-        .loading-line.medium {
-            width: 80%;
-        }
-
-        .loading-line.long {
-            width: 100%;
+            .dataset-meta {
+                gap: 0.5rem 1rem;
+            }
         }
     </style>
 @endpush
@@ -420,19 +536,24 @@
             <div class="row align-items-center">
                 <div class="col-lg-8">
                     <h1><i class="fas fa-database"></i> Dataset</h1>
-                    <p class="subtitle mb-0">Temukan dan eksplorasi data terbuka dari Pemerintah Provinsi Kalimantan Tengah
-                    </p>
+                    <p class="subtitle mb-0">Temukan dan eksplorasi data terbuka dari Pemerintah Kabupaten Murung Raya</p>
                 </div>
-                <div class="col-lg-4">
-                    <form action="{{ route('frontend.datasets') }}" method="GET" class="search-box">
+                <div class="col-lg-4 position-relative">
+                    <form action="{{ route('frontend.datasets') }}" method="GET" class="search-box" role="search"
+                        id="mainSearchForm">
                         <div class="input-group">
-                            <input type="text" name="q" class="form-control" value="{{ $filters['q'] ?? '' }}"
-                                placeholder="Cari dataset, topik, atau instansi...">
-                            <button type="submit" class="btn btn-primary">
+                            <input type="text" name="q" class="form-control" id="autoSearchInput"
+                                value="{{ $filters['q'] ?? '' }}" placeholder="Cari dataset, topik, atau instansi..."
+                                autocomplete="off" aria-label="Cari dataset">
+                            <button type="submit" class="btn btn-search" title="Cari">
                                 <i class="fas fa-search"></i>
                             </button>
                         </div>
                     </form>
+                    <!-- Search Indicator -->
+                    <div id="searchIndicator">
+                        <i class="fas fa-spinner fa-spin"></i> Mencari...
+                    </div>
                 </div>
             </div>
         </div>
@@ -450,7 +571,6 @@
         <div class="datasets-container">
             <!-- Sidebar Filters -->
             <form method="GET" action="{{ route('frontend.datasets') }}" id="filterForm">
-                <!-- Sidebar Filters -->
                 <aside class="sidebar">
                     <!-- Organization Filter -->
                     <div class="filter-card">
@@ -463,8 +583,8 @@
                                 @foreach ($organizations as $org)
                                     <label class="filter-item">
                                         <input type="checkbox" name="organizations[]" value="{{ $org['name'] }}"
-                                            id="org-{{ $org['id'] }}"
-                                            {{ in_array($org['id'], $filters['organizations'] ?? []) ? 'checked' : '' }}
+                                            id="org-{{ $org['name'] }}"
+                                            {{ in_array($org['name'], $filters['organizations'] ?? []) ? 'checked' : '' }}
                                             onchange="applyFilter()">
                                         <span class="text-truncate" style="max-width: 150px;">
                                             {{ $org['title'] ?? $org['name'] }}
@@ -507,10 +627,11 @@
                         </div>
                     </div>
 
-                    <!-- Hidden input untuk preserve other filters -->
-                    <input type="hidden" name="q" value="{{ $filters['q'] ?? '' }}">
-                    <input type="hidden" name="sort" value="{{ $filters['sort'] ?? '' }}">
-                    <input type="hidden" name="per_page" value="{{ $filters['per_page'] ?? 10 }}">
+                    <!-- Hidden inputs untuk preserve filters -->
+                    <input type="hidden" name="q" id="filterQuery" value="{{ $filters['q'] ?? '' }}">
+                    <input type="hidden" name="sort" id="filterSort" value="{{ $filters['sort'] ?? '' }}">
+                    <input type="hidden" name="per_page" id="filterPerPage" value="{{ $filters['per_page'] ?? 10 }}">
+                    <input type="hidden" name="page" id="filterPage" value="1">
                 </aside>
             </form>
 
@@ -519,14 +640,14 @@
                 <!-- Header Controls -->
                 <div class="datasets-header">
                     <div class="datasets-count">
-                        <strong>{{ number_format($pagination['total'] ?? 0) }}</strong> dataset ditemukan
+                        <strong id="resultsCount">{{ number_format($pagination['total'] ?? 0) }}</strong> dataset ditemukan
                         @if ($filters['q'])
                             <span class="text-muted">untuk "<strong>{{ $filters['q'] }}</strong>"</span>
                         @endif
                     </div>
                     <div class="view-controls">
-                        <select name="sort" class="form-select form-select-sm" style="width: auto;"
-                            onchange="this.form?.submit()">
+                        <select name="sort" id="sortSelect" class="form-select form-select-sm" style="width: auto;"
+                            onchange="applyFilter()">
                             <option value="metadata_modified desc"
                                 {{ ($filters['sort'] ?? '') == 'metadata_modified desc' ? 'selected' : '' }}>
                                 Terbaru
@@ -544,8 +665,8 @@
                                 Paling Dilihat
                             </option>
                         </select>
-                        <select name="per_page" class="form-select form-select-sm" style="width: auto;"
-                            onchange="this.form?.submit()">
+                        <select name="per_page" id="perPageSelect" class="form-select form-select-sm"
+                            style="width: auto;" onchange="applyFilter()">
                             <option value="10" {{ ($filters['per_page'] ?? 10) == 10 ? 'selected' : '' }}>10/hal
                             </option>
                             <option value="25" {{ ($filters['per_page'] ?? 10) == 25 ? 'selected' : '' }}>25/hal
@@ -556,117 +677,107 @@
                     </div>
                 </div>
 
-                <!-- Dataset Cards -->
-                @forelse($datasets as $dataset)
-                    <article class="dataset-card">
-                        <!-- Title -->
-                        <h3 class="dataset-title">
-                            <a href="{{ route('frontend.show', $dataset['id']) }}">
-                                {{ $dataset['title'] ?? $dataset['name'] }}
-                            </a>
-                        </h3>
-
-                        <!-- Description -->
-                        <p class="dataset-description">
-                            {{ $dataset['notes'] ?? 'Tidak ada deskripsi tersedia.' }}
-                        </p>
-
-                        <!-- Tags -->
-                        @if (!empty($dataset['tags']))
-                            <div class="dataset-tags">
-                                @foreach (array_slice($dataset['tags'], 0, 4) as $tag)
-                                    <a href="{{ route('frontend.datasets', array_merge($filters, ['q' => is_array($tag) ? $tag['name'] ?? $tag : $tag])) }}"
-                                        class="dataset-tag">
-                                        {{ is_array($tag) ? $tag['name'] ?? $tag : $tag }}
-                                    </a>
-                                @endforeach
-                                @if (count($dataset['tags']) > 4)
-                                    <span class="dataset-tag" style="background: #dee2e6; color: #495057;">
-                                        +{{ count($dataset['tags']) - 4 }}
-                                    </span>
-                                @endif
-                            </div>
-                        @endif
-
-                        <!-- Metadata -->
-                        <div class="dataset-meta">
-                            <div class="dataset-meta-item">
-                                <i class="fas fa-calendar-alt"></i>
-                                <span>Updated:
-                                    {{ \Carbon\Carbon::parse($dataset['metadata_modified'])->format('d M Y') }}</span>
-                            </div>
-                            <div class="dataset-meta-item">
-                                <i class="fas fa-file"></i>
-                                <span>{{ count($dataset['resources'] ?? []) }} resource</span>
-                            </div>
-                            <div class="dataset-meta-item">
-                                <i class="fas fa-eye"></i>
-                                <span>{{ $dataset['metadata_views'] ?? 0 }} views</span>
-                            </div>
-                            @if ($dataset['license_id'])
-                                <div class="dataset-meta-item">
-                                    <i class="fas fa-certificate"></i>
-                                    <span
-                                        class="badge badge-license {{ $dataset['private'] ? 'badge-restricted' : 'badge-open' }}">
-                                        {{ $dataset['license_title'] ?? $dataset['license_id'] }}
-                                    </span>
+                <!-- ✅ DATASET CARDS CONTAINER (untuk auto-search) -->
+                <div id="datasetsResults">
+                    @forelse($datasets as $dataset)
+                        <article class="dataset-card">
+                            <h3 class="dataset-title">
+                                <a href="{{ route('frontend.show', $dataset['id']) }}">
+                                    {{ $dataset['title'] ?? $dataset['name'] }}
+                                </a>
+                            </h3>
+                            <p class="dataset-description">
+                                {{ $dataset['notes'] ?? 'Tidak ada deskripsi tersedia.' }}
+                            </p>
+                            @if (!empty($dataset['tags']))
+                                <div class="dataset-tags">
+                                    @foreach (array_slice($dataset['tags'], 0, 4) as $tag)
+                                        <a href="{{ route('frontend.datasets', array_merge($filters, ['q' => is_array($tag) ? $tag['name'] ?? $tag : $tag])) }}"
+                                            class="dataset-tag">
+                                            {{ is_array($tag) ? $tag['name'] ?? $tag : $tag }}
+                                        </a>
+                                    @endforeach
+                                    @if (count($dataset['tags']) > 4)
+                                        <span class="dataset-tag" style="background: #dee2e6; color: #495057;">
+                                            +{{ count($dataset['tags']) - 4 }}
+                                        </span>
+                                    @endif
                                 </div>
                             @endif
-                        </div>
-
-                        <!-- Footer -->
-                        <div class="dataset-footer">
-                            <div class="dataset-org">
-                                @if ($dataset['organization'])
-                                    @if ($dataset['organization']['image_url'] ?? false)
-                                        <img src="{{ $dataset['organization']['image_url'] }}" alt=""
-                                            onerror="this.style.display='none'">
-                                    @endif
-                                    <span>
-                                        {{ $dataset['organization']['title'] ?? $dataset['organization']['name'] }}
-                                    </span>
-                                @else
-                                    <i class="fas fa-building"></i> Tanpa organisasi
+                            <div class="dataset-meta">
+                                <div class="dataset-meta-item">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <span>Updated:
+                                        {{ \Carbon\Carbon::parse($dataset['metadata_modified'])->format('d M Y') }}</span>
+                                </div>
+                                <div class="dataset-meta-item">
+                                    <i class="fas fa-file"></i>
+                                    <span>{{ count($dataset['resources'] ?? []) }} resource</span>
+                                </div>
+                                <div class="dataset-meta-item">
+                                    <i class="fas fa-eye"></i>
+                                    <span>{{ $dataset['metadata_views'] ?? 0 }} views</span>
+                                </div>
+                                @if ($dataset['license_id'])
+                                    <div class="dataset-meta-item">
+                                        <i class="fas fa-certificate"></i>
+                                        <span
+                                            class="badge badge-license {{ $dataset['private'] ? 'badge-restricted' : 'badge-open' }}">
+                                            {{ $dataset['license_title'] ?? $dataset['license_id'] }}
+                                        </span>
+                                    </div>
                                 @endif
                             </div>
-                            <div class="dataset-actions">
-                                <a href="{{ route('frontend.show', $dataset['id']) }}"
-                                    class="btn btn-outline-primary btn-sm">
-                                    <i class="fas fa-eye"></i> Lihat Detail
+                            <div class="dataset-footer">
+                                <div class="dataset-org">
+                                    @if ($dataset['organization'])
+                                        @if ($dataset['organization']['image_url'] ?? false)
+                                            <img src="{{ $dataset['organization']['image_url'] }}" alt=""
+                                                onerror="this.style.display='none'">
+                                        @endif
+                                        <span>{{ $dataset['organization']['title'] ?? $dataset['organization']['name'] }}</span>
+                                    @else
+                                        <i class="fas fa-building"></i> Tanpa organisasi
+                                    @endif
+                                </div>
+                                <div class="dataset-actions">
+                                    <a href="{{ route('frontend.show', $dataset['id']) }}"
+                                        class="btn btn-outline-primary btn-sm">
+                                        <i class="fas fa-eye"></i> Lihat Detail
+                                    </a>
+                                </div>
+                            </div>
+                        </article>
+                    @empty
+                        <div class="filter-card">
+                            <div class="empty-state">
+                                <i class="fas fa-search"></i>
+                                <h5>Tidak ada dataset ditemukan</h5>
+                                <p class="mb-3">Coba ubah kata kunci pencarian atau hapus filter untuk melihat hasil
+                                    lebih banyak.</p>
+                                <a href="{{ route('frontend.datasets') }}" class="btn btn-primary">
+                                    <i class="fas fa-undo"></i> Reset Pencarian
                                 </a>
+                                @if (auth()->check())
+                                    <a href="{{ route('frontend.create') }}" class="btn btn-outline-primary ms-2">
+                                        <i class="fas fa-plus"></i> Tambah Dataset
+                                    </a>
+                                @endif
                             </div>
                         </div>
-                    </article>
-                @empty
-                    <!-- Empty State -->
-                    <div class="filter-card">
-                        <div class="empty-state">
-                            <i class="fas fa-search"></i>
-                            <h5>Tidak ada dataset ditemukan</h5>
-                            <p class="mb-3">Coba ubah kata kunci pencarian atau hapus filter untuk melihat hasil lebih
-                                banyak.</p>
-                            <a href="{{ route('frontend.datasets') }}" class="btn btn-primary">
-                                <i class="fas fa-undo"></i> Reset Pencarian
-                            </a>
-                            @if (auth()->check())
-                                <a href="{{ route('frontend.create') }}" class="btn btn-outline-primary ms-2">
-                                    <i class="fas fa-plus"></i> Tambah Dataset
-                                </a>
-                            @endif
-                        </div>
-                    </div>
-                @endforelse
+                    @endforelse
+                </div>
 
-                <!-- Pagination -->
+                <!-- ✅ PAGINATION CONTAINER (untuk auto-search) -->
                 @if (($pagination['total'] ?? 0) > 0)
-                    <div class="pagination-container">
+                    <div class="pagination-container" id="paginationContainer">
                         <nav>
-                            <ul class="pagination justify-content-center mb-0">
+                            <ul class="pagination justify-content-center mb-0" id="paginationList">
                                 {{-- Previous --}}
                                 @if ($pagination['current_page'] > 1)
                                     <li class="page-item">
-                                        <a class="page-link"
-                                            href="{{ route('frontend.datasets', array_merge($filters, ['page' => $pagination['current_page'] - 1])) }}">
+                                        <a class="page-link" href="#"
+                                            data-page="{{ $pagination['current_page'] - 1 }}">
                                             <i class="fas fa-chevron-left"></i>
                                         </a>
                                     </li>
@@ -679,18 +790,16 @@
                                 {{-- Page Numbers --}}
                                 @for ($i = max(1, $pagination['current_page'] - 2); $i <= min($pagination['last_page'], $pagination['current_page'] + 2); $i++)
                                     <li class="page-item {{ $i == $pagination['current_page'] ? 'active' : '' }}">
-                                        <a class="page-link"
-                                            href="{{ route('frontend.datasets', array_merge($filters, ['page' => $i])) }}">
-                                            {{ $i }}
-                                        </a>
+                                        <a class="page-link" href="#"
+                                            data-page="{{ $i }}">{{ $i }}</a>
                                     </li>
                                 @endfor
 
                                 {{-- Next --}}
                                 @if ($pagination['current_page'] < $pagination['last_page'])
                                     <li class="page-item">
-                                        <a class="page-link"
-                                            href="{{ route('frontend.datasets', array_merge($filters, ['page' => $pagination['current_page'] + 1])) }}">
+                                        <a class="page-link" href="#"
+                                            data-page="{{ $pagination['current_page'] + 1 }}">
                                             <i class="fas fa-chevron-right"></i>
                                         </a>
                                     </li>
@@ -701,7 +810,7 @@
                                 @endif
                             </ul>
                         </nav>
-                        <div class="text-center text-muted small mt-2">
+                        <div class="text-center text-muted small mt-2" id="paginationInfo">
                             Halaman {{ $pagination['current_page'] }} dari {{ $pagination['last_page'] }}
                             • Menampilkan {{ $pagination['from'] }}-{{ $pagination['to'] }} dari
                             {{ $pagination['total'] }} dataset
@@ -711,7 +820,6 @@
             </main>
         </div>
     </div>
-
 @endsection
 
 
@@ -813,7 +921,7 @@
                     const filterForm = document.getElementById('filterForm');
                     if (filterForm) {
                         const filterInputs = filterForm.querySelectorAll(
-                        'input[name]:not([type="hidden"])');
+                            'input[name]:not([type="hidden"])');
                         filterInputs.forEach(input => {
                             if (input.checked || input.type !== 'checkbox') {
                                 const hiddenInput = document.createElement('input');
@@ -826,6 +934,463 @@
                     }
                 });
             }
+        });
+    </script>
+@endpush
+
+@push('scripts')
+    <script>
+        // Auto-Search Class - FIXED VERSION
+        class AutoSearch {
+            constructor(config) {
+                this.apiUrl = config.apiUrl;
+                this.input = document.getElementById(config.inputId);
+                this.resultsContainer = document.getElementById(config.resultsId);
+                this.paginationContainer = document.getElementById(config.paginationId);
+                this.countElement = document.getElementById(config.countId);
+                this.indicator = document.getElementById(config.indicatorId);
+                this.filterForm = document.getElementById(config.filterFormId);
+
+                this.delay = config.delay || 300;
+                this.timeout = null;
+                this.abortController = null;
+                this.currentQuery = this.input?.value || '';
+
+                this.init();
+            }
+
+            init() {
+                if (this.input) {
+                    this.input.addEventListener('input', (e) => this.onInput(e));
+                }
+
+                if (this.paginationContainer) {
+                    this.paginationContainer.addEventListener('click', (e) => {
+                        const link = e.target.closest('.page-link');
+                        if (link && link.dataset.page) {
+                            e.preventDefault();
+                            this.search(parseInt(link.dataset.page));
+                        }
+                    });
+                }
+
+                if (this.filterForm) {
+                    this.filterForm.addEventListener('change', (e) => {
+                        if (e.target.name === 'organizations[]' || e.target.name === 'tags[]' ||
+                            e.target.id === 'sortSelect' || e.target.id === 'perPageSelect') {
+                            this.applyFilters();
+                        }
+                    });
+                }
+            }
+
+            onInput(e) {
+                const query = e.target.value;
+
+                if (this.timeout) clearTimeout(this.timeout);
+
+                this.timeout = setTimeout(() => {
+                    if (query !== this.currentQuery) {
+                        this.currentQuery = query;
+                        this.updateHiddenInputs();
+                        this.search(1);
+                    }
+                }, this.delay);
+            }
+
+            applyFilters() {
+                this.updateHiddenInputs();
+                this.search(1);
+            }
+
+            updateHiddenInputs() {
+                const sortSelect = document.getElementById('sortSelect');
+                const perPageSelect = document.getElementById('perPageSelect');
+                const queryInput = document.getElementById('filterQuery');
+
+                if (sortSelect) document.getElementById('filterSort').value = sortSelect.value;
+                if (perPageSelect) document.getElementById('filterPerPage').value = perPageSelect.value;
+                if (queryInput) queryInput.value = this.currentQuery;
+            }
+
+            getFilters() {
+                const filters = {};
+
+                const orgs = Array.from(document.querySelectorAll('input[name="organizations[]"]:checked'))
+                    .map(cb => cb.value).filter(v => v);
+                if (orgs.length > 0) filters.organizations = orgs;
+
+                const tags = Array.from(document.querySelectorAll('input[name="tags[]"]:checked'))
+                    .map(cb => cb.value).filter(v => v);
+                if (tags.length > 0) filters.tags = tags;
+
+                const sort = document.getElementById('filterSort')?.value;
+                const perPage = document.getElementById('filterPerPage')?.value;
+                if (sort) filters.sort = sort;
+                if (perPage) filters.per_page = perPage;
+
+                return filters;
+            }
+
+            async search(page = 1) {
+                if (this.abortController) {
+                    this.abortController.abort();
+                }
+                this.abortController = new AbortController();
+
+                this.showLoading();
+
+                try {
+                    const filters = this.getFilters();
+
+                    // ✅ FIX: Build params WITHOUT q if empty
+                    const params = new URLSearchParams({
+                        page: page,
+                        ...filters,
+                    });
+
+                    // Only add 'q' if currentQuery is not empty
+                    if (this.currentQuery && this.currentQuery.trim() !== '') {
+                        params.set('q', this.currentQuery.trim());
+                    }
+                    // If empty, we don't add 'q' at all
+
+                    console.log('🔍 Search params:', params.toString());
+
+                    const response = await fetch(`${this.apiUrl}?${params}`, {
+                        signal: this.abortController.signal,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    });
+
+                    const result = await response.json();
+
+                    console.log('✅ Response:', {
+                        success: result.success,
+                        total: result.pagination?.total,
+                        count: result.data?.length,
+                    });
+
+                    if (!result.success) {
+                        throw new Error(result.error || 'Search failed');
+                    }
+
+                    this.renderResults(result.data, result.pagination, '');
+
+                } catch (error) {
+                    if (error.name === 'AbortError') return;
+                    console.error('Search error:', error);
+                    this.showError(error.message);
+                } finally {
+                    this.hideLoading();
+                }
+            }
+
+            showLoading() {
+                if (this.indicator) this.indicator.classList.add('show');
+                if (this.resultsContainer) {
+                    this.resultsContainer.innerHTML = `
+                <div class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status"></div>
+                    <p class="mt-2 text-muted">Memuat...</p>
+                </div>
+            `;
+                }
+            }
+
+            hideLoading() {
+                if (this.indicator) this.indicator.classList.remove('show');
+            }
+
+            showError(message) {
+                if (this.resultsContainer) {
+                    this.resultsContainer.innerHTML = `
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-circle"></i> Error: ${message}
+                </div>
+            `;
+                }
+            }
+
+            renderResults(datasets, pagination, query) {
+                if (!this.resultsContainer) return;
+
+                if (this.countElement) {
+                    this.countElement.innerHTML =
+                        `<strong>${pagination.total.toLocaleString('id-ID')}</strong> dataset ditemukan`;
+                }
+
+                if (datasets.length === 0) {
+                    this.resultsContainer.innerHTML = `
+                <div class="filter-card">
+                    <div class="empty-state">
+                        <i class="fas fa-search"></i>
+                        <h5>Tidak ada dataset ditemukan</h5>
+                        <p class="mb-3">Coba ubah kata kunci atau hapus filter</p>
+                        <button class="btn btn-primary" onclick="window.autoSearch?.resetSearch()">
+                            <i class="fas fa-undo"></i> Reset
+                        </button>
+                    </div>
+                </div>
+            `;
+                    this.renderPagination(pagination, 0);
+                    return;
+                }
+
+                let html = '';
+                const baseUrl = "/ckan/dataset";
+
+                datasets.forEach(dataset => {
+                    const orgName = dataset.organization?.title || dataset.organization?.name ||
+                        'Tanpa organisasi';
+                    const resourceCount = dataset.resources?.length || 0;
+                    const views = dataset.metadata_views || 0;
+                    const updated = dataset.metadata_modified ?
+                        new Date(dataset.metadata_modified).toLocaleDateString('id-ID', {
+                            day: 'numeric',
+                            month: 'short',
+                            year: 'numeric'
+                        }) : '-';
+
+                    html += `
+                <article class="dataset-card">
+                    <h3 class="dataset-title">
+                        <a href="${baseUrl}/${dataset.id}">${this.escapeHtml(dataset.title || dataset.name)}</a>
+                    </h3>
+                    <p class="dataset-description">${this.escapeHtml(dataset.notes || 'Tidak ada deskripsi.')}</p>
+                    <div class="dataset-meta">
+                        <div class="dataset-meta-item">
+                            <i class="fas fa-calendar-alt"></i><span>Updated: ${updated}</span>
+                        </div>
+                        <div class="dataset-meta-item">
+                            <i class="fas fa-file"></i><span>${resourceCount} resource</span>
+                        </div>
+                        <div class="dataset-meta-item">
+                            <i class="fas fa-eye"></i><span>${views.toLocaleString('id-ID')} views</span>
+                        </div>
+                    </div>
+                    <div class="dataset-footer">
+                        <div class="dataset-org">
+                            <i class="fas fa-building"></i><span>${this.escapeHtml(orgName)}</span>
+                        </div>
+                        <div class="dataset-actions">
+                            <a href="${baseUrl}/${dataset.id}" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-eye"></i> Lihat Detail
+                            </a>
+                        </div>
+                    </div>
+                </article>
+            `;
+                });
+
+                this.resultsContainer.innerHTML = html;
+                this.renderPagination(pagination, datasets.length);
+            }
+
+            renderPagination(pagination, resultsCount) {
+                if (!this.paginationContainer) return;
+
+                const paginationEl = document.getElementById('paginationList');
+                const infoEl = document.getElementById('paginationInfo');
+
+                if (!paginationEl || !infoEl) return;
+
+                if (pagination.last_page <= 1) {
+                    this.paginationContainer.style.display = 'none';
+                    return;
+                }
+
+                this.paginationContainer.style.display = 'block';
+
+                let html = '';
+
+                if (pagination.current_page > 1) {
+                    html +=
+                        `<li class="page-item"><a class="page-link" href="#" data-page="${pagination.current_page - 1}"><i class="fas fa-chevron-left"></i></a></li>`;
+                } else {
+                    html +=
+                        `<li class="page-item disabled"><span class="page-link"><i class="fas fa-chevron-left"></i></span></li>`;
+                }
+
+                const startPage = Math.max(1, pagination.current_page - 2);
+                const endPage = Math.min(pagination.last_page, pagination.current_page + 2);
+
+                for (let i = startPage; i <= endPage; i++) {
+                    const active = i === pagination.current_page ? 'active' : '';
+                    html +=
+                        `<li class="page-item ${active}"><a class="page-link" href="#" data-page="${i}">${i}</a></li>`;
+                }
+
+                if (pagination.current_page < pagination.last_page) {
+                    html +=
+                        `<li class="page-item"><a class="page-link" href="#" data-page="${pagination.current_page + 1}"><i class="fas fa-chevron-right"></i></a></li>`;
+                } else {
+                    html +=
+                        `<li class="page-item disabled"><span class="page-link"><i class="fas fa-chevron-right"></i></span></li>`;
+                }
+
+                paginationEl.innerHTML = html;
+                infoEl.innerHTML = `Halaman ${pagination.current_page} dari ${pagination.last_page}`;
+            }
+
+            resetSearch() {
+                this.currentQuery = '';
+                if (this.input) this.input.value = '';
+
+                // Clear all filters
+                document.querySelectorAll('#filterForm input[type="checkbox"]').forEach(cb => {
+                    cb.checked = false;
+                });
+
+                const sortSelect = document.getElementById('sortSelect');
+                const perPageSelect = document.getElementById('perPageSelect');
+                if (sortSelect) sortSelect.value = 'metadata_modified desc';
+                if (perPageSelect) perPageSelect.value = '10';
+
+                this.updateHiddenInputs();
+                this.search(1);
+            }
+
+            escapeHtml(text) {
+                if (!text) return '';
+                const map = {
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#039;'
+                };
+                return String(text).replace(/[&<>"']/g, m => map[m]);
+            }
+        }
+
+        // Global functions
+        function applyFilter() {
+            if (window.autoSearch) {
+                window.autoSearch.applyFilters();
+            } else {
+                document.getElementById('filterForm')?.submit();
+            }
+        }
+
+        function clearFilters() {
+            document.querySelectorAll('#filterForm input[type="checkbox"]').forEach(cb => {
+                cb.checked = false;
+            });
+
+            const searchInput = document.getElementById('autoSearchInput');
+            if (searchInput) searchInput.value = '';
+
+            if (window.autoSearch) {
+                window.autoSearch.resetSearch();
+            } else {
+                window.location.href = "{{ route('frontend.datasets') }}";
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            if (document.getElementById('autoSearchInput')) {
+                window.autoSearch = new AutoSearch({
+                    apiUrl: "{{ route('ckan.api.search') }}",
+                    inputId: 'autoSearchInput',
+                    resultsId: 'datasetsResults',
+                    paginationId: 'paginationContainer',
+                    countId: 'resultsCount',
+                    indicatorId: 'searchIndicator',
+                    filterFormId: 'filterForm',
+                    delay: 300,
+                });
+            }
+
+            const searchForm = document.getElementById('mainSearchForm');
+            if (searchForm) {
+                searchForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    if (window.autoSearch) {
+                        window.autoSearch.currentQuery = document.getElementById('autoSearchInput').value;
+                        window.autoSearch.search(1);
+                    }
+                });
+            }
+        });
+
+        // HERO ANIMATION
+        const header = document.querySelector('.page-header');
+
+        if (header) {
+            const observerHeader = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        header.classList.add('show');
+                    }
+                });
+            }, {
+                threshold: 0.3
+            });
+
+            observerHeader.observe(header);
+        }
+
+        // SEARCH FORM ANIMATION
+        document.addEventListener("DOMContentLoaded", function() {
+            const searchBox = document.querySelector('.search-box');
+            const header = document.querySelector('.page-header');
+
+            if (searchBox && header) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            setTimeout(() => {
+                                searchBox.classList.add('show');
+                            }, 250);
+                        }
+                    });
+                }, {
+                    threshold: 0.3
+                });
+
+                observer.observe(header);
+            }
+        });
+
+        // SIDEBAR ANIMATION
+        document.addEventListener("DOMContentLoaded", function() {
+            const sidebar = document.querySelector(".sidebar");
+            const cards = document.querySelectorAll(".filter-card");
+
+            if (sidebar) {
+                setTimeout(() => {
+                    sidebar.classList.add("show");
+                }, 150);
+            }
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.classList.add("show");
+                }, 250 + (index * 100));
+            });
+        });
+
+        // DATASET CARD ANIMATION
+        document.addEventListener("DOMContentLoaded", function() {
+            const items = document.querySelectorAll(".dataset-card");
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("show");
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.2
+            });
+
+            items.forEach((item, index) => {
+                item.style.transitionDelay = `${index * 60}ms`;
+                observer.observe(item);
+            });
         });
     </script>
 @endpush

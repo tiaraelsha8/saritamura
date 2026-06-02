@@ -2,22 +2,24 @@
 
 namespace App\Http\Controllers\backend;
 
-// use App\Helpers\VisitorCounter;
+use App\Helpers\VisitorCounter;
 use App\Http\Controllers\Controller;
-// use App\Models\Kategori;
-// use App\Models\Layanan;
-// use App\Models\User;
+use App\Models\Dokumen;
+use App\Models\Grafik;
+use App\Models\User;
+use App\Models\Video;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    public function index() 
+    public function home() 
     {
-        // $jumlahkategori = Kategori::count();
-        // $jumlahlayanan = Layanan::count();
-        // $statistik = VisitorCounter::count();
-        // $jumlahadmin = User::where('role', 'admin')->count();
-        // return view('backend.dashboard', compact('jumlahkategori','jumlahlayanan','statistik','jumlahadmin'));
+        $jumlahdokumen = Dokumen::count();
+        $jumlahgrafik = Grafik::count();
+        $jumlahvideo = Video::count();
+        $jumlahadmin = User::where('role', 'admin')->count();
+        $statistik = VisitorCounter::count();
+        return view('backend.dashboard', compact('jumlahdokumen','jumlahgrafik','jumlahvideo','jumlahadmin','statistik'));
 
         return view('backend.dashboard');
     }

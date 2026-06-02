@@ -260,7 +260,7 @@
         <nav aria-label="breadcrumb" class="mb-4">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item">
-                    <a href="{{ route('frontend.index') }}"><i class="fas fa-home"></i> Beranda</a>
+                    <a href="{{ route('frontend.home') }}"><i class="fas fa-home"></i> Beranda</a>
                 </li>
                 <li class="breadcrumb-item">
                     <a href="{{ route('frontend.datasets') }}">Dataset</a>
@@ -589,7 +589,7 @@
                             // Reload with sort
                             const currentSort = new URL(apiEndpoint).searchParams.get('sort') || '';
                             const newSort = field.id + (currentSort.includes('desc') ? ' asc' :
-                            ' desc');
+                                ' desc');
                             loadData(1, document.getElementById('tableSearch').value);
                         }
                     });
