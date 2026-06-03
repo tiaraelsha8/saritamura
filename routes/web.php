@@ -20,7 +20,7 @@ use App\Http\Controllers\InfografisController;
 use App\Http\Controllers\SipdWalidataController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('/ckan');
 });
 
 Route::get('/login-ckan', function () {
