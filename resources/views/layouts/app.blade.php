@@ -14,12 +14,17 @@
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
     <!-- Custom Styles -->
     <style>
+        html {
+            overflow-y: scroll;
+        }
+
         body {
             font-family: 'Figtree', sans-serif;
             background: #f8fafc;
@@ -47,55 +52,90 @@
         .btn-primary:hover {
             background: linear-gradient(135deg, #1e3a8a, #2563eb);
         }
+
+        #backToTopBtn {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 999;
+            width: 45px;
+            height: 45px;
+            background: transparent;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(0.8) translateY(10px);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(6px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        #backToTopBtn::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.08);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        #backToTopBtn svg,
+        #backToTopBtn i {
+            z-index: 1;
+        }
+
+        #backToTopBtn.show {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1) translateY(0);
+        }
+
+        #backToTopBtn i {
+            font-size: 1.2rem;
+            color: #000;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        #backToTopBtn:hover i {
+            transform: translate(-50%, -50%) scale(1.08);
+            text-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
+        }
+
+        #backToTopBtn svg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 70px;
+            height: 70px;
+            transform: translate(-50%, -50%) rotate(-90deg);
+        }
     </style>
 
     @stack('styles')
 </head>
 
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-danger mb-4">
-        <div class="container">
-            <a class="navbar-brand" href="{{ route('ckan.index') }}">
-                <i class="fas fa-database"></i> {{ config('app.name', 'Portal Data') }}
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('ckan.datasets') }}">
-                            <i class="fas fa-table"></i> Datasets
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('ckan.index') }}">
-                            <i class="fas fa-home"></i> Home
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('ckan.search') }}">
-                            <i class="fas fa-search"></i> Search
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('ckan.create') }}">
-                            <i class="fas fa-plus"></i> Add Dataset
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('ckan.organizations') }}">
-                            <i class="fas fa-building"></i> Organizations
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+
+    <button onclick="scrollToTop()" id="backToTopBtn" title="Kembali ke atas">
+        <svg viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="30" stroke="#ffffff33" stroke-width="6" fill="none" />
+            <circle id="progressRing" cx="50" cy="50" r="30" stroke="#000" stroke-width="3" fill="none"
+                stroke-linecap="round" />
+        </svg>
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    {{-- Navbar --}}
+    @include('partial.navbar')
 
     <!-- Main Content -->
-    <main class="container">
+    <main>
         @yield('content')
     </main>
 
@@ -104,6 +144,34 @@
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const btn = document.getElementById("backToTopBtn");
+        const circle = document.getElementById("progressRing");
+
+        const radius = 30;
+        const circumference = 2 * Math.PI * radius;
+
+        circle.style.strokeDasharray = circumference;
+        circle.style.strokeDashoffset = circumference;
+
+        window.addEventListener('scroll', function () {
+            const scrollTop = document.documentElement.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+
+            const progress = scrollHeight > 0 ? scrollTop / scrollHeight : 0;
+            const offset = circumference * (1 - progress);
+
+            btn.classList.toggle('show', scrollTop > 300);
+            circle.style.strokeDashoffset = offset;
+        });
+
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+    </script>
 
     @stack('scripts')
 </body>
