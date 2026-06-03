@@ -327,8 +327,8 @@
                         <i class="fas fa-info-circle"></i>
                         <strong>Admin:</strong> Jalankan perintah berikut untuk memproses file ini:
                         <code class="d-block mt-2 bg-light p-2 rounded">
-                            ckan -c production.ini xloader submit {{ $resource['id'] }}
-                        </code>
+                                                            ckan -c production.ini xloader submit {{ $resource['id'] }}
+                                                        </code>
                     </div>
                     <a href="{{ $resource['url'] ?? '#' }}" class="btn btn-primary" target="_blank">
                         <i class="fas fa-external-link-alt"></i> Unduh File Langsung
@@ -463,24 +463,24 @@
         let resourceId = '{{ $resource['id'] }}';
         let datasetId = '{{ $package['id'] }}';
         let apiEndpoint =
-            '{{ route('frontend.resource.api', ['datasetId' => ':datasetId', 'resourceId' => ':resourceId']) }}'.replace(
+            '{{ route('ckan.resource.api', ['datasetId' => ':datasetId', 'resourceId' => ':resourceId']) }}'.replace(
                 ':datasetId', datasetId).replace(':resourceId', resourceId);
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             @if ($hasDataStore)
                 // Initialize
                 loadData();
 
                 // Event listeners
-                document.getElementById('recordsPerPage').addEventListener('change', function() {
+                document.getElementById('recordsPerPage').addEventListener('change', function () {
                     loadData();
                 });
 
-                document.getElementById('tableSearch').addEventListener('input', function(e) {
+                document.getElementById('tableSearch').addEventListener('input', function (e) {
                     debounceLoadData(e.target.value, 300);
                 });
             @endif
-        });
+                        });
 
         // Debounced search
         let searchTimeout;
@@ -555,7 +555,7 @@
                 data: field.id,
                 title: field.label || field.id,
                 responsivePriority: 1,
-                render: function(data, type, row) {
+                render: function (data, type, row) {
                     if (data === null || data === undefined) return '<span class="text-muted">-</span>';
                     if (type === 'display' && typeof data === 'string' && data.length > 100) {
                         return `<span title="${escapeHtml(data)}">${escapeHtml(data.substring(0, 100))}...</span>`;
@@ -580,9 +580,9 @@
                     loadingRecords: "Memuat...",
                     zeroRecords: "Tidak ditemukan data yang cocok",
                 },
-                drawCallback: function(settings) {
+                drawCallback: function (settings) {
                     // Add click handlers for sorting
-                    $('.sorting').on('click', function() {
+                    $('.sorting').on('click', function () {
                         const colIdx = $(this).index();
                         const field = currentFields[colIdx];
                         if (field) {
@@ -604,40 +604,40 @@
             const to = Math.min(pagination.page * pagination.limit, pagination.total);
 
             infoEl.innerHTML = `
-                                                    <span>Menampilkan ${from.toLocaleString()} - ${to.toLocaleString()} dari ${pagination.total.toLocaleString()} records</span>
-                                                    <span>
-                                                        ${pagination.page > 1 ?
+                                                                    <span>Menampilkan ${from.toLocaleString()} - ${to.toLocaleString()} dari ${pagination.total.toLocaleString()} records</span>
+                                                                    <span>
+                                                                        ${pagination.page > 1 ?
                     `<button class="btn btn-sm btn-outline-secondary me-1" onclick="loadData(${pagination.page - 1})">← Prev</button>` :
                     '<button class="btn btn-sm btn-outline-secondary me-1" disabled>← Prev</button>'
                 }
-                                                        Page ${pagination.page} of ${pagination.total_pages}
-                                                        ${pagination.page < pagination.total_pages ?
+                                                                        Page ${pagination.page} of ${pagination.total_pages}
+                                                                        ${pagination.page < pagination.total_pages ?
                     `<button class="btn btn-sm btn-outline-secondary ms-1" onclick="loadData(${pagination.page + 1})">Next →</button>` :
                     '<button class="btn btn-sm btn-outline-secondary ms-1" disabled>Next →</button>'
                 }
-                                                    </span>
-                                                `;
+                                                                    </span>
+                                                                `;
         }
 
         // Show error message in table
         function showErrorMessage(message) {
             const table = document.getElementById('dataTable');
             table.innerHTML = `
-                                                    <tbody>
-                                                        <tr>
-                                                            <td colspan="100%" class="text-center py-5 text-danger">
-                                                                <i class="fas fa-exclamation-triangle fa-2x mb-3"></i>
-                                                                <p class="mb-0"><strong>Error:</strong> ${escapeHtml(message)}</p>
-                                                                <small class="text-muted">Coba refresh atau periksa koneksi Anda</small>
-                                                                <div class="mt-3">
-                                                                    <button class="btn btn-outline-primary btn-sm" onclick="loadData()">
-                                                                        <i class="fas fa-sync-alt"></i> Coba Lagi
-                                                                    </button>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                `;
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td colspan="100%" class="text-center py-5 text-danger">
+                                                                                <i class="fas fa-exclamation-triangle fa-2x mb-3"></i>
+                                                                                <p class="mb-0"><strong>Error:</strong> ${escapeHtml(message)}</p>
+                                                                                <small class="text-muted">Coba refresh atau periksa koneksi Anda</small>
+                                                                                <div class="mt-3">
+                                                                                    <button class="btn btn-outline-primary btn-sm" onclick="loadData()">
+                                                                                        <i class="fas fa-sync-alt"></i> Coba Lagi
+                                                                                    </button>
+                                                                                </div>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                `;
         }
 
         // Export data
@@ -676,7 +676,7 @@
         }
 
         // Copy cell value on click (optional)
-        document.addEventListener('click', function(e) {
+        document.addEventListener('click', function (e) {
             if (e.target.closest('#dataTable tbody td')) {
                 const cell = e.target.closest('td');
                 const text = cell.textContent.trim();
