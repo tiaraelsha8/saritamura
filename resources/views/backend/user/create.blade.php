@@ -67,11 +67,10 @@
 
                     <div class="form-group">
                         <label for="role">Role</label>
-                        <select name="role" id="role" class="form-control" required>
-                            <option value="">-- Pilih Role --</option>
-                            <option value="superadmin">Superadmin</option>
-                            <option value="admin">Admin</option>
-                        </select>
+
+                        <input type="text" class="form-control" value="Admin" readonly>
+
+                        <input type="hidden" name="role" value="admin">
                     </div>
                     @error('role')
                         <div class="alert alert-danger">{{ $message }}</div>

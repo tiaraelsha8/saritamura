@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Exception;
+use App\Models\Dokumen;
+use App\Models\Grafik;
+use App\Models\Video;
 
 class CkanController extends Controller
 {
@@ -31,15 +34,23 @@ class CkanController extends Controller
             $recentPackages = $this->ckan->getRecentPackages(6);
             $organizations = $this->ckan->getOrganizations();
 
-            return view('frontend.home', compact('stats', 'recentPackages', 'organizations'));
+            $videos = Video::latest()->get();
+
+            $infografis = Grafik::latest()->take(4)->get();
+
+            return view('frontend.home', compact('stats', 'recentPackages', 'organizations', 'videos', 'infografis'));
         } catch (Exception $e) {
-            Log::error('CKAN Index Error', ['error' => $e->getMessage()]);
+            Log::error('CKAN Home Error', [
+                'error' => $e->getMessage(),
+            ]);
 
             return view('frontend.home', [
                 'error' => 'Gagal mengambil data dari CKAN: ' . $e->getMessage(),
                 'stats' => [],
                 'recentPackages' => [],
                 'organizations' => [],
+                'videos' => collect(),
+                'infografis' => collect(),
             ]);
         }
     }
@@ -53,7 +64,8 @@ class CkanController extends Controller
             $organizations = $this->ckan->getOrganizations();
             return view('frontend.create', compact('organizations'));
         } catch (Exception $e) {
-            return redirect()->route('frontend.home')
+            return redirect()
+                ->route('frontend.home')
                 ->with('error', 'Gagal memuat form: ' . $e->getMessage());
         }
     }
@@ -86,21 +98,20 @@ class CkanController extends Controller
             if (!empty($validated['resources'])) {
                 $data['resources'] = collect($validated['resources'])
                     ->filter(fn($r) => !empty($r['name']))
-                    ->map(fn($r) => [
-                        'name' => $r['name'],
-                        'url' => $r['url'] ?? null,
-                        'format' => $r['format'] ?? 'CSV',
-                        'description' => $r['description'] ?? null,
-                    ])
+                    ->map(
+                        fn($r) => [
+                            'name' => $r['name'],
+                            'url' => $r['url'] ?? null,
+                            'format' => $r['format'] ?? 'CSV',
+                            'description' => $r['description'] ?? null,
+                        ],
+                    )
                     ->toArray();
             }
 
             // Process extras
             if (!empty($validated['extras'])) {
-                $data['extras'] = collect($validated['extras'])
-                    ->filter(fn($e) => !empty($e['key']) && !empty($e['value']))
-                    ->values()
-                    ->toArray();
+                $data['extras'] = collect($validated['extras'])->filter(fn($e) => !empty($e['key']) && !empty($e['value']))->values()->toArray();
             }
 
             // Create package in CKAN
@@ -111,26 +122,20 @@ class CkanController extends Controller
                 foreach ($request->file('resources') as $index => $resourceFiles) {
                     if (isset($resourceFiles['upload']) && $resourceFiles['upload']->isValid()) {
                         $file = $resourceFiles['upload'];
-                        $this->ckan->uploadResource(
-                            $result['id'],
-                            $file->getRealPath(),
-                            $file->getClientOriginalName(),
-                            ['name' => $data['resources'][$index]['name'] ?? $file->getClientOriginalName()]
-                        );
+                        $this->ckan->uploadResource($result['id'], $file->getRealPath(), $file->getClientOriginalName(), ['name' => $data['resources'][$index]['name'] ?? $file->getClientOriginalName()]);
                     }
                 }
             }
 
-            return redirect()->route('frontend.show', $result['id'])
-                ->with('success', 'Dataset berhasil dibuat!');
-
+            return redirect()->route('frontend.show', $result['id'])->with('success', 'Dataset berhasil dibuat!');
         } catch (Exception $e) {
             Log::error('Failed to create dataset', [
                 'error' => $e->getMessage(),
-                'data' => $request->all()
+                'data' => $request->all(),
             ]);
 
-            return back()->withInput()
+            return back()
+                ->withInput()
                 ->with('error', 'Gagal membuat dataset: ' . $e->getMessage());
         }
     }
@@ -158,7 +163,8 @@ class CkanController extends Controller
             $organizations = $this->ckan->getOrganizations();
             return view('frontend.edit', compact('package', 'organizations'));
         } catch (Exception $e) {
-            return redirect()->route('frontend.home')
+            return redirect()
+                ->route('frontend.home')
                 ->with('error', 'Gagal memuat form: ' . $e->getMessage());
         }
     }
@@ -182,11 +188,10 @@ class CkanController extends Controller
 
             $this->ckan->updatePackage($data);
 
-            return redirect()->route('frontend.show', $id)
-                ->with('success', 'Dataset berhasil diupdate!');
-
+            return redirect()->route('frontend.show', $id)->with('success', 'Dataset berhasil diupdate!');
         } catch (Exception $e) {
-            return back()->withInput()
+            return back()
+                ->withInput()
                 ->with('error', 'Gagal mengupdate dataset: ' . $e->getMessage());
         }
     }
@@ -198,8 +203,7 @@ class CkanController extends Controller
     {
         try {
             $this->ckan->deletePackage($id);
-            return redirect()->route('frontend.home')
-                ->with('success', 'Dataset berhasil dihapus!');
+            return redirect()->route('frontend.home')->with('success', 'Dataset berhasil dihapus!');
         } catch (Exception $e) {
             return back()->with('error', 'Gagal menghapus dataset: ' . $e->getMessage());
         }
@@ -242,16 +246,11 @@ class CkanController extends Controller
 
             if ($request->hasFile('upload')) {
                 $file = $request->file('upload');
-                $result = $this->ckan->uploadResource(
-                    $validated['package_id'],
-                    $file->getRealPath(),
-                    $file->getClientOriginalName(),
-                    [
-                        'name' => $validated['name'],
-                        'format' => $validated['format'],
-                        'description' => $validated['description'] ?? null,
-                    ]
-                );
+                $result = $this->ckan->uploadResource($validated['package_id'], $file->getRealPath(), $file->getClientOriginalName(), [
+                    'name' => $validated['name'],
+                    'format' => $validated['format'],
+                    'description' => $validated['description'] ?? null,
+                ]);
             } else {
                 $result = $this->ckan->createResource([
                     'package_id' => $validated['package_id'],
@@ -262,11 +261,10 @@ class CkanController extends Controller
                 ]);
             }
 
-            return redirect()->route('frontend.show', $validated['package_id'])
-                ->with('success', 'Resource berhasil diupload!');
-
+            return redirect()->route('frontend.show', $validated['package_id'])->with('success', 'Resource berhasil diupload!');
         } catch (Exception $e) {
-            return back()->withInput()
+            return back()
+                ->withInput()
                 ->with('error', 'Gagal upload resource: ' . $e->getMessage());
         }
     }
@@ -285,43 +283,46 @@ class CkanController extends Controller
 
             return response()->json($result);
         } catch (Exception $e) {
-            return response()->json([
-                'success' => false,
-                'error' => $e->getMessage()
-            ], 500);
+            return response()->json(
+                [
+                    'success' => false,
+                    'error' => $e->getMessage(),
+                ],
+                500,
+            );
         }
     }
 
     public function index()
-{
-    $docs = Sipd::latest()->get();
-    return view('sipd.index', compact('docs'));
-}
-
-    public function infografis()
     {
-    try {
-        // ambil data dari CKAN (contoh)
-        $stats = $this->ckan->getStatistics();
-        $datasets = $this->ckan->searchPackages('', ['rows' => 100]);
-
-        return view('frontend.infografis', [
-            'stats' => $stats,
-            'datasets' => $datasets['results'] ?? [],
-        ]);
-
-    } catch (\Exception $e) {
-        \Log::error('Infografis error', [
-            'error' => $e->getMessage()
-        ]);
-
-        return view('frontend.infografis', [
-            'stats' => [],
-            'datasets' => [],
-            'error' => 'Gagal memuat data'
-        ]);
+        $docs = Sipd::latest()->get();
+        return view('sipd.index', compact('docs'));
     }
-}
+
+    //     public function infografis()
+    //     {
+    //     try {
+    //         // ambil data dari CKAN (contoh)
+    //         $stats = $this->ckan->getStatistics();
+    //         $datasets = $this->ckan->searchPackages('', ['rows' => 100]);
+
+    //         return view('frontend.infografis', [
+    //             'stats' => $stats,
+    //             'datasets' => $datasets['results'] ?? [],
+    //         ]);
+
+    //     } catch (\Exception $e) {
+    //         \Log::error('Infografis error', [
+    //             'error' => $e->getMessage()
+    //         ]);
+
+    //         return view('frontend.infografis', [
+    //             'stats' => [],
+    //             'datasets' => [],
+    //             'error' => 'Gagal memuat data'
+    //         ]);
+    //     }
+    // }
 
     /**
      * Get organizations list
@@ -356,11 +357,14 @@ class CkanController extends Controller
     {
         $healthy = $this->ckan->healthCheck();
 
-        return response()->json([
-            'status' => $healthy ? 'healthy' : 'unhealthy',
-            'ckan_url' => config('ckan.api_url'),
-            'timestamp' => now()->toIso8601String(),
-        ], $healthy ? 200 : 503);
+        return response()->json(
+            [
+                'status' => $healthy ? 'healthy' : 'unhealthy',
+                'ckan_url' => config('ckan.api_url'),
+                'timestamp' => now()->toIso8601String(),
+            ],
+            $healthy ? 200 : 503,
+        );
     }
 
     /**
@@ -386,12 +390,15 @@ class CkanController extends Controller
             $formats = $request->input('format', []);
 
             // Ensure arrays
-            if (!is_array($organizations))
+            if (!is_array($organizations)) {
                 $organizations = [$organizations];
-            if (!is_array($tags))
+            }
+            if (!is_array($tags)) {
                 $tags = [$tags];
-            if (!is_array($formats))
+            }
+            if (!is_array($formats)) {
                 $formats = [$formats];
+            }
 
             // Build CKAN search params
             $searchParams = [
@@ -407,7 +414,7 @@ class CkanController extends Controller
             // Organization filter
             if (!empty($organizations)) {
                 $orgFilter = collect($organizations)
-                    ->filter()  // Remove empty values
+                    ->filter() // Remove empty values
                     ->map(fn($org) => sprintf('organization:"%s"', $org))
                     ->implode(' OR ');
 
@@ -418,10 +425,7 @@ class CkanController extends Controller
 
             // Tags filter
             if (!empty($tags)) {
-                $tagFilter = collect($tags)
-                    ->filter()
-                    ->map(fn($tag) => sprintf('tags:"%s"', $tag))
-                    ->implode(' OR ');
+                $tagFilter = collect($tags)->filter()->map(fn($tag) => sprintf('tags:"%s"', $tag))->implode(' OR ');
 
                 if ($tagFilter) {
                     $filterQueries[] = sprintf('(%s)', $tagFilter);
@@ -430,10 +434,7 @@ class CkanController extends Controller
 
             // Format filter
             if (!empty($formats)) {
-                $formatFilter = collect($formats)
-                    ->filter()
-                    ->map(fn($fmt) => sprintf('res_format:"%s"', $fmt))
-                    ->implode(' OR ');
+                $formatFilter = collect($formats)->filter()->map(fn($fmt) => sprintf('res_format:"%s"', $fmt))->implode(' OR ');
 
                 if ($formatFilter) {
                     $filterQueries[] = sprintf('(%s)', $formatFilter);
@@ -478,11 +479,7 @@ class CkanController extends Controller
             $popularTags = [];
             try {
                 $tagsResult = $this->ckan->getTags();
-                $popularTags = collect($tagsResult)
-                    ->sortByDesc('count')
-                    ->take(10)
-                    ->values()
-                    ->toArray();
+                $popularTags = collect($tagsResult)->sortByDesc('count')->take(10)->values()->toArray();
             } catch (\Exception $e) {
                 // Tags optional
             }
@@ -508,11 +505,10 @@ class CkanController extends Controller
                 'organizations' => $organizationsList,
                 'popularTags' => $popularTags,
             ]);
-
         } catch (\Exception $e) {
             \Log::error('Failed to load datasets', [
                 'error' => $e->getMessage(),
-                'params' => $request->all()
+                'params' => $request->all(),
             ]);
 
             return view('frontend.datasets', [
@@ -553,7 +549,7 @@ class CkanController extends Controller
             try {
                 // Check if resource has DataStore
                 $datastoreInfo = $this->ckan->searchDataStore($resourceId, [
-                    'limit' => 0,  // Just get metadata, no records
+                    'limit' => 0, // Just get metadata, no records
                     'include_total' => true,
                 ]);
             } catch (\Exception $e) {
@@ -566,15 +562,15 @@ class CkanController extends Controller
                 'datastoreInfo' => $datastoreInfo,
                 'hasDataStore' => $resource['datastore_active'] ?? !empty($datastoreInfo),
             ]);
-
         } catch (\Exception $e) {
             Log::error('Preview data error', [
                 'datasetId' => $datasetId,
                 'resourceId' => $resourceId,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
 
-            return redirect()->route('frontend.show', $datasetId)
+            return redirect()
+                ->route('frontend.show', $datasetId)
                 ->with('error', 'Gagal memuat preview data: ' . $e->getMessage());
         }
     }
@@ -586,7 +582,7 @@ class CkanController extends Controller
     {
         try {
             $page = $request->input('page', 1);
-            $limit = min($request->input('limit', 100), 1000);  // Max 1000 records
+            $limit = min($request->input('limit', 100), 1000); // Max 1000 records
             $offset = ($page - 1) * $limit;
             $sort = $request->input('sort', '');
             $filters = $request->input('filters', []);
@@ -598,7 +594,7 @@ class CkanController extends Controller
                 'limit' => $limit,
                 'offset' => $offset,
                 'include_total' => true,
-                'records_format' => 'objects',  // or 'lists'
+                'records_format' => 'objects', // or 'lists'
             ];
 
             // Add sort
@@ -630,17 +626,19 @@ class CkanController extends Controller
                     'total_pages' => ceil(($result['total'] ?? 0) / $limit),
                 ],
             ]);
-
         } catch (\Exception $e) {
             Log::error('API get data error', [
                 'resourceId' => $resourceId,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
 
-            return response()->json([
-                'success' => false,
-                'error' => $e->getMessage(),
-            ], 500);
+            return response()->json(
+                [
+                    'success' => false,
+                    'error' => $e->getMessage(),
+                ],
+                500,
+            );
         }
     }
 
@@ -666,10 +664,12 @@ class CkanController extends Controller
             $organizations = $request->input('organizations', []);
             $tags = $request->input('tags', []);
 
-            if (!is_array($organizations))
+            if (!is_array($organizations)) {
                 $organizations = [$organizations];
-            if (!is_array($tags))
+            }
+            if (!is_array($tags)) {
                 $tags = [$tags];
+            }
 
             $organizations = array_filter($organizations);
             $tags = array_filter($tags);
@@ -691,9 +691,7 @@ class CkanController extends Controller
 
             // Build organization filter
             if (!empty($organizations)) {
-                $orgFilter = collect($organizations)
-                    ->map(fn($name) => sprintf('organization:"%s"', $name))
-                    ->implode(' OR ');
+                $orgFilter = collect($organizations)->map(fn($name) => sprintf('organization:"%s"', $name))->implode(' OR ');
                 $searchParams['fq'] = "($orgFilter)";
             }
 
@@ -739,7 +737,6 @@ class CkanController extends Controller
                 ],
                 'query' => '',
             ]);
-
         } catch (\Exception $e) {
             \Log::error('API Search error', ['error' => $e->getMessage()]);
             return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
@@ -755,7 +752,6 @@ class CkanController extends Controller
             $query = $request->input('q', '');
             $limit = min($request->input('limit', 10), 15);
 
-
             if (strlen($query) < 2) {
                 return response()->json([
                     'success' => true,
@@ -769,28 +765,30 @@ class CkanController extends Controller
                 'rows' => $limit,
                 'start' => 0,
                 'sort' => 'metadata_modified desc',
-                'fl' => 'id,name,title,organization',  // Only fetch needed fields
+                'fl' => 'id,name,title,organization', // Only fetch needed fields
             ];
 
             $result = $this->ckan->searchPackages($query, $searchParams);
 
             // Transform to suggestions
-            $suggestions = collect($result['results'] ?? [])->map(function ($pkg) {
-                return [
-                    'id' => $pkg['id'],
-                    'title' => $pkg['title'] ?? $pkg['name'],
-                    'name' => $pkg['name'],
-                    'organization' => $pkg['organization']['title'] ?? $pkg['organization']['name'] ?? null,
-                    'type' => 'dataset',
-                ];
-            })->take($limit)->toArray();
+            $suggestions = collect($result['results'] ?? [])
+                ->map(function ($pkg) {
+                    return [
+                        'id' => $pkg['id'],
+                        'title' => $pkg['title'] ?? $pkg['name'],
+                        'name' => $pkg['name'],
+                        'organization' => $pkg['organization']['title'] ?? ($pkg['organization']['name'] ?? null),
+                        'type' => 'dataset',
+                    ];
+                })
+                ->take($limit)
+                ->toArray();
 
             return response()->json([
                 'success' => true,
                 'suggestions' => $suggestions,
                 'query' => $query,
             ]);
-
         } catch (\Exception $e) {
             \Log::error('API Autocomplete error', ['error' => $e->getMessage()]);
             return response()->json(['success' => false, 'error' => $e->getMessage()], 500);

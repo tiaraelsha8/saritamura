@@ -1,3 +1,7 @@
+@php
+     use App\Helpers\VisitorCounter;
+     $statistik = VisitorCounter::count();
+ @endphp
 <footer class="footer-section py-4">
     <div class="footer-particles"></div>
     <div class="container">
@@ -27,24 +31,36 @@
             <!-- TENGAH -->
             <div class="col-md-4 mb-1 d-flex justify-content-center">
                 <div class="statistik-wrapper">
-                    <h5 class="footer-title">
-                        <i class="bi bi-bar-chart-fill me-2"></i> Data Statistik
+
+                    <h5 class="footer-title d-flex align-items-center gap-2">
+                        <i class="bi bi-bar-chart-fill"></i>
+                        DATA STATISTIK
                     </h5>
+
                     <div class="stat-row">
                         <span class="label">Total Pengunjung</span>
                         <span class="separator">:</span>
-                        <span class="value"></span>
+                        <span class="value">
+                            {{ $statistik['total'] ?? 0 }}
+                        </span>
                     </div>
+
                     <div class="stat-row">
                         <span class="label">Pengunjung Hari Ini</span>
                         <span class="separator">:</span>
-                        <span class="value"></span>
+                        <span class="value">
+                            {{ $statistik['today'] ?? 0 }}
+                        </span>
                     </div>
+
                     <div class="stat-row">
                         <span class="label">Pengunjung Online</span>
                         <span class="separator">:</span>
-                        <span class="value"></span>
+                        <span class="value">
+                            {{ $statistik['online'] ?? 0 }}
+                        </span>
                     </div>
+
                 </div>
             </div>
 

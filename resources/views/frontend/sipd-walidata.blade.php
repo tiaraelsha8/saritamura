@@ -30,18 +30,45 @@
                     </h4>
 
                     <small class="text-muted">
-                        Total 3 dokumen tersedia
+                        Total {{ $dokumen->total() }} dokumen tersedia
                     </small>
                 </div>
 
-                <div class="search-box">
+                {{-- Search --}}
+                <form method="GET" action="{{ route('frontend.sipd-walidata') }}" class="search-box">
                     <i class="fas fa-search"></i>
 
-                    <input type="text" placeholder="Cari dokumen...">
-                </div>
+                    <input type="text" name="search" placeholder="Cari nama terus tekan enter..."
+                        value="{{ request('search') }}">
+                </form>
 
             </div>
 
+            {{-- Filter Keterangan --}}
+            <div class="mb-3">
+                <form method="GET" action="{{ route('frontend.sipd-walidata') }}">
+                    <div class="row">
+
+                        <div class="col-md-4">
+                            <select name="keterangan" class="form-select" onchange="this.form.submit()">
+
+                                <option value="">
+                                    -- Semua Keterangan --
+                                </option>
+
+                                @foreach ($allKeterangan as $keterangan)
+                                    <option value="{{ $keterangan }}"
+                                        {{ request('keterangan') == $keterangan ? 'selected' : '' }}>
+                                        {{ $keterangan }}
+                                    </option>
+                                @endforeach
+
+                            </select>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
 
             <div class="table-responsive">
 
@@ -51,187 +78,84 @@
                         <tr>
                             <th width="60">No</th>
                             <th>Dokumen</th>
-                            <th width="150">Kategori</th>
+                            <th width="250">Keterangan</th>
                             <th width="150">Tanggal</th>
-                            <th width="120">Status</th>
                             <th width="150">Aksi</th>
                         </tr>
                     </thead>
 
                     <tbody>
 
-                        <tr>
+                        @forelse ($dokumen as $key => $item)
+                            <tr>
 
-                            <td>1</td>
+                                <td>
+                                    {{ $dokumen->firstItem() + $key }}
+                                </td>
 
-                            <td>
+                                <td>
 
-                                <div class="doc-info">
+                                    <div class="doc-info">
 
-                                    <div class="doc-icon">
-                                        <i class="fas fa-file-pdf"></i>
-                                    </div>
-
-                                    <div>
-
-                                        <div class="doc-title">
-                                            Pedoman Walidata 2025
+                                        <div class="doc-icon">
+                                            <i class="fas fa-file-pdf"></i>
                                         </div>
 
-                                        <small class="text-muted">
-                                            PDF • 2.3 MB
-                                        </small>
+                                        <div>
 
-                                    </div>
+                                            <div class="doc-title">
+                                                {{ $item->nama_dok }}
+                                            </div>
 
-                                </div>
+                                            @if ($item->file)
+                                                <small class="text-muted">
+                                                    {{ strtoupper(pathinfo($item->file, PATHINFO_EXTENSION)) }}
+                                                </small>
+                                            @endif
 
-                            </td>
-
-                            <td>
-                                <span class="badge-category">
-                                    Pedoman
-                                </span>
-                            </td>
-
-                            <td>
-                                12 Jan 2025
-                            </td>
-
-                            <td>
-                                <span class="badge-status">
-                                    Aktif
-                                </span>
-                            </td>
-
-                            <td>
-
-                                <a href="#" class="btn-download">
-
-                                    <i class="fas fa-download"></i>
-                                    Download
-
-                                </a>
-
-                            </td>
-
-                        </tr>
-
-
-                        <tr>
-
-                            <td>2</td>
-
-                            <td>
-
-                                <div class="doc-info">
-
-                                    <div class="doc-icon">
-                                        <i class="fas fa-file-pdf"></i>
-                                    </div>
-
-                                    <div>
-
-                                        <div class="doc-title">
-                                            Laporan Statistik Daerah
                                         </div>
 
-                                        <small class="text-muted">
-                                            PDF • 1.8 MB
-                                        </small>
-
                                     </div>
 
-                                </div>
+                                </td>
 
-                            </td>
+                                <td>
+                                    <span class="badge-category">
+                                        {{ $item->keterangan }}
+                                    </span>
+                                </td>
 
-                            <td>
-                                <span class="badge-category">
-                                    Laporan
-                                </span>
-                            </td>
+                                <td>
+                                    {{ $item->created_at->format('d M Y') }}
+                                </td>
 
-                            <td>
-                                20 Feb 2025
-                            </td>
+                                <td>
 
-                            <td>
-                                <span class="badge-status">
-                                    Aktif
-                                </span>
-                            </td>
+                                    @if ($item->file)
+                                        <a href="{{ route('download.sipd-walidata', $item->id) }}" target="_blank"
+                                            class="btn-download">
 
-                            <td>
+                                            <i class="fas fa-download"></i>
+                                            Download
 
-                                <a href="#" class="btn-download">
+                                        </a>
+                                    @else
+                                        <span class="text-muted">
+                                            Belum ada file
+                                        </span>
+                                    @endif
 
-                                    <i class="fas fa-download"></i>
-                                    Download
+                                </td>
 
-                                </a>
+                            </tr>
+                        @empty
 
-                            </td>
-
-                        </tr>
-
-
-                        <tr>
-
-                            <td>3</td>
-
-                            <td>
-
-                                <div class="doc-info">
-
-                                    <div class="doc-icon">
-                                        <i class="fas fa-file-pdf"></i>
-                                    </div>
-
-                                    <div>
-
-                                        <div class="doc-title">
-                                            Standar Metadata SIPD
-                                        </div>
-
-                                        <small class="text-muted">
-                                            PDF • 3.1 MB
-                                        </small>
-
-                                    </div>
-
-                                </div>
-
-                            </td>
-
-                            <td>
-                                <span class="badge-category">
-                                    Regulasi
-                                </span>
-                            </td>
-
-                            <td>
-                                10 Mar 2025
-                            </td>
-
-                            <td>
-                                <span class="badge-status">
-                                    Aktif
-                                </span>
-                            </td>
-
-                            <td>
-
-                                <a href="#" class="btn-download">
-
-                                    <i class="fas fa-download"></i>
-                                    Download
-
-                                </a>
-
-                            </td>
-
-                        </tr>
+                            <tr>
+                                <td colspan="5" class="text-center">
+                                    Belum ada data dokumen
+                                </td>
+                            </tr>
+                        @endforelse
 
                     </tbody>
 
@@ -239,10 +163,14 @@
 
             </div>
 
+            {{-- Pagination --}}
+            <div class="mt-4">
+                {{ $dokumen->links() }}
+            </div>
+
         </div>
 
     </div>
-
 
     <style>
         .page-header {

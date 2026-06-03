@@ -519,47 +519,56 @@
     </div>
 
     <!-- ===== VIDEO SECTION ===== -->
-    <div class="video-section">
-        <div class="container">
-            <div class="text-center mb-4">
-                <h2 class="section-title fade-up delay-1">Lebih Dekat Dengan Satu Data Murung Raya</h2>
-            </div>
+    <div id="videoCarousel" class="carousel slide" data-bs-ride="carousel">
 
-            <div class="row gx-4 gy-0">
-                <!-- Video Item -->
-                <div class="col-md-4 fade-up delay-1">
-                    <div class="video-card">
-                        <div class="ratio ratio-16x9">
-                            <iframe src="https://www.youtube.com/embed/TDutYeYq9M4?si=5DZAoV28k96TDXRO" title="Video 1"
-                                allowfullscreen></iframe>
-                        </div>
-                        <h6 class="video-title mt-2">Sejarah Singkat Kabupaten Murung Raya</h6>
-                    </div>
-                </div>
+        <div class="carousel-inner">
 
-                <div class="col-md-4 fade-up delay-2">
-                    <div class="video-card">
-                        <div class="ratio ratio-16x9">
-                            <iframe src="https://www.youtube.com/embed/hLBh2AvRQ9Q?si=gALEZ8a8Q8uZw011" title="Video 2"
-                                allowfullscreen></iframe>
-                        </div>
-                        <h6 class="video-title mt-2">Bupati Heriyus Lantik 148 Pejabat Administrator, Pengawas dan
-                            Fungsional</h6>
-                    </div>
-                </div>
+            @foreach ($videos->chunk(3) as $key => $chunk)
+                <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
 
-                <div class="col-md-4 fade-up delay-3">
-                    <div class="video-card">
-                        <div class="ratio ratio-16x9">
-                            <iframe src="https://www.youtube.com/embed/E_5ICuKFkEk?si=bTmlNKfAZiTfut1Q" title="Video 3"
-                                allowfullscreen></iframe>
-                        </div>
-                        <h6 class="video-title mt-2">Pemkab Mura Gelar Buka Puasa Bersama, Sekaligus Syukuran 1 Tahun
-                            Pemerintahan HEBAT</h6>
+                    <div class="row gx-3">
+
+                        @foreach ($chunk as $item)
+                            <div class="col-md-4">
+
+                                <div class="video-card">
+
+                                    <div class="ratio ratio-16x9">
+                                        <iframe src="https://www.youtube.com/embed/{{ $item->video }}" allowfullscreen>
+                                        </iframe>
+                                    </div>
+
+                                    <h6 class="mt-2">
+                                        {{ $item->judul }}
+                                    </h6>
+
+                                </div>
+
+                            </div>
+                        @endforeach
+
                     </div>
+
                 </div>
-            </div>
+            @endforeach
+
         </div>
+
+        <!-- tombol geser -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#videoCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"
+                style="filter:invert(0) brightness(0); transform:scale(1.3); opacity:1;
+        filter: invert(0) brightness(0) drop-shadow(0 0 1px rgba(0,0,0,0.8));">
+            </span>
+        </button>
+
+        <button class="carousel-control-next" type="button" data-bs-target="#videoCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon"
+                style="filter:invert(0) brightness(0); transform:scale(1.3); opacity:1;
+        filter: invert(0) brightness(0) drop-shadow(0 0 1px rgba(0,0,0,0.8));">
+            </span>
+        </button>
+
     </div>
 
     <!-- ===== INFOGRAFIS SECTION ===== -->
@@ -570,82 +579,34 @@
             </div>
 
             <div class="row gx-4 gy-0">
-                <!-- Item -->
-                <div class="col-md-3 fade-up delay-1">
-                    <a href="{{ route('frontend.infografis') }}" class="infografis-link">
-                        <div class="infografis-card">
-                            <div class="infografis-media">
-                                <img src="{{ asset('assets/images/infografis5.png') }}" class="infografis-img"
-                                    alt="">
-                                <p class="infografis-desc mt-2">Infografis adalah representasi visual dari data atau
-                                    informasi
-                                    kompleks
-                                    yang disajikan dalam bentuk grafis (gambar, ikon, bagan, dan teks minimal) agar mudah
-                                    dipahami,
-                                    menarik, dan cepat dimengerti sekilas. Infografis mengubah angka kaku dan fakta rumit
-                                    menjadi
-                                    cerita visual yang memikat.</p>
-                            </div>
-                        </div>
-                    </a>
-                </div>
 
-                <div class="col-md-3 fade-up delay-2">
-                    <a href="{{ route('frontend.infografis') }}" class="infografis-link">
-                        <div class="infografis-card">
-                            <div class="infografis-media">
-                                <img src="{{ asset('assets/images/infografis5.png') }}" class="infografis-img"
-                                    alt="">
-                                <p class="infografis-desc mt-2">Infografis adalah representasi visual dari data atau
-                                    informasi
-                                    kompleks
-                                    yang disajikan dalam bentuk grafis (gambar, ikon, bagan, dan teks minimal) agar mudah
-                                    dipahami,
-                                    menarik, dan cepat dimengerti sekilas. Infografis mengubah angka kaku dan fakta rumit
-                                    menjadi
-                                    cerita visual yang memikat.</p>
-                            </div>
-                        </div>
-                    </a>
-                </div>
+                @forelse ($infografis as $key => $item)
+                    <div class="col-md-3 fade-up delay-{{ $key + 1 }}">
 
-                <div class="col-md-3 fade-up delay-3">
-                    <a href="{{ route('frontend.infografis') }}" class="infografis-link">
-                        <div class="infografis-card">
-                            <div class="infografis-media">
-                                <img src="{{ asset('assets/images/infografis5.png') }}" class="infografis-img"
-                                    alt="">
-                                <p class="infografis-desc mt-2">Infografis adalah representasi visual dari data atau
-                                    informasi
-                                    kompleks
-                                    yang disajikan dalam bentuk grafis (gambar, ikon, bagan, dan teks minimal) agar mudah
-                                    dipahami,
-                                    menarik, dan cepat dimengerti sekilas. Infografis mengubah angka kaku dan fakta rumit
-                                    menjadi
-                                    cerita visual yang memikat.</p>
-                            </div>
-                        </div>
-                    </a>
-                </div>
+                        <a href="{{ route('infografis.show', $item->id) }}" class="infografis-link">
 
-                <div class="col-md-3 fade-up delay-4">
-                    <a href="{{ route('frontend.infografis') }}" class="infografis-link">
-                        <div class="infografis-card">
-                            <div class="infografis-media">
-                                <img src="{{ asset('assets/images/infografis5.png') }}" class="infografis-img"
-                                    alt="">
-                                <p class="infografis-desc mt-2">Infografis adalah representasi visual dari data atau
-                                    informasi
-                                    kompleks
-                                    yang disajikan dalam bentuk grafis (gambar, ikon, bagan, dan teks minimal) agar mudah
-                                    dipahami,
-                                    menarik, dan cepat dimengerti sekilas. Infografis mengubah angka kaku dan fakta rumit
-                                    menjadi
-                                    cerita visual yang memikat.</p>
+                            <div class="infografis-card">
+
+                                <div class="infografis-media">
+
+                                    <img src="{{ $item->foto ? asset('storage/grafik/' . $item->foto) : 'https://via.placeholder.com/600x400?text=No+Image' }}"
+                                        class="infografis-img" alt="{{ $item->judul }}">
+
+                                    <p class="infografis-desc mt-2">
+                                        {{ \Illuminate\Support\Str::limit(strip_tags($item->deskripsi), 120, '...') }}
+                                    </p>
+
+                                </div>
+
                             </div>
-                        </div>
-                    </a>
-                </div>
+
+                        </a>
+
+                    </div>
+                @empty
+                    <p class="text-center">Infografis belum tersedia</p>
+                @endforelse
+
             </div>
         </div>
     </div>

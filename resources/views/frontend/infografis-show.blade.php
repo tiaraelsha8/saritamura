@@ -13,55 +13,41 @@
             </p>
         </div>
     </div>
-
     <div class="container py-5">
+        <div class="row justify-content-center">
 
-        @forelse ($infografis as $item)
-            <div class="infografis-item mb-4 p-3 border rounded">
+            <div class="col-lg-9 col-md-10">
 
-                <h4 class="infografis-title mb-2">
-                    {{ $item->judul }}
-                </h4>
+                <h1 class="mb-2">
+                    {{ $infografis->judul }}
+                </h1>
 
-                <div class="infografis-meta mb-2 text-muted" style="font-size: 13px;">
-                    Oleh: {{ $item->penulis }}
-                    | {{ $item->created_at->format('d M Y') }}
+                <div class="infografis-meta mb-3">
+                    Oleh: {{ $infografis->penulis }}
+                    |
+                    {{ $infografis->created_at->format('d M Y') }}
                 </div>
 
-                <div class="row align-items-center">
-
-                    <div class="col-md-4">
-                        <img src="{{ $item->foto ? asset('storage/grafik/' . $item->foto) : 'https://via.placeholder.com/600x400?text=No+Image' }}"
-                            class="img-fluid rounded" style="max-height:180px; object-fit:cover;" alt="{{ $item->judul }}">
+                @if ($infografis->foto)
+                    <div class="text-center mb-4">
+                        <img src="{{ asset('storage/grafik/' . $infografis->foto) }}" alt="{{ $infografis->judul }}"
+                            class="img-fluid rounded shadow-sm">
                     </div>
+                @endif
 
-                    <div class="col-md-8">
+                <div class="mb-4">
+                    {!! $infografis->deskripsi !!}
+                </div>
 
-                        <p class="mb-2" style="font-size:14px;">
-                            {{ \Illuminate\Support\Str::limit(strip_tags($item->deskripsi), 180, '...') }}
-                        </p>
-
-                        <a href="{{ route('infografis.show', $item->id) }}" class="btn btn-sm btn-primary">
-                            Selengkapnya
-                        </a>
-
-                    </div>
-
+                <div class="mt-4">
+                    <a href="{{ route('frontend.infografis') }}" class="btn btn-secondary">
+                        ← Kembali
+                    </a>
                 </div>
 
             </div>
 
-        @empty
-            <div class="alert alert-info">
-                Data infografis belum tersedia.
-            </div>
-        @endforelse
-
-        {{-- PAGINATION --}}
-        <div class="d-flex justify-content-center mt-4">
-            {{ $infografis->links('pagination::bootstrap-4') }}
         </div>
-
     </div>
 
     <style>

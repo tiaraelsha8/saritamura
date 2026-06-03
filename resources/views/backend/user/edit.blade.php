@@ -48,7 +48,7 @@
                         <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
 
-                    <div class="form-group position-relative">
+                    {{-- <div class="form-group position-relative">
                         <label>Password</label>
                         <input type="password" class="form-control" name="password" id="password"
                             placeholder="kosongkan kalau tidak ubah password">
@@ -60,7 +60,7 @@
                     : '<i class=\'fas fa-eye-slash\'></i>';">
                             <i class="fas fa-eye"></i>
                         </span>
-                    </div>
+                    </div> --}}
 
                     @error('password')
                         <div class="alert alert-danger mt-2">{{ $message }}</div>
@@ -68,12 +68,10 @@
 
                     <div class="form-group">
                         <label for="role">Role</label>
-                        <select name="role" id="role" class="form-control" required>
-                            <option value="">-- Pilih Role --</option>
-                            <option value="superadmin" {{ $user->role === 'superadmin' ? 'selected' : '' }}>Superadmin
-                            </option>
-                            <option value="admin" {{ $user->role === 'admin' ? 'selected' : '' }}>Admin</option>
-                        </select>
+
+                        <input type="text" class="form-control" value="Admin" readonly>
+
+                        <input type="hidden" name="role" value="admin">
                     </div>
 
                     @error('role')
