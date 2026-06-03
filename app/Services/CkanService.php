@@ -139,18 +139,22 @@ class CkanService
      */
     public function searchPackages(?string $query = '', array $params = []): array
     {
-        // Convert null to empty string
-        $query = $query ?? '';
-
         $defaultParams = [
-            'q' => $query,
             'rows' => $params['rows'] ?? 12,
             'start' => $params['start'] ?? 0,
             'sort' => $params['sort'] ?? 'metadata_modified desc',
             'include_private' => false,
         ];
 
-        return $this->callApi('package_search', array_merge($defaultParams, $params), true, 300);
+        // ✅ FIX: Only add 'q' if query is not empty
+        if (!empty($query) && $query !== '*' && $query !== '') {
+            $defaultParams['q'] = $query;
+        }
+        // If query is empty, don't send 'q' parameter at all
+
+        $finalParams = array_merge($defaultParams, $params);
+
+        return $this->callApi('package_search', $finalParams, false, 0);
     }
 
     /**
@@ -164,26 +168,32 @@ class CkanService
 
 
     /**
-     * Get List of Organizations
+     * Get Organizations List
      */
-    public function getOrganizations(): array
+    public function getOrganizations(array $params = []): array
     {
-        return $this->callApi('organization_list', [
+        $defaultParams = [
             'all_fields' => true,
             'include_extras' => true,
-        ], true, 3600);
+            'include_dataset_count' => true,
+        ];
+
+        return $this->callApi('organization_list', array_merge($defaultParams, $params), true, 1800);
     }
 
     /**
      * Get Organization Details
      */
-    public function getOrganization(string $id): array
+    public function getOrganization(string $id, array $params = []): array
     {
-        return $this->callApi('organization_show', [
+        $defaultParams = [
             'id' => $id,
-            'include_datasets' => true,
-            'include_dataset_count' => true,
-        ], true, 1800);
+            'all_fields' => true,
+            'include_extras' => true,
+            'include_datasets' => false,  // Fetch datasets separately for pagination
+        ];
+
+        return $this->callApi('organization_show', array_merge($defaultParams, $params), true, 600);
     }
 
     /**
