@@ -168,26 +168,32 @@ class CkanService
 
 
     /**
-     * Get List of Organizations
+     * Get Organizations List
      */
-    public function getOrganizations(): array
+    public function getOrganizations(array $params = []): array
     {
-        return $this->callApi('organization_list', [
+        $defaultParams = [
             'all_fields' => true,
             'include_extras' => true,
-        ], true, 3600);
+            'include_dataset_count' => true,
+        ];
+
+        return $this->callApi('organization_list', array_merge($defaultParams, $params), true, 1800);
     }
 
     /**
      * Get Organization Details
      */
-    public function getOrganization(string $id): array
+    public function getOrganization(string $id, array $params = []): array
     {
-        return $this->callApi('organization_show', [
+        $defaultParams = [
             'id' => $id,
-            'include_datasets' => true,
-            'include_dataset_count' => true,
-        ], true, 1800);
+            'all_fields' => true,
+            'include_extras' => true,
+            'include_datasets' => false,  // Fetch datasets separately for pagination
+        ];
+
+        return $this->callApi('organization_show', array_merge($defaultParams, $params), true, 600);
     }
 
     /**

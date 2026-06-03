@@ -64,8 +64,6 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         Route::resource('/grafik', GrafikController::class);
         Route::post('grafik-upload', [GrafikController::class, 'storeImage'])->name('grafik.upload');
 
-        Route::resource('/dokumen', DokumenController::class);
-        Route::get('/dokumen/download/{id}', [DokumenController::class, 'download'])->name('dokumen.download');
     });
 
 });
@@ -93,7 +91,7 @@ Route::prefix('ckan')->controller(CkanController::class)->group(function () {
 
     // Organizations
     Route::get('/organizations', 'organizations')->name('ckan.organizations');
-    Route::get('/organization/{id}', 'showOrganization')->name('ckan.organization');
+    Route::get('/organization/{id}', 'organization')->name('ckan.organization');
 
     // API
     Route::get('/health', 'health')->name('ckan.health');

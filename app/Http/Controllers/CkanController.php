@@ -295,15 +295,15 @@ class CkanController extends Controller
     /**
      * Get organizations list
      */
-    public function organizations()
-    {
-        try {
-            $organizations = $this->ckan->getOrganizations();
-            return view('ckan.organizations', compact('organizations'));
-        } catch (Exception $e) {
-            return back()->with('error', 'Gagal mengambil data organisasi');
-        }
-    }
+    // public function organizations()
+    // {
+    //     try {
+    //         $organizations = $this->ckan->getOrganizations();
+    //         return view('ckan.organizations', compact('organizations'));
+    //     } catch (Exception $e) {
+    //         return back()->with('error', 'Gagal mengambil data organisasi');
+    //     }
+    // }
 
     /**
      * Get organization detail
@@ -555,40 +555,36 @@ class CkanController extends Controller
     {
         try {
             $page = $request->input('page', 1);
-            $limit = min($request->input('limit', 100), 1000);  // Max 1000 records
+            $limit = min($request->input('limit', 100), 1000);
             $offset = ($page - 1) * $limit;
-            $sort = $request->input('sort', '');
-            $filters = $request->input('filters', []);
             $search = $request->input('search', '');
 
-            // Build search params
+            // ✅ Server-side cache key
+            $cacheKey = "ckan_api_data_{$resourceId}_{$page}_{$limit}_{$search}";
+
+            // Try cache first (30 seconds TTL)
+            if (Cache::has($cacheKey)) {
+                \Log::info('API cache hit', ['key' => $cacheKey]);
+                return response()->json(Cache::get($cacheKey));
+            }
+
+            // Build params
             $params = [
                 'resource_id' => $resourceId,
                 'limit' => $limit,
                 'offset' => $offset,
                 'include_total' => true,
-                'records_format' => 'objects',  // or 'lists'
+                'records_format' => 'objects',
             ];
 
-            // Add sort
-            if (!empty($sort)) {
-                $params['sort'] = $sort;
-            }
-
-            // Add filters (DataStore SQL-like filters)
-            if (!empty($filters)) {
-                $params['filters'] = $filters;
-            }
-
-            // Add full-text search
-            if (!empty($search)) {
+            if ($search) {
                 $params['full_text'] = $search;
             }
 
-            // Fetch from CKAN DataStore
+            // Fetch from CKAN
             $result = $this->ckan->searchDataStore($resourceId, $params);
 
-            return response()->json([
+            $response = [
                 'success' => true,
                 'data' => $result['records'] ?? [],
                 'fields' => $result['fields'] ?? [],
@@ -598,10 +594,15 @@ class CkanController extends Controller
                     'limit' => $limit,
                     'total_pages' => ceil(($result['total'] ?? 0) / $limit),
                 ],
-            ]);
+            ];
+
+            // ✅ Cache response for 30 seconds
+            Cache::put($cacheKey, $response, 30);
+
+            return response()->json($response);
 
         } catch (\Exception $e) {
-            Log::error('API get data error', [
+            \Log::error('API get data error', [
                 'resourceId' => $resourceId,
                 'error' => $e->getMessage()
             ]);
@@ -763,6 +764,129 @@ class CkanController extends Controller
         } catch (\Exception $e) {
             \Log::error('API Autocomplete error', ['error' => $e->getMessage()]);
             return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Display list of organizations
+     */
+    public function organizations(Request $request)
+    {
+        try {
+            // Fetch organizations from CKAN
+            $organizations = $this->ckan->getOrganizations([
+                'all_fields' => true,
+                'include_extras' => true,
+                'include_dataset_count' => true,
+            ]);
+
+            // Transform data for view
+            $orgs = collect($organizations)->map(function ($org) {
+                return [
+                    'id' => $org['id'],
+                    'name' => $org['name'],
+                    'title' => $org['title'] ?? $org['name'],
+                    'description' => $org['description'] ?? 'Tidak ada deskripsi',
+                    'image_url' => $org['image_url'] ?? null,
+                    'created' => $org['created'] ?? null,
+                    'is_organization' => $org['is_organization'] ?? true,
+                    'package_count' => $org['package_count'] ?? 0,
+                    'extras' => $org['extras'] ?? [],
+                    // Extract custom fields from extras
+                    'address' => collect($org['extras'] ?? [])->firstWhere('key', 'address')['value'] ?? null,
+                    'phone' => collect($org['extras'] ?? [])->firstWhere('key', 'phone')['value'] ?? null,
+                    'email' => collect($org['extras'] ?? [])->firstWhere('key', 'email')['value'] ?? null,
+                    'website' => collect($org['extras'] ?? [])->firstWhere('key', 'website')['value'] ?? null,
+                ];
+            })->sortBy('title');
+
+            return view('ckan.organizations', [
+                'organizations' => $orgs,
+                'total' => $orgs->count(),
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Failed to load organizations', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return view('ckan.organizations', [
+                'organizations' => collect(),
+                'total' => 0,
+                'error' => 'Gagal memuat data organisasi: ' . $e->getMessage(),
+            ]);
+        }
+    }
+
+    /**
+     * Display organization detail with datasets
+     */
+    public function organization(string $id, Request $request)
+    {
+        try {
+            // Get organization details
+            $organization = $this->ckan->getOrganization($id);
+
+            // Get datasets from this organization
+            $page = $request->input('page', 1);
+            $perPage = $request->input('per_page', 12);
+
+            $searchParams = [
+                'fq' => sprintf('organization:"%s"', $organization['name']),
+                'rows' => $perPage,
+                'start' => ($page - 1) * $perPage,
+                'sort' => 'metadata_modified desc',
+            ];
+
+            $result = $this->ckan->searchPackages('*', $searchParams);
+
+            // Transform datasets
+            $datasets = collect($result['results'] ?? [])->map(function ($pkg) {
+                return [
+                    'id' => $pkg['id'],
+                    'name' => $pkg['name'],
+                    'title' => $pkg['title'] ?? $pkg['name'],
+                    'notes' => Str::limit($pkg['notes'] ?? 'Tidak ada deskripsi', 150),
+                    'license_id' => $pkg['license_id'] ?? null,
+                    'private' => $pkg['private'] ?? false,
+                    'resource_count' => count($pkg['resources'] ?? []),
+                    'tags' => $pkg['tags'] ?? [],
+                    'metadata_modified' => $pkg['metadata_modified'] ?? null,
+                ];
+            });
+
+            return view('ckan.organization-detail', [
+                'organization' => [
+                    'id' => $organization['id'],
+                    'name' => $organization['name'],
+                    'title' => $organization['title'] ?? $organization['name'],
+                    'description' => $organization['description'] ?? 'Tidak ada deskripsi',
+                    'image_url' => $organization['image_url'] ?? null,
+                    'created' => $organization['created'] ?? null,
+                    'package_count' => $organization['package_count'] ?? 0,
+                    'extras' => $organization['extras'] ?? [],
+                    'address' => collect($organization['extras'] ?? [])->firstWhere('key', 'address')['value'] ?? null,
+                    'phone' => collect($organization['extras'] ?? [])->firstWhere('key', 'phone')['value'] ?? null,
+                    'email' => collect($organization['extras'] ?? [])->firstWhere('key', 'email')['value'] ?? null,
+                    'website' => collect($organization['extras'] ?? [])->firstWhere('key', 'website')['value'] ?? null,
+                ],
+                'datasets' => $datasets,
+                'pagination' => [
+                    'total' => $result['count'] ?? 0,
+                    'per_page' => $perPage,
+                    'current_page' => $page,
+                    'last_page' => ceil(($result['count'] ?? 0) / $perPage),
+                ],
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Failed to load organization detail', [
+                'id' => $id,
+                'error' => $e->getMessage(),
+            ]);
+
+            abort(404, 'Organisasi tidak ditemukan');
         }
     }
 }
