@@ -830,7 +830,7 @@ class CkanController extends Controller
                 ];
             })->sortBy('title');
 
-            return view('ckan.organizations', [
+            return view('frontend.organizations', [
                 'organizations' => $orgs,
                 'total' => $orgs->count(),
             ]);
@@ -841,7 +841,7 @@ class CkanController extends Controller
                 'trace' => $e->getTraceAsString(),
             ]);
 
-            return view('ckan.organizations', [
+            return view('frontend.organizations', [
                 'organizations' => collect(),
                 'total' => 0,
                 'error' => 'Gagal memuat data organisasi: ' . $e->getMessage(),
@@ -886,7 +886,7 @@ class CkanController extends Controller
                 ];
             });
 
-            return view('ckan.organization-detail', [
+            return view('frontend.organization-detail', [
                 'organization' => [
                     'id' => $organization['id'],
                     'name' => $organization['name'],

@@ -387,11 +387,10 @@
         <!-- Breadcrumb -->
         <nav aria-label="breadcrumb" class="mb-4">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ route('frontend.home') }}"><i class="fas fa-home"></i> Beranda</a>
-                </li>
-                <li class="breadcrumb-item"><a href="{{ route('frontend.datasets') }}">Dataset</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('ckan.index') }}"><i class="fas fa-home"></i> Beranda</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('ckan.datasets') }}">Dataset</a></li>
                 <li class="breadcrumb-item"><a
-                        href="{{ route('frontend.show', $package['id']) }}">{{ Str::limit($package['title'], 40) }}</a></li>
+                        href="{{ route('ckan.show', $package['id']) }}">{{ Str::limit($package['title'], 40) }}</a></li>
                 <li class="breadcrumb-item active">Preview Data</li>
             </ol>
         </nav>
@@ -422,7 +421,7 @@
                     </div>
                 </div>
                 <div>
-                    <a href="{{ route('frontend.show', $package['id']) }}" class="btn btn-outline-secondary">
+                    <a href="{{ route('ckan.show', $package['id']) }}" class="btn btn-outline-secondary">
                         <i class="fas fa-arrow-left"></i> Kembali ke Dataset
                     </a>
                 </div>
@@ -652,7 +651,7 @@
                 document.getElementById('recordsPerPage').addEventListener('change', loadData);
                 document.getElementById('tableSearch').addEventListener('input', (e) => debounceLoadData(e.target.value, 300));
             @endif
-                                                                                                    });
+                                                                                });
 
         // ===== TABLE FUNCTIONS =====
         let searchTimeout;
@@ -773,24 +772,24 @@
             const to = Math.min(pagination.page * pagination.limit, pagination.total);
 
             infoEl.innerHTML = `
-                                                                                                            <span>Menampilkan ${from.toLocaleString()} - ${to.toLocaleString()} dari ${pagination.total.toLocaleString()} records</span>
-                                                                                                            <span>
-                                                                                                                ${pagination.page > 1 ? `<button class="btn btn-sm btn-outline-secondary me-1" onclick="loadData(${pagination.page - 1})">← Prev</button>` : '<button class="btn btn-sm btn-outline-secondary me-1" disabled>← Prev</button>'}
-                                                                                                                Page ${pagination.page} of ${pagination.total_pages}
-                                                                                                                ${pagination.page < pagination.total_pages ? `<button class="btn btn-sm btn-outline-secondary ms-1" onclick="loadData(${pagination.page + 1})">Next →</button>` : '<button class="btn btn-sm btn-outline-secondary ms-1" disabled>Next →</button>'}
-                                                                                                            </span>
-                                                                                                        `;
+                                                                                        <span>Menampilkan ${from.toLocaleString()} - ${to.toLocaleString()} dari ${pagination.total.toLocaleString()} records</span>
+                                                                                        <span>
+                                                                                            ${pagination.page > 1 ? `<button class="btn btn-sm btn-outline-secondary me-1" onclick="loadData(${pagination.page - 1})">← Prev</button>` : '<button class="btn btn-sm btn-outline-secondary me-1" disabled>← Prev</button>'}
+                                                                                            Page ${pagination.page} of ${pagination.total_pages}
+                                                                                            ${pagination.page < pagination.total_pages ? `<button class="btn btn-sm btn-outline-secondary ms-1" onclick="loadData(${pagination.page + 1})">Next →</button>` : '<button class="btn btn-sm btn-outline-secondary ms-1" disabled>Next →</button>'}
+                                                                                        </span>
+                                                                                    `;
         }
 
         function showErrorMessage(message) {
             document.getElementById('dataTable').innerHTML = `
-                                                                                                            <tbody><tr><td colspan="100%" class="text-center py-5 text-danger">
-                                                                                                                <i class="fas fa-exclamation-triangle fa-2x mb-3"></i>
-                                                                                                                <p class="mb-0"><strong>Error:</strong> ${escapeHtml(message)}</p>
-                                                                                                                <small class="text-muted">Coba refresh atau periksa koneksi Anda</small>
-                                                                                                                <div class="mt-3"><button class="btn btn-outline-primary btn-sm" onclick="loadData()"><i class="fas fa-sync-alt"></i> Coba Lagi</button></div>
-                                                                                                            </td></tr></tbody>
-                                                                                                        `;
+                                                                                        <tbody><tr><td colspan="100%" class="text-center py-5 text-danger">
+                                                                                            <i class="fas fa-exclamation-triangle fa-2x mb-3"></i>
+                                                                                            <p class="mb-0"><strong>Error:</strong> ${escapeHtml(message)}</p>
+                                                                                            <small class="text-muted">Coba refresh atau periksa koneksi Anda</small>
+                                                                                            <div class="mt-3"><button class="btn btn-outline-primary btn-sm" onclick="loadData()"><i class="fas fa-sync-alt"></i> Coba Lagi</button></div>
+                                                                                        </td></tr></tbody>
+                                                                                    `;
         }
 
         function exportData(format) {
@@ -1044,12 +1043,12 @@
             const container = document.querySelector('.chart-container');
             if (container) {
                 container.innerHTML = `
-                                                                                                                <div class="chart-error">
-                                                                                                                    <i class="fas fa-chart-bar fa-3x mb-3"></i>
-                                                                                                                    <p class="mb-0">${message}</p>
-                                                                                                                    <button class="btn btn-outline-primary btn-sm mt-3" onclick="loadChartData()"><i class="fas fa-sync-alt"></i> Coba Lagi</button>
-                                                                                                                </div>
-                                                                                                            `;
+                                                                                            <div class="chart-error">
+                                                                                                <i class="fas fa-chart-bar fa-3x mb-3"></i>
+                                                                                                <p class="mb-0">${message}</p>
+                                                                                                <button class="btn btn-outline-primary btn-sm mt-3" onclick="loadChartData()"><i class="fas fa-sync-alt"></i> Coba Lagi</button>
+                                                                                            </div>
+                                                                                        `;
             }
         }
 

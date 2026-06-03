@@ -495,10 +495,10 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
-                        <a href="{{ route('frontend.home') }}"><i class="fas fa-home"></i> Beranda</a>
+                        <a href="{{ route('ckan.index') }}"><i class="fas fa-home"></i> Beranda</a>
                     </li>
                     <li class="breadcrumb-item">
-                        <a href="{{ route('frontend.datasets') }}">Dataset</a>
+                        <a href="{{ route('ckan.datasets') }}">Dataset</a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">
                         {{ Str::limit($package['title'] ?? $package['name'], 50) }}
@@ -641,7 +641,7 @@
 
                                     @if($resource['datastore_active'] ?? false)
                                         <!-- ✅ NEW: Preview Button -->
-                                        <a href="{{ route('frontend.resource.preview', ['datasetId' => $package['id'], 'resourceId' => $resource['id']]) }}"
+                                        <a href="{{ route('ckan.resource.preview', ['datasetId' => $package['id'], 'resourceId' => $resource['id']]) }}"
                                             class="btn btn-outline-success" target="_blank">
                                             <i class="fas fa-table"></i> Preview Data
                                         </a>

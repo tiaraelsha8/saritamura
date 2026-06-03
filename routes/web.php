@@ -92,7 +92,7 @@ Route::prefix('ckan')
 
         // Organizations
         Route::get('/organizations', 'organizations')->name('frontend.organizations');
-        Route::get('/organization/{id}', 'showOrganization')->name('frontend.organization');
+        Route::get('/organization/{id}', 'organization')->name('frontend.organization');
 
         // API
         Route::get('/health', 'health')->name('frontend.health');
