@@ -1,8 +1,8 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4" style="background-color: #0071b4">
     <!-- Brand Logo -->
     <a href="" class="brand-link">
-      <img src="{{ asset('image/tingang.png') }}" alt="Logo" class="brand-image img-circle elevation-3 mr-2" style="opacity: .9; background:#ffffff">
-      <span class="brand-text font-weight-light">TINGANG</span>
+      <img src="{{ asset('image/logo-murung-raya.png') }}" alt="Logo" class="brand-image img-circle elevation-3 mr-2" style="opacity: .9; background:#ffffff">
+      <span class="brand-text font-weight-light">SARITAMURA</span>
     </a>
 
     <!-- Sidebar -->
@@ -59,7 +59,7 @@
             <a href="{{ route ('grafik.index') }}" class="nav-link">
               <i class="nav-icon fas fa-table"></i>
               <p>
-                Info Grafik
+                Info Grafis
               </p>
             </a>
           </li>

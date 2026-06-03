@@ -16,7 +16,7 @@
 @extends('backend.layouts.master')
 
 @section('judul')
-  Halaman Kelola Info Grafik
+  Halaman Kelola Info Grafis
 @endsection
 
 @section('content')
@@ -43,7 +43,7 @@
 
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">Data Info Grafik</h3>
+            <h3 class="card-title">Data Info Grafis</h3>
           </div>
           <!-- /.card-header -->
           <div class="card-body">

@@ -16,7 +16,7 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('templateadmin/dist/css/adminlte.min.css') }}">
     <!-- Favicon -->
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('templateadmin/dist/img/AdminLTELogo.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('image/logo-murung-raya.png') }}">
 </head>
 
 <body class="hold-transition login-page">
@@ -27,7 +27,7 @@
                 <div class="login-logo">
                     <a href=""><b>Katalog Layanan</b></a>
                     <div class="text-center mt-2">
-                        <img src="{{ asset('image/logo/logodiskominfo.png') }}" alt="Logo Diskominfo"
+                        <img src="{{ asset('image/logo-murung-raya.png') }}" alt="Logo Diskominfo"
                             style="height: 80px;">
                     </div>
                 </div>

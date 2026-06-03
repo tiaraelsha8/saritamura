@@ -36,7 +36,7 @@ class DokumenController extends Controller
         $request->validate([
             'nama_dok' => 'required',
             'keterangan' => 'required',
-            'file' => 'required|mimes:pdf|max:5120', //5 mb
+            'file' => 'required|mimes:pdf,xls,xlsx|max:5120', // 5MB
         ]);
 
         //upload
@@ -51,7 +51,9 @@ class DokumenController extends Controller
         ]);
 
         //redirect to index
-        return redirect()->route('dokumen.index')->with(['success' => 'Data Berhasil Disimpan!']);
+        return redirect()
+            ->route('dokumen.index')
+            ->with(['success' => 'Data Berhasil Disimpan!']);
     }
 
     /**
@@ -83,13 +85,13 @@ class DokumenController extends Controller
         $request->validate([
             'nama_dok' => 'required',
             'keterangan' => 'required',
-            'file' => 'mimes:pdf|max:5120', //5 mb
+            'file' => 'nullable|mimes:pdf,xls,xlsx|max:5120', // 5MB
         ]);
 
         $dokumens = Dokumen::findOrFail($id);
 
-         //check
-         if ($request->hasFile('file')) {
+        //check
+        if ($request->hasFile('file')) {
             //delete
             Storage::delete('dokumen/' . $dokumens->file);
 
@@ -97,7 +99,7 @@ class DokumenController extends Controller
             $file = $request->file('file');
             $file->storeAs('dokumen', $file->hashName());
 
-            //update new 
+            //update new
             $dokumens->update([
                 'nama_dok' => $request->nama_dok,
                 'keterangan' => $request->keterangan,
@@ -112,8 +114,9 @@ class DokumenController extends Controller
         }
 
         //redirect to index
-        return redirect()->route('dokumen.index')->with(['success' => 'Data Berhasil Diubah!']);
-
+        return redirect()
+            ->route('dokumen.index')
+            ->with(['success' => 'Data Berhasil Diubah!']);
     }
 
     /**
@@ -146,9 +149,20 @@ class DokumenController extends Controller
         if (!file_exists($path)) {
             abort(404);
         }
+        $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+
+        // set content type sesuai file
+        $mimeTypes = [
+            'pdf' => 'application/pdf',
+            'xls' => 'application/vnd.ms-excel',
+            'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        ];
+
+        $mime = $mimeTypes[$ext] ?? 'application/octet-stream';
 
         return response()->file($path, [
-            'Content-Disposition' => 'inline; filename="' . $dokumen->file . '"'
+            'Content-Type' => $mime,
+            'Content-Disposition' => 'inline; filename="' . $filename . '"',
         ]);
     }
 }

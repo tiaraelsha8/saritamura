@@ -29,7 +29,7 @@
     <!-- summernote -->
     <link rel="stylesheet" href="{{ asset('templateadmin/plugins/summernote/summernote-bs4.min.css') }}">
     <!-- Favicon -->
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('image/tingang.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('image/logo-murung-raya.png') }}">
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('templateadmin/dist/css/adminlte.min.css') }}">
 
