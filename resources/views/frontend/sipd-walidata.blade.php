@@ -95,24 +95,30 @@
 
                                 <td>
 
+                                    @php
+                                        $ext = strtolower(pathinfo($item->file ?? '', PATHINFO_EXTENSION));
+                                    @endphp
+
                                     <div class="doc-info">
 
                                         <div class="doc-icon">
-                                            <i class="fas fa-file-pdf"></i>
+                                            @if (in_array($ext, ['xls', 'xlsx', 'csv']))
+                                                <i class="fas fa-file-excel text-success"></i>
+                                            @else
+                                                <i class="fas fa-file-pdf text-danger"></i>
+                                            @endif
                                         </div>
 
                                         <div>
-
                                             <div class="doc-title">
                                                 {{ $item->nama_dok }}
                                             </div>
 
                                             @if ($item->file)
                                                 <small class="text-muted">
-                                                    {{ strtoupper(pathinfo($item->file, PATHINFO_EXTENSION)) }}
+                                                    {{ strtoupper($ext) }}
                                                 </small>
                                             @endif
-
                                         </div>
 
                                     </div>
@@ -120,9 +126,9 @@
                                 </td>
 
                                 <td>
-                                    <span class="badge-category">
+                                    <div class="badge-category">
                                         {{ $item->keterangan }}
-                                    </span>
+                                    </div>
                                 </td>
 
                                 <td>
