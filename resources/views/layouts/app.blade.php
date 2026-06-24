@@ -19,6 +19,17 @@
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('image/logo-komdigi.png') }}">
+
+    <!-- Meta deskripsi untuk SEO. Ini yang ditampilkan Google di hasil pencarian -->
+    <meta name="description"
+        content="Portal Resmi Satu Data Indonesia Kabupaten Murung Raya yang menyediakan data statistik, 
+        data sektoral, informasi geospasial, metadata, berita, publikasi, dan layanan data 
+        Pemerintah Daerah secara akurat, terpadu, dan berkelanjutan.">
+    <meta name="robots" content="index, follow"> <!-- biarkan Google mengindeks -->
+    <link rel="canonical" href="https://satudata.murungrayakab.go.id"> <!-- ganti dengan domain -->
+
     <!-- Custom Styles -->
     <style>
         html {
