@@ -24,7 +24,7 @@ Route::get('/', function () {
 });
 
 Route::get('/login-ckan', function () {
-    return redirect()->away('https://dev-egovt.murungrayakab.go.id/user/login');
+    return redirect()->away('https://saritamura.murungrayakab.go.id/user/login');
 });
 
 // ==================== LOGIN ====================
