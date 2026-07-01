@@ -37,8 +37,11 @@
         }
 
         body {
-            font-family: 'Figtree', sans-serif;
-            background: #f8fafc;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--light-bg);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         .navbar-brand {
@@ -146,7 +149,7 @@
     @include('partial.navbar')
 
     <!-- Main Content -->
-    <main>
+    <main class="flex-grow-1">
         @yield('content')
     </main>
 

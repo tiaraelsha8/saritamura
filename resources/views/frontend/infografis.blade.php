@@ -111,7 +111,6 @@
         .section-title {
             font-weight: 700;
             margin-bottom: 0.5rem;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
 
         .grafs-subtitle {

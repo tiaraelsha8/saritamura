@@ -230,12 +230,21 @@
 
         .document-wrapper {
             background: #fff;
-            border-radius: 20px;
+            border-radius: 24px;
             padding: 30px;
             overflow: hidden;
 
+            border: 1px solid rgba(15, 23, 42, 0.06);
+
             box-shadow:
-                0 10px 30px rgba(0, 0, 0, .05);
+                0 1px 2px rgba(0, 0, 0, .04),
+                0 10px 25px rgba(15, 23, 42, .08),
+                0 30px 60px rgba(15, 23, 42, .08);
+
+            position: relative;
+
+
+            z-index: 10;
         }
 
         .top-area {

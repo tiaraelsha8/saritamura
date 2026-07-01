@@ -64,7 +64,6 @@
         .page-header h1 {
             font-weight: 700;
             margin-bottom: 0.5rem;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
 
         .page-header .subtitle {
@@ -313,6 +312,20 @@
             border-left-color: var(--primary-color);
         }
 
+        .dataset-card.animate-card {
+            opacity: 0;
+            transform: translateY(40px);
+            transition:
+                opacity .6s ease,
+                transform .6s cubic-bezier(.22, 1, .36, 1);
+            will-change: opacity, transform;
+        }
+
+        .dataset-card.animate-card.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
         .dataset-card .dataset-title {
             font-size: 1.1rem;
             font-weight: 600;
@@ -339,17 +352,6 @@
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
-        }
-
-        .dataset-card {
-            opacity: 0;
-            transform: translateY(25px) scale(0.95);
-            transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-        }
-
-        .dataset-card.show {
-            opacity: 1;
-            transform: translateY(0) scale(1);
         }
 
         .dataset-meta {
@@ -1186,6 +1188,8 @@
 
                 this.resultsContainer.innerHTML = html;
                 this.renderPagination(pagination, datasets.length);
+
+                initDatasetAnimation();
             }
 
             renderPagination(pagination, resultsCount) {
@@ -1373,24 +1377,45 @@
         });
 
         // DATASET CARD ANIMATION
-        document.addEventListener("DOMContentLoaded", function() {
-            const items = document.querySelectorAll(".dataset-card");
+        function initDatasetAnimation() {
 
-            const observer = new IntersectionObserver((entries, observer) => {
+            const cards = document.querySelectorAll('.dataset-card');
+
+            if (!cards.length) return;
+
+            const observer = new IntersectionObserver((entries, obs) => {
+
                 entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add("show");
-                        observer.unobserve(entry.target);
-                    }
+
+                    if (!entry.isIntersecting) return;
+
+                    const card = entry.target;
+
+                    setTimeout(() => {
+                        card.classList.add('show');
+                    }, Number(card.dataset.delay));
+
+                    obs.unobserve(card);
+
                 });
+
             }, {
-                threshold: 0.2
+                threshold: 0.15,
+                rootMargin: "0px 0px -60px 0px"
             });
 
-            items.forEach((item, index) => {
-                item.style.transitionDelay = `${index * 60}ms`;
-                observer.observe(item);
+            cards.forEach((card, index) => {
+
+                card.classList.add('animate-card');
+
+                card.dataset.delay = index * 80;
+
+                observer.observe(card);
+
             });
-        });
+
+        }
+
+        document.addEventListener('DOMContentLoaded', initDatasetAnimation);
     </script>
 @endpush
