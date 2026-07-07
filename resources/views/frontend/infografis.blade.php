@@ -90,22 +90,25 @@
             color: white;
             align-items: center;
             overflow: hidden;
+            opacity: 0;
         }
 
         .grafs-hero.show {
-            animation: fadeHero 0.8s ease;
+            animation: fadeHero .65s ease forwards;
         }
 
         @keyframes fadeHero {
+
             from {
-                opacity: 0.7;
-                transform: scale(1.02);
+                opacity: 0;
+                transform: translateY(-20px);
             }
 
             to {
                 opacity: 1;
-                transform: scale(1);
+                transform: translateY(0);
             }
+
         }
 
         .section-title {
@@ -124,8 +127,7 @@
             border-bottom: 1px solid #e5e7eb;
             margin-bottom: 50px;
             opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 0.6s ease, transform 0.6s ease;
+            transform: translateY(24px);
         }
 
         .infografis-item:hover {
@@ -133,8 +135,21 @@
         }
 
         .infografis-item.show {
-            opacity: 1;
-            transform: translateY(0);
+            animation: fadeUp .55s ease forwards;
+        }
+
+        @keyframes fadeUp {
+
+            from {
+                opacity: 0;
+                transform: translateY(24px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
         }
 
         .infografis-item:last-child {
@@ -183,69 +198,36 @@
             object-fit: cover;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         }
-
-        .grafs-hero .section-title {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.6s ease;
-        }
-
-        .grafs-hero.show .section-title {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .grafs-subtitle {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.6s ease;
-        }
-
-        .grafs-hero.show .grafs-subtitle {
-            opacity: 1;
-            transform: translateY(0);
-            transition-delay: 0.15s;
-        }
     </style>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
+
+            document.querySelector(".grafs-hero")?.classList.add("show");
+
             const items = document.querySelectorAll(".infografis-item");
 
             const observer = new IntersectionObserver((entries, observer) => {
+
                 entries.forEach((entry, index) => {
+
                     if (entry.isIntersecting) {
 
                         setTimeout(() => {
                             entry.target.classList.add("show");
-                        }, index * 150);
+                        }, index * 80);
 
                         observer.unobserve(entry.target);
+
                     }
+
                 });
+
             }, {
-                threshold: 0.2
+                threshold: .15
             });
 
             items.forEach(item => observer.observe(item));
-        });
-
-        document.addEventListener("DOMContentLoaded", function() {
-            const hero = document.querySelector('.grafs-hero');
-
-            if (hero) {
-                const heroObserver = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            hero.classList.add('show');
-                        }
-                    });
-                }, {
-                    threshold: 0.3
-                });
-
-                heroObserver.observe(hero);
-            }
 
         });
     </script>

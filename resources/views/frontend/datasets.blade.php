@@ -126,6 +126,9 @@
 
         .btn-search:hover {
             transform: translateY(-2px);
+
+            box-shadow:
+                0 8px 20px rgba(37, 99, 235, .3);
             color: white;
         }
 
@@ -183,8 +186,11 @@
 
         .filter-card {
             background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border-radius: 16px;
+            border: 1px solid rgba(15, 23, 42, .06);
+            box-shadow:
+                0 1px 2px rgba(0, 0, 0, .04),
+                0 10px 25px rgba(15, 23, 42, .06);
             margin-bottom: 1rem;
             overflow: hidden;
             opacity: 0;
@@ -285,13 +291,18 @@
         }
 
         .dataset-card {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            background: #fff;
+            border-radius: 24px;
+            border: 1px solid rgba(15, 23, 42, .06);
+            box-shadow:
+                0 1px 2px rgba(0, 0, 0, .04),
+                0 10px 25px rgba(15, 23, 42, .08),
+                0 30px 60px rgba(15, 23, 42, .08);
             padding: 1.25rem;
             margin-bottom: 1rem;
             transition: transform 0.2s, box-shadow 0.2s;
             border-left: 4px solid transparent;
+            overflow: hidden;
         }
 
         @keyframes fadeIn {
@@ -383,11 +394,11 @@
         }
 
         .dataset-tag {
-            background: #e7f1ff;
+            background: #DBEAFE;
             color: var(--primary-color);
             padding: 0.2rem 0.6rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
+            border-radius: 30px;
+            font-size: .75rem;
             font-weight: 500;
             text-decoration: none;
             transition: background 0.2s;
@@ -443,9 +454,13 @@
         /* ===== PAGINATION ===== */
         .pagination-container {
             background: white;
-            border-radius: 8px;
+            border-radius: 16px;
+
+            border: 1px solid rgba(15, 23, 42, .06);
             padding: 1rem;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            box-shadow:
+                0 1px 2px rgba(0, 0, 0, .04),
+                0 10px 25px rgba(15, 23, 42, .06);
             margin-top: 1rem;
         }
 

@@ -204,20 +204,24 @@
             padding: 2.5rem 0;
             overflow: hidden;
 
-            animation: heroFade .7s ease;
+            opacity: 0;
         }
 
         @keyframes heroFade {
 
             from {
-                opacity: .7;
-                transform: scale(1.02);
+                opacity: 0;
+                transform: translateY(-20px);
             }
 
             to {
                 opacity: 1;
-                transform: scale(1);
+                transform: translateY(0);
             }
+        }
+
+        .page-header.show {
+            animation: heroFade .65s ease forwards;
         }
 
         .section-title {
@@ -233,18 +237,19 @@
             border-radius: 24px;
             padding: 30px;
             overflow: hidden;
-
             border: 1px solid rgba(15, 23, 42, 0.06);
-
             box-shadow:
                 0 1px 2px rgba(0, 0, 0, .04),
                 0 10px 25px rgba(15, 23, 42, .08),
                 0 30px 60px rgba(15, 23, 42, .08);
-
             position: relative;
-
-
             z-index: 10;
+            opacity: 0;
+            transform: translateY(24px);
+        }
+
+        .document-wrapper.show {
+            animation: fadeUp .55s ease forwards;
         }
 
         .top-area {
@@ -330,6 +335,26 @@
         .document-table tbody tr {
             border-bottom: 1px solid #EEF2F7;
             transition: .25s;
+            opacity: 0;
+            transform: translateY(18px);
+        }
+
+        .document-table tbody tr.show {
+            animation: fadeUp .45s ease forwards;
+        }
+
+        @keyframes fadeUp {
+
+            from {
+                opacity: 0;
+                transform: translateY(24px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
         }
 
         .document-table tbody tr:nth-child(even) {
@@ -435,5 +460,23 @@
 
         }
     </style>
+    @push('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
 
+                document.querySelector('.page-header')?.classList.add('show');
+
+                setTimeout(() => {
+                    document.querySelector('.document-wrapper')?.classList.add('show');
+                }, 120);
+
+                document.querySelectorAll('.document-table tbody tr').forEach((row, index) => {
+                    setTimeout(() => {
+                        row.classList.add('show');
+                    }, 250 + (index * 45));
+                });
+
+            });
+        </script>
+    @endpush
 @endsection
