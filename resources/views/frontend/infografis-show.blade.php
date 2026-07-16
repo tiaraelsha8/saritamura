@@ -14,37 +14,40 @@
         </div>
     </div>
     <div class="container py-5">
-        <div class="row justify-content-center">
+        <div class="mx-auto infografis-content infografis-item">
 
-            <div class="col-lg-9 col-md-10">
+            <h1 class="infografis-title">
+                {{ $infografis->judul }}
+            </h1>
 
-                <h1 class="mb-2">
-                    {{ $infografis->judul }}
-                </h1>
+            <div class="infografis-meta">
+                <span>
+                    <i class="fa-solid fa-user"></i>
+                    {{ $infografis->penulis }}
+                </span>
 
-                <div class="infografis-meta mb-3">
-                    Oleh: {{ $infografis->penulis }}
-                    |
+                <span>
+                    <i class="fa-solid fa-calendar-days"></i>
                     {{ $infografis->created_at->format('d M Y') }}
+                </span>
+            </div>
+
+            @if ($infografis->foto)
+                <div class="text-center mb-4">
+                    <img src="{{ asset('storage/grafik/' . $infografis->foto) }}" alt="{{ $infografis->judul }}"
+                        class="infografis-img-detail">
                 </div>
+            @endif
 
-                @if ($infografis->foto)
-                    <div class="text-center mb-4">
-                        <img src="{{ asset('storage/grafik/' . $infografis->foto) }}" alt="{{ $infografis->judul }}"
-                            class="img-fluid rounded shadow-sm">
-                    </div>
-                @endif
+            <div class="infografis-content-body">
+                {!! $infografis->deskripsi !!}
+            </div>
 
-                <div class="mb-4">
-                    {!! $infografis->deskripsi !!}
-                </div>
-
-                <div class="mt-4">
-                    <a href="{{ route('frontend.infografis') }}" class="btn btn-secondary">
-                        ← Kembali
-                    </a>
-                </div>
-
+            <div class="mt-5">
+                <a href="{{ route('frontend.infografis') }}" class="btn btn-outline-secondary">
+                    <i class="fa-solid fa-arrow-left me-2"></i>
+                    Kembali
+                </a>
             </div>
 
         </div>
@@ -72,26 +75,29 @@
 
                 linear-gradient(135deg, #1E3A8A, #2563EB);
 
-            padding: 2rem 0;
+            padding: 2.5rem 0;
             color: white;
             align-items: center;
             overflow: hidden;
+            opacity: 0;
         }
 
         .grafs-hero.show {
-            animation: fadeHero 0.8s ease;
+            animation: fadeHero .65s ease forwards;
         }
 
         @keyframes fadeHero {
+
             from {
-                opacity: 0.7;
-                transform: scale(1.02);
+                opacity: 0;
+                transform: translateY(-20px);
             }
 
             to {
                 opacity: 1;
-                transform: scale(1);
+                transform: translateY(0);
             }
+
         }
 
         .section-title {
@@ -107,27 +113,63 @@
         }
 
         .infografis-item {
-            padding-bottom: 30px;
-            border-bottom: 1px solid #e5e7eb;
-            margin-bottom: 50px;
             opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 0.6s ease, transform 0.6s ease;
-        }
-
-        .infografis-item:hover {
-            transform: translateY(-3px);
+            transform: translateY(24px);
         }
 
         .infografis-item.show {
-            opacity: 1;
-            transform: translateY(0);
+            animation: fadeUp .55s ease forwards;
         }
 
-        .infografis-item:last-child {
-            margin-bottom: 0 !important;
-            padding-bottom: 0;
-            border-bottom: none;
+        @keyframes fadeUp {
+
+            from {
+                opacity: 0;
+                transform: translateY(24px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+        }
+
+        .infografis-content {
+            max-width: 860px;
+            margin: 0 auto;
+            color: #334155;
+        }
+
+        .infografis-content-body {
+            font-size: 1.08rem;
+            line-height: 1.9;
+            color: #334155;
+        }
+
+        .infografis-content-body p {
+            margin-bottom: 1.5rem;
+            text-align: justify;
+        }
+
+        .infografis-content-body h2,
+        .infografis-content-body h3,
+        .infografis-content-body h4 {
+            margin: 2rem 0 1rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .infografis-content-body img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+        }
+
+        .infografis-content-body ul,
+        .infografis-content-body ol {
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
         }
 
         .infografis-item p {
@@ -139,100 +181,64 @@
         }
 
         .infografis-title {
-            font-size: 1.5rem;
+            font-size: 2rem;
+            line-height: 1.3;
             font-weight: 700;
             color: #000000;
-            margin-bottom: 5px;
+            margin-bottom: .75rem;
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
 
-        .infografis-title::after {
-            content: "";
-            display: block;
-            width: 60px;
-            height: 3px;
-            background: linear-gradient(135deg, #1E3A8A, #2563EB);
-            margin-top: 6px;
-        }
-
         .infografis-meta {
-            font-size: 0.85rem;
-            color: #6b7280;
-            margin-bottom: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+            align-items: center;
+            color: #64748b;
+            font-size: .9rem;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 18px;
+            margin-bottom: 30px;
         }
-
 
         .infografis-img-detail {
             border-radius: 12px;
             width: 100%;
-            height: 100%;
-            max-height: 260px;
-            object-fit: cover;
+            height: auto;
+            display: block;
+            margin-bottom: 2rem;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-        }
-
-        .grafs-hero .section-title {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.6s ease;
-        }
-
-        .grafs-hero.show .section-title {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .grafs-subtitle {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.6s ease;
-        }
-
-        .grafs-hero.show .grafs-subtitle {
-            opacity: 1;
-            transform: translateY(0);
-            transition-delay: 0.15s;
         }
     </style>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
+
+            document.querySelector(".grafs-hero")?.classList.add("show");
+
             const items = document.querySelectorAll(".infografis-item");
 
             const observer = new IntersectionObserver((entries, observer) => {
+
                 entries.forEach((entry, index) => {
+
                     if (entry.isIntersecting) {
 
                         setTimeout(() => {
                             entry.target.classList.add("show");
-                        }, index * 150);
+                        }, index * 80);
 
                         observer.unobserve(entry.target);
+
                     }
+
                 });
+
             }, {
-                threshold: 0.2
+                threshold: .15
             });
 
             items.forEach(item => observer.observe(item));
-        });
-
-        document.addEventListener("DOMContentLoaded", function() {
-            const hero = document.querySelector('.grafs-hero');
-
-            if (hero) {
-                const heroObserver = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            hero.classList.add('show');
-                        }
-                    });
-                }, {
-                    threshold: 0.3
-                });
-
-                heroObserver.observe(hero);
-            }
 
         });
     </script>

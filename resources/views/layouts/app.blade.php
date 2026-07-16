@@ -69,65 +69,52 @@
 
         #backToTopBtn {
             position: fixed;
-            bottom: 24px;
-            right: 24px;
+            bottom: 30px;
+            right: 30px;
             z-index: 999;
-            width: 45px;
-            height: 45px;
+            width: 60px;
+            height: 60px;
             background: transparent;
             border: none;
-            border-radius: 50%;
             cursor: pointer;
             opacity: 0;
             visibility: hidden;
-            transform: scale(0.8) translateY(10px);
-            transition: all 0.3s ease;
-            backdrop-filter: blur(6px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        #backToTopBtn::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            border-radius: 50%;
-            background: rgba(0, 0, 0, 0.08);
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        #backToTopBtn svg,
-        #backToTopBtn i {
-            z-index: 1;
+            transform: translateY(16px);
+            transition: opacity .3s ease, transform .3s ease;
         }
 
         #backToTopBtn.show {
             opacity: 1;
             visibility: visible;
-            transform: scale(1) translateY(0);
-        }
-
-        #backToTopBtn i {
-            font-size: 1.2rem;
-            color: #000;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-
-        #backToTopBtn:hover i {
-            transform: translate(-50%, -50%) scale(1.08);
-            text-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
+            transform: translateY(0);
         }
 
         #backToTopBtn svg {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 70px;
-            height: 70px;
-            transform: translate(-50%, -50%) rotate(-90deg);
+            inset: 0;
+            width: 60px;
+            height: 60px;
+            transform: rotate(-90deg);
+        }
+
+        #backToTopBtn i {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: #000;
+            transition: transform .25s ease;
+        }
+
+        #backToTopBtn:hover i {
+            transform: translateY(-3px);
+        }
+
+        #progressRing {
+            stroke: #000;
+            transition: stroke-dashoffset .15s linear;
         }
     </style>
 
@@ -138,8 +125,10 @@
 
     <button onclick="scrollToTop()" id="backToTopBtn" title="Kembali ke atas">
         <svg viewBox="0 0 100 100">
-            <circle cx="50" cy="50" r="30" stroke="#ffffff33" stroke-width="6" fill="none" />
-            <circle id="progressRing" cx="50" cy="50" r="30" stroke="#000" stroke-width="3"
+            <circle cx="50" cy="50" r="34" stroke="#000" stroke-width="3" fill="none"
+                opacity=".18" />
+
+            <circle id="progressRing" cx="50" cy="50" r="34" stroke="#000" stroke-width="3"
                 fill="none" stroke-linecap="round" />
         </svg>
         <i class="fas fa-arrow-up"></i>
@@ -162,7 +151,7 @@
         const btn = document.getElementById("backToTopBtn");
         const circle = document.getElementById("progressRing");
 
-        const radius = 30;
+        const radius = 34;
         const circumference = 2 * Math.PI * radius;
 
         circle.style.strokeDasharray = circumference;

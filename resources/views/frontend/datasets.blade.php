@@ -40,25 +40,27 @@
 
                 linear-gradient(135deg, #1E3A8A, #2563EB);
             color: white;
-            padding: 2rem 0;
-            margin-bottom: 2rem;
+            padding: 2.5rem 0;
             overflow: hidden;
+            opacity: 0;
         }
 
         .page-header.show {
-            animation: fadeHero 0.8s ease;
+            animation: fadeHero .65s ease forwards;
         }
 
         @keyframes fadeHero {
+
             from {
-                opacity: 0.7;
-                transform: scale(1.02);
+                opacity: 0;
+                transform: translateY(-20px);
             }
 
             to {
                 opacity: 1;
-                transform: scale(1);
+                transform: translateY(0);
             }
+
         }
 
         .page-header h1 {
@@ -69,24 +71,6 @@
         .page-header .subtitle {
             opacity: 0.9;
             font-size: 1.1rem;
-        }
-
-        .page-header h1,
-        .page-header .subtitle {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.6s ease;
-        }
-
-        .page-header.show h1 {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .page-header.show .subtitle {
-            opacity: 1;
-            transform: translateY(0);
-            transition-delay: 0.15s;
         }
 
         .search-box {
@@ -126,21 +110,9 @@
 
         .btn-search:hover {
             transform: translateY(-2px);
-
             box-shadow:
                 0 8px 20px rgba(37, 99, 235, .3);
             color: white;
-        }
-
-        .search-box {
-            opacity: 0;
-            transform: translateY(30px) scale(0.95);
-            transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-        }
-
-        .search-box.show {
-            opacity: 1;
-            transform: translateY(0) scale(1);
         }
 
         .search-box:focus-within {
@@ -174,14 +146,6 @@
         .sidebar {
             position: sticky;
             top: 20px;
-            opacity: 0;
-            transform: translateX(-30px);
-            transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-        }
-
-        .sidebar.show {
-            opacity: 1;
-            transform: translateX(0);
         }
 
         .filter-card {
@@ -192,15 +156,24 @@
                 0 1px 2px rgba(0, 0, 0, .04),
                 0 10px 25px rgba(15, 23, 42, .06);
             margin-bottom: 1rem;
-            overflow: hidden;
             opacity: 0;
-            transform: translateY(20px) scale(0.96);
-            transition: all 0.5s ease;
+            transform: translateY(24px);
         }
 
         .filter-card.show {
-            opacity: 1;
-            transform: translateY(0) scale(1);
+            animation: fadeUp .55s ease forwards;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(24px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .filter-card .card-header {
@@ -272,6 +245,16 @@
             margin-bottom: 1rem;
             flex-wrap: wrap;
             gap: 1rem;
+            opacity: 0;
+            transform: translateY(30px);
+            transition:
+                opacity .65s ease,
+                transform .65s cubic-bezier(.22, 1, .36, 1);
+        }
+
+        .datasets-header.show {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .datasets-count {
@@ -325,16 +308,24 @@
 
         .dataset-card.animate-card {
             opacity: 0;
-            transform: translateY(40px);
-            transition:
-                opacity .6s ease,
-                transform .6s cubic-bezier(.22, 1, .36, 1);
-            will-change: opacity, transform;
+            transform: translateY(24px);
+            will-change: transform, opacity;
         }
 
         .dataset-card.animate-card.show {
-            opacity: 1;
-            transform: translateY(0);
+            animation: fadeUp .55s ease forwards;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(24px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .dataset-card .dataset-title {
@@ -455,13 +446,22 @@
         .pagination-container {
             background: white;
             border-radius: 16px;
-
             border: 1px solid rgba(15, 23, 42, .06);
             padding: 1rem;
             box-shadow:
                 0 1px 2px rgba(0, 0, 0, .04),
                 0 10px 25px rgba(15, 23, 42, .06);
             margin-top: 1rem;
+            opacity: 0;
+            transform: translateY(25px);
+            transition:
+                opacity .6s ease,
+                transform .6s cubic-bezier(.22, 1, .36, 1);
+        }
+
+        .pagination-container.show {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .pagination .page-link {
@@ -577,7 +577,7 @@
     </header>
 
     <!-- Main Content -->
-    <div class="container mb-5">
+    <div class="container py-5">
         @if (isset($error))
             <div class="alert alert-danger alert-dismissible fade show">
                 <i class="fas fa-exclamation-circle"></i> {{ $error }}
@@ -886,47 +886,6 @@
                 });
             });
         });
-    </script>
-@endpush
-
-@push('scripts')
-    <script>
-        // Apply filter when checkbox changes
-        function applyFilter() {
-            // Reset to page 1 when filter changes
-            const form = document.getElementById('filterForm');
-
-            // Update hidden inputs with current values
-            const searchInput = document.querySelector('input[name="q"]');
-            if (searchInput) {
-                const existingQ = new URLSearchParams(window.location.search).get('q');
-                if (existingQ && !searchInput.value) {
-                    searchInput.value = existingQ;
-                }
-            }
-
-            // Submit form
-            form.submit();
-        }
-
-        // Clear all filters
-        function clearFilters() {
-            const form = document.getElementById('filterForm');
-
-            // Uncheck all checkboxes
-            form.querySelectorAll('input[type="checkbox"]').forEach(cb => {
-                cb.checked = false;
-            });
-
-            // Clear search input
-            const searchInput = form.querySelector('input[name="q"]');
-            if (searchInput) {
-                searchInput.value = '';
-            }
-
-            // Submit to clear
-            form.submit();
-        }
 
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
@@ -945,18 +904,16 @@
                                 hiddenInput.type = 'hidden';
                                 hiddenInput.name = input.name;
                                 hiddenInput.value = input.value;
-                                searchForm.appendChild(hiddenInput);
+                                searchForm.querySelectorAll('.dynamic-filter')
+                                    .forEach(el => el.remove());
+                                hiddenInput.classList.add('dynamic-filter');
                             }
                         });
                     }
                 });
             }
         });
-    </script>
-@endpush
 
-@push('scripts')
-    <script>
         // Auto-Search Class - FIXED VERSION
         class AutoSearch {
             constructor(config) {
@@ -1336,42 +1293,64 @@
         });
 
         // HERO ANIMATION
-        const header = document.querySelector('.page-header');
+        document.addEventListener("DOMContentLoaded", function() {
 
-        if (header) {
-            const observerHeader = new IntersectionObserver((entries) => {
+            const header = document.querySelector(".page-header");
+
+            if (!header) return;
+
+            const observer = new IntersectionObserver((entries, observer) => {
+
                 entries.forEach(entry => {
+
                     if (entry.isIntersecting) {
-                        header.classList.add('show');
+
+                        header.classList.add("show");
+
+                        observer.unobserve(entry.target);
+
                     }
+
                 });
+
             }, {
                 threshold: 0.3
             });
 
-            observerHeader.observe(header);
-        }
+            observer.observe(header);
+
+        });
 
         // SEARCH FORM ANIMATION
         document.addEventListener("DOMContentLoaded", function() {
-            const searchBox = document.querySelector('.search-box');
-            const header = document.querySelector('.page-header');
 
-            if (searchBox && header) {
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            setTimeout(() => {
-                                searchBox.classList.add('show');
-                            }, 250);
-                        }
-                    });
-                }, {
-                    threshold: 0.3
+            const header = document.querySelector(".page-header");
+            const searchBox = document.querySelector(".search-box");
+
+            if (!header || !searchBox) return;
+
+            const observer = new IntersectionObserver((entries, observer) => {
+
+                entries.forEach(entry => {
+
+                    if (entry.isIntersecting) {
+
+                        setTimeout(() => {
+                            searchBox.classList.add("show");
+                        }, 250);
+
+                        observer.unobserve(entry.target);
+
+                    }
+
                 });
 
-                observer.observe(header);
-            }
+            }, {
+                threshold: 0.3
+            });
+
+            observer.observe(header);
+
         });
 
         // SIDEBAR ANIMATION
@@ -1381,8 +1360,17 @@
 
             if (sidebar) {
                 setTimeout(() => {
-                    sidebar.classList.add("show");
+
+                    document.querySelector(".datasets-header")
+                        ?.classList.add("show");
+
                 }, 150);
+
+                setTimeout(() => {
+
+                    sidebar?.classList.add("show");
+
+                }, 350);
             }
             cards.forEach((card, index) => {
                 setTimeout(() => {
@@ -1423,11 +1411,25 @@
 
                 card.classList.add('animate-card');
 
-                card.dataset.delay = index * 80;
+                card.dataset.delay = index * 40;
 
                 observer.observe(card);
 
             });
+
+            const pagination = document.querySelector(".pagination-container");
+
+            pagination?.classList.remove("show");
+
+            if (pagination) {
+
+                setTimeout(() => {
+
+                    pagination.classList.add("show");
+
+                }, 500 + cards.length * 90);
+
+            }
 
         }
 

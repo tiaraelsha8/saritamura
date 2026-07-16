@@ -15,53 +15,73 @@
     </div>
 
     <div class="container py-5">
+        <div class="mx-auto d-flex flex-column gap-4 infografis-container">
+            @forelse ($infografis as $item)
+                <div class="infografis-item">
+                    <div class="row align-items-center g-4">
 
-        @forelse ($infografis as $item)
-            <div class="infografis-item mb-4 p-3 border rounded">
+                        <div class="col-lg-4 image-col">
 
-                <h4 class="infografis-title mb-2">
-                    {{ $item->judul }}
-                </h4>
+                            <div class="infografis-image-wrapper">
 
-                <div class="infografis-meta mb-2 text-muted" style="font-size: 13px;">
-                    Oleh: {{ $item->penulis }}
-                    | {{ $item->created_at->format('d M Y') }}
+                                <img src="{{ $item->foto ? asset('storage/grafik/' . $item->foto) : 'https://via.placeholder.com/600x400?text=No+Image' }}"
+                                    class="infografis-img-detail" alt="{{ $item->judul }}" loading="lazy">
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-lg-8 content-col">
+
+                            <h3>
+                                <a href="{{ route('infografis.show', $item->id) }}" class="infografis-title">
+                                    {{ $item->judul }}
+                                </a>
+                            </h3>
+
+                            <div class="infografis-meta">
+
+                                <span>
+                                    <i class="fa-solid fa-user"></i>
+                                    {{ $item->penulis }}
+                                </span>
+
+                                <span>
+                                    <i class="fa-solid fa-calendar-days"></i>
+                                    {{ $item->created_at->format('d M Y') }}
+                                </span>
+
+                            </div>
+
+                            <p class="infografis-description">
+                                {{ \Illuminate\Support\Str::limit(strip_tags($item->deskripsi), 150, '...') }}
+                            </p>
+
+                            <a href="{{ route('infografis.show', $item->id) }}" class="btn-detail">
+
+                                Selengkapnya
+                                <i class="fa-solid fa-arrow-right ms-2"></i>
+
+                            </a>
+
+                        </div>
+
+                    </div>
                 </div>
 
-                <div class="row align-items-center">
-
-                    <div class="col-md-4">
-                        <img src="{{ $item->foto ? asset('storage/grafik/' . $item->foto) : 'https://via.placeholder.com/600x400?text=No+Image' }}"
-                            class="img-fluid rounded" style="max-height:180px; object-fit:cover;" alt="{{ $item->judul }}">
-                    </div>
-
-                    <div class="col-md-8">
-
-                        <p class="mb-2" style="font-size:14px;">
-                            {{ \Illuminate\Support\Str::limit(strip_tags($item->deskripsi), 180, '...') }}
-                        </p>
-
-                        <a href="{{ route('infografis.show', $item->id) }}" class="btn btn-sm btn-primary">
-                            Selengkapnya
-                        </a>
-
-                    </div>
-
+            @empty
+                <div class="alert alert-info">
+                    Data infografis belum tersedia.
                 </div>
+            @endforelse
 
-            </div>
-
-        @empty
-            <div class="alert alert-info">
-                Data infografis belum tersedia.
-            </div>
-        @endforelse
-
-        {{-- PAGINATION --}}
-        <div class="d-flex justify-content-center mt-4">
-            {{ $infografis->links('pagination::bootstrap-4') }}
+            {{-- PAGINATION --}}
+            @if ($infografis->hasPages())
+                <div class="pagination-wrapper d-flex justify-content-center">
+                    {{ $infografis->links('pagination::bootstrap-4') }}
+                </div>
+            @endif
         </div>
-
     </div>
 
     <style>
@@ -86,7 +106,7 @@
 
                 linear-gradient(135deg, #1E3A8A, #2563EB);
 
-            padding: 2rem 0;
+            padding: 2.5rem 0;
             color: white;
             align-items: center;
             overflow: hidden;
@@ -111,9 +131,14 @@
 
         }
 
+        .infografis-container {
+            max-width: 1320px;
+        }
+
         .section-title {
             font-weight: 700;
             margin-bottom: 0.5rem;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
 
         .grafs-subtitle {
@@ -123,80 +148,130 @@
         }
 
         .infografis-item {
-            padding-bottom: 30px;
-            border-bottom: 1px solid #e5e7eb;
-            margin-bottom: 50px;
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px;
+            overflow: hidden;
+            border: 1px solid rgba(15, 23, 42, 0.06);
+            box-shadow:
+                0 2px 8px rgba(15, 23, 42, .05),
+                0 10px 20px rgba(15, 23, 42, .06);
             opacity: 0;
-            transform: translateY(24px);
-        }
-
-        .infografis-item:hover {
-            transform: translateY(-3px);
+            transform: translateY(18px);
+            transition:
+                opacity .55s ease,
+                transform .55s ease,
+                box-shadow .3s ease;
         }
 
         .infografis-item.show {
-            animation: fadeUp .55s ease forwards;
+            opacity: 1;
+            transform: translateY(0);
         }
 
-        @keyframes fadeUp {
-
-            from {
-                opacity: 0;
-                transform: translateY(24px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-
+        .infografis-item:hover {
+            box-shadow:
+                0 1px 2px rgba(0, 0, 0, .04),
+                0 10px 25px rgba(15, 23, 42, .08),
+                0 30px 60px rgba(15, 23, 42, .08);
         }
 
-        .infografis-item:last-child {
-            margin-bottom: 0 !important;
-            padding-bottom: 0;
-            border-bottom: none;
+        .infografis-image-wrapper {
+            background: #f8fafc;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid #eef2f7;
+            position: relative;
         }
 
-        .infografis-item p {
-            font-size: 1.1rem;
-            color: #1f2937;
-            line-height: 1.7;
+        .infografis-img-detail {
+            display: block;
+            width: 100%;
+            aspect-ratio: 16/9;
+            object-fit: cover;
+        }
+
+        .infografis-description {
+            color: #334155;
+            font-size: 1rem;
+            line-height: 1.5;
             text-align: justify;
-            margin-bottom: 10px;
+            margin-bottom: 24px;
         }
 
         .infografis-title {
-            font-size: 1.5rem;
+            display: inline-block;
+            font-size: 1.4rem;
             font-weight: 700;
-            color: #000000;
-            margin-bottom: 5px;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            color: #0f172a;
+            margin-bottom: 12px;
+            line-height: 1.45;
+            text-decoration: none;
+            transition: color .25s ease;
         }
 
-        .infografis-title::after {
-            content: "";
-            display: block;
-            width: 60px;
-            height: 3px;
-            background: linear-gradient(135deg, #1E3A8A, #2563EB);
-            margin-top: 6px;
+        .infografis-title:hover {
+            color: #0d6efd;
+            cursor: pointer;
         }
 
         .infografis-meta {
-            font-size: 0.85rem;
-            color: #6b7280;
-            margin-bottom: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 18px 0;
+            color: #64748b;
+            font-size: .88rem;
         }
 
+        .infografis-meta span {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
-        .infografis-img-detail {
-            border-radius: 12px;
-            width: 100%;
-            height: 100%;
-            max-height: 260px;
-            object-fit: cover;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        .infografis-meta i {
+            color: #2563EB;
+            opacity: .8;
+        }
+
+        .btn-detail {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.35rem;
+            padding: 9px 16px;
+            font-size: .84rem;
+            font-weight: 600;
+            line-height: 1.5;
+            text-decoration: none;
+            border: 1px solid #0d6efd;
+            border-radius: 8px;
+            background-color: #fff;
+            color: #0d6efd;
+            transition:
+                background-color .25s ease,
+                color .25s ease,
+                border-color .25s ease,
+                box-shadow .25s ease;
+        }
+
+        .btn-detail:hover {
+            background: #2563EB;
+            color: #fff;
+            box-shadow: 0 8px 18px rgba(37, 99, 235, .18);
+        }
+
+        .btn-detail i {
+            transition: transform .25s ease;
+        }
+
+        .btn-detail:hover i {
+            transform: translateX(3px);
+        }
+
+        .pagination-wrapper {
+            margin-top: 24px;
         }
     </style>
 

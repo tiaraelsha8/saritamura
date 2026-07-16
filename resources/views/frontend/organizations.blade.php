@@ -42,8 +42,7 @@
 
                 linear-gradient(135deg, #1E3A8A, #2563EB);
             color: white;
-            padding: 2rem 0;
-            margin-bottom: 2rem;
+            padding: 2.5rem 0;
             overflow: hidden;
             opacity: 0;
         }
@@ -241,22 +240,38 @@
         .btn-view-org {
             display: inline-flex;
             align-items: center;
-            gap: 0.4rem;
-            padding: 0.5rem 1rem;
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            font-weight: 500;
+            justify-content: center;
+            gap: .45rem;
+            padding: 9px 16px;
+            font-size: .84rem;
+            font-weight: 600;
+            line-height: 1.5;
             text-decoration: none;
-            transition: background 0.2s;
+            border: 1px solid var(--primary-color);
+            border-radius: 8px;
+            background: #fff;
+            color: var(--primary-color);
             white-space: nowrap;
+            transition:
+                background-color .25s ease,
+                color .25s ease,
+                border-color .25s ease,
+                box-shadow .25s ease;
+        }
+
+        .btn-view-org i {
+            transition: transform .25s ease;
         }
 
         .btn-view-org:hover {
-            background: var(--primary-dark);
-            color: white;
+            background: var(--primary-color);
+            color: #fff;
+            border-color: var(--primary-color);
+            box-shadow: 0 8px 18px rgba(37, 99, 235, .18);
+        }
+
+        .btn-view-org:hover i {
+            transform: translateX(3px);
         }
 
         /* ===== EMPTY STATE ===== */
@@ -340,7 +355,7 @@
         </div>
     </header>
 
-    <div class="container mb-5">
+    <div class="container py-5">
         @if (isset($error))
             <div class="alert alert-danger alert-dismissible fade show">
                 <i class="fas fa-exclamation-circle"></i> {{ $error }}

@@ -203,7 +203,6 @@
             color: white;
             padding: 2.5rem 0;
             overflow: hidden;
-
             opacity: 0;
         }
 

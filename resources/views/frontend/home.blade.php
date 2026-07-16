@@ -67,6 +67,29 @@
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
 
+        .hero-title.show .hero-line {
+            animation: heroPulse 3.2s ease-in-out infinite;
+            transform-origin: left center;
+        }
+
+        .hero-title.show .hero-line:nth-child(2) {
+            animation-delay: .35s;
+        }
+
+        @keyframes heroPulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.03);
+                opacity: .96;
+            }
+        }
+
         .hero-subtitle {
             font-size: 1.5rem;
             font-weight: 500;
@@ -196,7 +219,10 @@
         .autocomplete-item-icon {
             width: 40px;
             height: 40px;
-            background: #e7f1ff;
+            background: rgba(255, 255, 255, .92);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 0, 0, .08);
             border-radius: 8px;
             display: flex;
             align-items: center;
@@ -477,8 +503,8 @@
             <div class="row align-items-center">
                 <div class="col-md-6 text-start">
                     <h1 class="hero-title fade-up hero-auto">
-                        <span class="d-block">SATU DATA KABUPATEN</span>
-                        <span class="d-block">MURUNG RAYA</span>
+                        <span class="d-block hero-line">SATU DATA KABUPATEN</span>
+                        <span class="d-block hero-line">MURUNG RAYA</span>
                     </h1>
                     <p class="hero-description fade-up delay-1 hero-auto">
                         Silahkan ketik data yang ingin anda cari di dalam kotak pencarian
