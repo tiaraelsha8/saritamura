@@ -28,5 +28,5 @@ jobs:
           context: .
           push: true
           tags: |
-            anggaramandani/layanankominfo:latest
-            anggaramandani/layanankominfo:${{ github.sha }}
+            anggaramandani/saritamura:latest
+            anggaramandani/saritamura:${{ github.sha }}
