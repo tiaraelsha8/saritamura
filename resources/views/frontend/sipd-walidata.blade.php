@@ -255,7 +255,6 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-
             margin-bottom: 30px;
             gap: 20px;
         }
@@ -276,19 +275,15 @@
         .search-box input {
             width: 100%;
             padding: 12px 15px 12px 42px;
-
             border: 1px solid #E2E8F0;
             border-radius: 12px;
-
             background: white;
             transition: .3s;
         }
 
         .search-box input:focus {
             outline: none;
-
             border-color: #2563EB;
-
             box-shadow:
                 0 0 0 4px rgba(37, 99, 235, .1);
         }
@@ -300,18 +295,12 @@
         }
 
         .document-table thead th {
-
             background: #F8FAFC;
-
             color: #64748B;
-
             font-size: .9rem;
             font-weight: 600;
-
             padding: 18px;
-
             border: none;
-
             position: sticky;
             top: 0;
             z-index: 1;
@@ -373,16 +362,12 @@
         .doc-icon {
             width: 50px;
             height: 50px;
-
             display: flex;
             align-items: center;
             justify-content: center;
-
             border-radius: 12px;
-
             background: #FEE2E2;
             color: #DC2626;
-
             font-size: 20px;
         }
 
@@ -394,54 +379,38 @@
         .badge-category {
             background: #DBEAFE;
             color: #1D4ED8;
-
             padding: 6px 14px;
-
             border-radius: 30px;
-
             font-size: .75rem;
         }
 
         .badge-status {
             background: #DCFCE7;
             color: #166534;
-
             padding: 6px 14px;
-
             border-radius: 30px;
-
             font-size: .75rem;
         }
 
         .btn-download {
-
             display: inline-flex;
             align-items: center;
             gap: 8px;
-
             padding: 9px 15px;
-
             border-radius: 10px;
-
             background:
                 linear-gradient(135deg,
                     #1E3A8A,
                     #2563EB);
-
             border: 1px solid rgba(255, 255, 255, .15);
-
             color: white;
             text-decoration: none;
-
             transition: .3s;
         }
 
         .btn-download:hover {
-
             transform: translateY(-2px);
-
             color: white;
-
             box-shadow:
                 0 8px 20px rgba(37, 99, 235, .3);
         }

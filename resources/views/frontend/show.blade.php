@@ -17,11 +17,6 @@
             --text-secondary: #6c757d;
         }
 
-        body {
-            background: var(--light-bg);
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-        }
-
         /* ===== BREADCRUMB ===== */
         .breadcrumb-section {
             background: white;

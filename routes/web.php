@@ -76,8 +76,7 @@ Route::prefix('ckan')
         Route::get('/search', 'search')->name('frontend.search');
         Route::get('/datasets', 'datasets')->name('frontend.datasets');
         Route::get('/dataset/{id}', 'show')->name('frontend.show');
-        Route::get('/infografis', 'infografis')->name('frontend.infografis');
-
+        
         // Datasets CRUD
         Route::get('/create', 'create')->name('frontend.create');
         Route::post('/store', 'store')->name('frontend.store');

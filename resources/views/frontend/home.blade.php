@@ -219,10 +219,7 @@
         .autocomplete-item-icon {
             width: 40px;
             height: 40px;
-            background: rgba(255, 255, 255, .92);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 0, 0, .08);
+            background: #e7f1ff;
             border-radius: 8px;
             display: flex;
             align-items: center;
@@ -341,67 +338,260 @@
 
         /* ===== VIDEO SECTION ===== */
         .video-section {
-            padding-top: 3rem;
-            padding-bottom: 2rem;
+            padding: 4rem 0;
         }
 
-        .section-title {
+        .video-header {
+            margin-bottom: 1rem;
+        }
+
+        .video-header::after {
+            content: "";
+            display: block;
+            width: 120px;
+            height: 3px;
+            margin: .9rem auto 0;
+            border-radius: 999px;
+            background:
+                linear-gradient(90deg,
+                    transparent 0%,
+                    #1E3A8A 15%,
+                    #3B82F6 50%,
+                    #1E3A8A 85%,
+                    transparent 100%);
+        }
+
+        .video-header h2 {
             font-size: 2rem;
-            font-weight: 700;
-            color: #212529;
-            margin: 0;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 2.5rem;
+        }
+
+        .video-card-link {
+            display: block;
+            text-decoration: none;
+            color: inherit;
         }
 
         .video-card {
-            padding: 12px;
-            transition: transform 0.25s ease;
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 18px;
+            cursor: pointer;
+            overflow: hidden;
             height: 100%;
-            display: flex;
-            flex-direction: column;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
         .video-card:hover {
-            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12)
+        }
+
+        .video-card .ratio {
+            overflow: hidden;
+        }
+
+        .video-card iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        .video-content {
+            padding: 1.1rem 1.25rem 1.3rem;
+        }
+
+        .video-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #0f172a;
+            line-height: 1.5;
+            margin: 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            transition: .3s;
         }
 
         .video-card:hover .video-title {
             color: #1E40AF;
         }
 
-        .video-card .ratio {
-            border-radius: 12px;
-            overflow: hidden;
-            transition: transform 0.25s ease;
-        }
-
-        .video-card:hover .ratio {
-            transform: scale(1.02);
-        }
-
-        .video-card .ratio iframe {
-            display: block;
-            width: 100%;
-            height: 100%;
-            border: 0;
-        }
-
-        .video-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #000000;
-            text-align: center;
-            min-height: 48px;
+        .video-meta {
             display: flex;
-            align-items: flex-start;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+            padding-top: .85rem;
+            border-top: 1px solid #edf2f7;
+        }
+
+        .video-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: .45rem;
+            color: #2563EB;
+            font-size: .85rem;
+            font-weight: 600;
+        }
+
+        .video-source {
+            color: #94a3b8;
+            font-size: .85rem;
+        }
+
+        /* ===== VIDEO CAROUSEL ===== */
+        #videoCarousel {
+            position: relative;
+            padding: 0 3.75rem;
+        }
+
+        #videoCarousel .carousel-item {
+            padding: 10px 0 24px;
+        }
+
+        /* ===== Navigation ===== */
+        .carousel-control-prev,
+        .carousel-control-next {
+            width: 56px;
+            height: 56px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: 0;
+            box-shadow: none;
+            opacity: 1;
+            transition: all .25s ease;
+            z-index: 20;
+        }
+
+        .carousel-control-prev {
+            left: -42px;
+        }
+
+        .carousel-control-next {
+            right: -42px;
+        }
+
+        .carousel-control-prev i,
+        .carousel-control-next i {
+            font-size: 34px;
+            color: #2563EB;
+            transition: all .25s ease;
+        }
+
+        .carousel-control-prev:hover,
+        .carousel-control-next:hover {
+            transform: translateY(-50%);
+        }
+
+        .carousel-control-prev:hover i,
+        .carousel-control-next:hover i {
+            color: #1D4ED8;
+            transform: scale(1.03);
+        }
+
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+            width: 30px;
+            height: 30px;
+            background-size: contain;
+        }
+
+        /* ===== CUSTOM INDICATOR ===== */
+        .custom-indicators {
+            display: flex;
             justify-content: center;
-            line-height: 1.4;
+            align-items: center;
+            gap: 10px;
+            margin-top: 1.8rem;
+        }
+
+        .custom-indicators button {
+            position: relative;
+            width: 42px;
+            height: 14px;
+            padding: 0;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            transition: .3s ease;
+        }
+
+        .custom-indicators button::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border: 2px solid #2F73D9;
+            border-radius: 999px;
+            transition: .3s ease;
+        }
+
+        .custom-indicators button::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 0;
+            height: 0;
+            background: #2F73D9;
+            border-radius: 999px;
+            transform: translate(-50%, -50%);
+            transition: .3s ease;
+        }
+
+        .custom-indicators button.active::after {
+            width: 26px;
+            height: 5px;
+        }
+
+        .custom-indicators button:hover::before {
+            border-color: #1F5CC6;
+        }
+
+        .custom-indicators button:hover::after {
+            background: #1F5CC6;
+        }
+
+        .custom-indicators button:focus {
+            outline: none;
+            box-shadow: none;
         }
 
         /* ===== INFOGRAFIS SECTION ===== */
         .infografis-section {
-            padding-top: 2rem;
-            padding-bottom: 3rem;
+            position: relative;
+            padding: 4rem 0;
+        }
+
+        .infografis-header {
+            margin-bottom: 1.6rem;
+        }
+
+        .infografis-header::after {
+            content: "";
+            display: block;
+            width: 120px;
+            height: 2.6px;
+            margin: .9rem auto 0;
+            border-radius: 999px;
+            background:
+                linear-gradient(90deg,
+                    transparent 0%,
+                    #1E3A8A 15%,
+                    #3B82F6 50%,
+                    #1E3A8A 85%,
+                    transparent 100%);
+        }
+
+        .infografis-header h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 2.5rem;
         }
 
         .infografis-link {
@@ -411,51 +601,92 @@
         }
 
         .infografis-card {
-            padding: 12px;
-            text-align: center;
-            transition: transform 0.25s ease;
-            height: 100%;
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 18px;
+            cursor: pointer;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
-            cursor: pointer;
+            height: 100%;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
         .infografis-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .infografis-card:hover .infografis-desc {
-            color: #1E40AF;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
         }
 
         .infografis-media {
-            border-radius: 12px;
             overflow: hidden;
+            flex-shrink: 0;
         }
 
         .infografis-img {
             width: 100%;
-            height: 180px;
+            height: 220px;
             object-fit: cover;
             display: block;
-            transition: transform 0.25s ease;
         }
 
-        .infografis-card:hover .infografis-img {
-            transform: scale(1.05);
+        .infografis-body {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            padding: 1.25rem;
+        }
+
+        .infografis-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #0f172a;
+            line-height: 1.5;
+            min-height: 3.2rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: .8rem;
+        }
+
+        .infografis-card:hover .infografis-title {
+            color: #1E40AF;
         }
 
         .infografis-desc {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #000000;
-            margin: 0;
+            color: #64748b;
+            font-size: .93rem;
+            line-height: 1.7;
+            flex: 1;
             display: -webkit-box;
-            -webkit-line-clamp: 5;
+            -webkit-line-clamp: 4;
             -webkit-box-orient: vertical;
             overflow: hidden;
-            text-align: justify;
-            line-height: 1.4;
+            margin: 0;
+        }
+
+        @media(max-width:768px) {
+
+            .infografis-section {
+                padding: 3rem 0;
+            }
+
+            .infografis-img {
+                height: 190px;
+            }
+
+        }
+
+        .infografis-footer {
+            margin-top: 1.2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eef2f7;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #2563EB;
+            font-size: .85rem;
+            font-weight: 600;
         }
 
         /* ===== GLOBAL ANIMATION ===== */
@@ -545,94 +776,113 @@
     </div>
 
     <!-- ===== VIDEO SECTION ===== -->
-    <div id="videoCarousel" class="carousel slide" data-bs-ride="carousel">
+    <div class="video-section">
+        <div class="container">
+            <div class="video-header text-center fade-up">
+                <h2>Video Satu Data Murung Raya</h2>
+            </div>
+            <div id="videoCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    @foreach ($videos->chunk(3) as $key => $chunk)
+                        <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
+                            <div class="row g-4">
+                                @foreach ($chunk as $item)
+                                    <div class="col-lg-4 col-md-6">
+                                        <a href="https://www.youtube.com/watch?v={{ $item->video }}" target="_blank"
+                                            class="video-card-link">
+                                            <div class="video-card fade-up">
+                                                <div class="ratio ratio-16x9">
+                                                    <iframe src="https://www.youtube.com/embed/{{ $item->video }}"
+                                                        allowfullscreen>
+                                                    </iframe>
+                                                </div>
 
-        <div class="carousel-inner">
+                                                <div class="video-content">
+                                                    <h5 class="video-title">
+                                                        {{ $item->judul }}
+                                                    </h5>
 
-            @foreach ($videos->chunk(3) as $key => $chunk)
-                <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
+                                                    <div class="video-meta">
+                                                        <span class="video-tag">
+                                                            <i class="fa-solid fa-circle-play"></i>
+                                                            Video
+                                                        </span>
 
-                    <div class="row gx-3">
-
-                        @foreach ($chunk as $item)
-                            <div class="col-md-4">
-
-                                <div class="video-card">
-
-                                    <div class="ratio ratio-16x9">
-                                        <iframe src="https://www.youtube.com/embed/{{ $item->video }}" allowfullscreen>
-                                        </iframe>
+                                                        <span class="video-source">
+                                                            YouTube
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
                                     </div>
-
-                                    <h6 class="mt-2">
-                                        {{ $item->judul }}
-                                    </h6>
-
-                                </div>
-
+                                @endforeach
                             </div>
-                        @endforeach
-
-                    </div>
-
+                        </div>
+                    @endforeach
                 </div>
-            @endforeach
-
+                <div class="custom-indicators">
+                    @foreach ($videos->chunk(3) as $key => $chunk)
+                        <button type="button" data-bs-target="#videoCarousel" data-bs-slide-to="{{ $key }}"
+                            class="{{ $key == 0 ? 'active' : '' }}">
+                        </button>
+                    @endforeach
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#videoCarousel" data-bs-slide="prev">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#videoCarousel" data-bs-slide="next">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            </div>
         </div>
-
-        <!-- tombol geser -->
-        <button class="carousel-control-prev" type="button" data-bs-target="#videoCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon"
-                style="filter:invert(0) brightness(0); transform:scale(1.3); opacity:1;
-        filter: invert(0) brightness(0) drop-shadow(0 0 1px rgba(0,0,0,0.8));">
-            </span>
-        </button>
-
-        <button class="carousel-control-next" type="button" data-bs-target="#videoCarousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon"
-                style="filter:invert(0) brightness(0); transform:scale(1.3); opacity:1;
-        filter: invert(0) brightness(0) drop-shadow(0 0 1px rgba(0,0,0,0.8));">
-            </span>
-        </button>
-
     </div>
 
     <!-- ===== INFOGRAFIS SECTION ===== -->
     <div class="infografis-section">
         <div class="container">
-            <div class="text-center mb-4">
-                <h2 class="section-title fade-up delay-1">Infografis Satu Data Murung Raya</h2>
+            <div class="infografis-header text-center fade-up">
+                <h2>Infografis Satu Data Murung Raya</h2>
             </div>
-
-            <div class="row gx-4 gy-0">
-
+            <div class="row g-4">
                 @forelse ($infografis as $key => $item)
-                    <div class="col-md-3 fade-up delay-{{ $key + 1 }}">
-
+                    <div class="col-lg-3 col-md-6 fade-up delay-{{ $key + 1 }}">
                         <a href="{{ route('infografis.show', $item->id) }}" class="infografis-link">
-
                             <div class="infografis-card">
-
                                 <div class="infografis-media">
-
                                     <img src="{{ $item->foto ? asset('storage/grafik/' . $item->foto) : 'https://via.placeholder.com/600x400?text=No+Image' }}"
                                         class="infografis-img" alt="{{ $item->judul }}">
-
-                                    <p class="infografis-desc mt-2">
+                                </div>
+                                <div class="infografis-body">
+                                    <h5 class="infografis-title">
+                                        {{ $item->judul }}
+                                    </h5>
+                                    <p class="infografis-desc">
                                         {{ \Illuminate\Support\Str::limit(strip_tags($item->deskripsi), 120, '...') }}
                                     </p>
+                                    <div class="infografis-footer">
+                                        <span>
+                                            <i class="fa-regular fa-image"></i>
+                                            Infografis
+                                        </span>
 
+                                        <i class="fa-solid fa-arrow-right"></i>
+                                    </div>
                                 </div>
-
                             </div>
-
                         </a>
-
                     </div>
                 @empty
-                    <p class="text-center">Infografis belum tersedia</p>
+                    <div class="col-12">
+                        <div class="text-center py-5">
+                            <i class="fa-regular fa-folder-open fa-3x text-secondary mb-3"></i>
+                            <h5>Belum Ada Infografis</h5>
+                            <p class="text-muted mb-0">
+                                Data infografis akan ditampilkan di sini ketika sudah tersedia.
+                            </p>
+                        </div>
+                    </div>
                 @endforelse
-
             </div>
         </div>
     </div>
@@ -875,6 +1125,38 @@
 
         // ===== SCROLL ANIMATION =====
         document.addEventListener("DOMContentLoaded", function() {
+
+            // ===== Indikator video =====
+            const carousel = document.getElementById("videoCarousel");
+            const indicators = document.querySelectorAll(".custom-indicators button");
+
+            function setActive(index) {
+
+                indicators.forEach((btn, i) => {
+
+                    btn.classList.toggle("active", i === index);
+
+                });
+
+            }
+
+            setActive(0);
+
+            carousel.addEventListener("slid.bs.carousel", function(e) {
+
+                setActive(e.to);
+
+            });
+
+            indicators.forEach((btn, index) => {
+
+                btn.addEventListener("click", () => {
+
+                    setActive(index);
+
+                });
+
+            });
 
             // ===== HERO: langsung tampil TANPA observer =====
             const heroElements = document.querySelectorAll(".hero-auto");
