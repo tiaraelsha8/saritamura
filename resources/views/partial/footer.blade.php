@@ -1,7 +1,7 @@
 @php
-     use App\Helpers\VisitorCounter;
-     $statistik = VisitorCounter::count();
- @endphp
+    use App\Helpers\VisitorCounter;
+    $statistik = VisitorCounter::count();
+@endphp
 <footer class="footer-section py-4">
     <div class="footer-particles"></div>
     <div class="container">
@@ -10,18 +10,18 @@
             <!-- KIRI -->
             <div class="col-md-4 mb-2">
                 <h5 class="footer-title">Satu Data Kabupaten Murung Raya</h5>
-                <div class="info-row">
+                <div class="footer-info-row">
                     <span class="label">Alamat</span>
                     <span class="separator">:</span>
                     Jl. Letjen Suprapto
                 </div>
 
-                <div class="info-row">
+                <div class="footer-info-row">
                     <span class="label">Email</span>
                     <span class="separator">:</span>
                     <span class="value">diskominfo@murungrayakab.go.id</span>
                 </div>
-                <div class="info-row">
+                <div class="footer-info-row">
                     <span class="label">Telepon</span>
                     <span class="separator">:</span>
                     <span class="value">0853-7777-8888</span>
@@ -92,6 +92,7 @@
         position: relative;
         overflow: hidden;
         background: linear-gradient(135deg, #1E3A8A, #2563EB);
+        margin-top: auto;
     }
 
     .footer-section .container {
@@ -171,7 +172,7 @@
         }
     }
 
-    .info-row {
+    .footer-info-row {
         display: grid;
         grid-template-columns: 90px 10px 1fr;
         gap: 6px;

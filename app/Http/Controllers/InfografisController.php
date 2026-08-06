@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\Grafik;
-use Illuminate\Support\Facades\Cache;
 
 class InfografisController extends Controller
 {
@@ -19,8 +17,14 @@ class InfografisController extends Controller
     {
         $infografis = Grafik::findOrFail($id);
 
-        $key = 'infografis_' . $infografis->id . '_' . request()->ip();
+        $infografisLainnya = Grafik::where('id', '!=', $id)
+            ->latest()
+            ->take(6)
+            ->get();
 
-        return view('frontend.infografis-show', compact('infografis'));
+        return view('frontend.infografis-show', compact(
+            'infografis',
+            'infografisLainnya'
+        ));
     }
 }
