@@ -9,7 +9,7 @@ return [
     'api_url' => env('CKAN_API_URL', 'http://localhost:5000'),
     'api_key' => env('CKAN_API_KEY', ''),
     'organization' => env('CKAN_ORGANIZATION', ''),
-    'timeout' => env('CKAN_TIMEOUT', 30),
+    'timeout' => env('CKAN_TIMEOUT', 10),
 
     /*
     |--------------------------------------------------------------------------
@@ -31,6 +31,6 @@ return [
     | Retry Configuration
     |--------------------------------------------------------------------------
     */
-    'retry_count' => 3,
-    'retry_delay' => 1000, // ms
+    'retry_count' => 1,
+    'retry_delay' => 200, // ms
 ];

@@ -29,30 +29,41 @@ class CkanController extends Controller
      */
     public function home()
     {
-        try {
-            $stats = $this->ckan->getStatistics();
-            $recentPackages = $this->ckan->getRecentPackages(6);
-            $organizations = $this->ckan->getOrganizations();
+        $data = Cache::remember('home_page_data', 600, function () {
+            try {
+                $stats = $this->ckan->getStatistics();
+                $recentPackages = $this->ckan->getRecentPackages(6);
+                $organizations = $this->ckan->getOrganizations();
 
-            $videos = Video::latest()->get();
+                $videos = Video::latest()->get();
 
-            $infografis = Grafik::latest()->take(4)->get();
+                $infografis = Grafik::latest()->take(4)->get();
 
-            return view('frontend.home', compact('stats', 'recentPackages', 'organizations', 'videos', 'infografis'));
-        } catch (Exception $e) {
-            Log::error('CKAN Home Error', [
-                'error' => $e->getMessage(),
-            ]);
+                return [
+                    'stats' => $stats,
+                    'recentPackages' => $recentPackages,
+                    'organizations' => $organizations,
+                    'videos' => $videos,
+                    'infografis' => $infografis,
+                    'error' => null,
+                ];
+            } catch (Exception $e) {
+                Log::error('CKAN Home Error', [
+                    'error' => $e->getMessage(),
+                ]);
 
-            return view('frontend.home', [
-                'error' => 'Gagal mengambil data dari CKAN: ' . $e->getMessage(),
-                'stats' => [],
-                'recentPackages' => [],
-                'organizations' => [],
-                'videos' => collect(),
-                'infografis' => collect(),
-            ]);
-        }
+                return [
+                    'stats' => [],
+                    'recentPackages' => [],
+                    'organizations' => [],
+                    'videos' => collect(),
+                    'infografis' => collect(),
+                    'error' => 'Gagal mengambil data dari CKAN: ' . $e->getMessage(),
+                ];
+            }
+        });
+
+        return view('frontend.home', $data);
     }
 
     /**

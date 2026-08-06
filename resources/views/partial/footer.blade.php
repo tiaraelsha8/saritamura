@@ -5,7 +5,7 @@
 <footer class="footer-section py-4">
     <div class="footer-particles"></div>
     <div class="container">
-        <div class="row align-items-start text-black">
+        <div class="row align-items-start text-white">
 
             <!-- KIRI -->
             <div class="col-md-4 mb-2">
@@ -76,8 +76,8 @@
             </div>
         </div>
 
-        <div class="text-center mt-2 pt-3 border-top border-black">
-            <small class="d-block">
+        <div class="text-center mt-2 pt-3 border-top border-white">
+            <small class="d-block text-white">
                 &copy; {{ date('Y') }} Tim Pengembang Dinas Komunikasi, Informatika, Statistik dan Persandian
                 Kabupaten
                 Murung Raya
@@ -205,7 +205,7 @@
     }
 
     .social-icons a {
-        color: black;
+        color: white;
         font-size: 50px;
         transition: 0.2s;
         text-decoration: none;
