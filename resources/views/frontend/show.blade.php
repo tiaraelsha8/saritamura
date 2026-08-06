@@ -17,11 +17,6 @@
             --text-secondary: #6c757d;
         }
 
-        body {
-            background: var(--light-bg);
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-        }
-
         /* ===== BREADCRUMB ===== */
         .breadcrumb-section {
             background: white;
@@ -573,7 +568,7 @@
                                 <h6 class="mb-3 text-muted"><i class="fas fa-tags"></i> Tag:</h6>
                                 <div class="tags-cloud">
                                     @foreach ($package['tags'] as $tag)
-                                        <a href="{{ route('frontend.datasets', ['q' => is_array($tag) ? $tag['name'] ?? $tag : $tag]) }}"
+                                        <a href="{{ route('ckan.datasets', ['q' => is_array($tag) ? $tag['name'] ?? $tag : $tag]) }}"
                                             class="tag-pill">
                                             {{ is_array($tag) ? $tag['name'] ?? $tag : $tag }}
                                         </a>

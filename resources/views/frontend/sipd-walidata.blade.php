@@ -203,21 +203,24 @@
             color: white;
             padding: 2.5rem 0;
             overflow: hidden;
-
-            animation: heroFade .7s ease;
+            opacity: 0;
         }
 
         @keyframes heroFade {
 
             from {
-                opacity: .7;
-                transform: scale(1.02);
+                opacity: 0;
+                transform: translateY(-20px);
             }
 
             to {
                 opacity: 1;
-                transform: scale(1);
+                transform: translateY(0);
             }
+        }
+
+        .page-header.show {
+            animation: heroFade .65s ease forwards;
         }
 
         .section-title {
@@ -230,19 +233,28 @@
 
         .document-wrapper {
             background: #fff;
-            border-radius: 20px;
+            border-radius: 24px;
             padding: 30px;
             overflow: hidden;
-
+            border: 1px solid rgba(15, 23, 42, 0.06);
             box-shadow:
-                0 10px 30px rgba(0, 0, 0, .05);
+                0 1px 2px rgba(0, 0, 0, .04),
+                0 10px 25px rgba(15, 23, 42, .08),
+                0 30px 60px rgba(15, 23, 42, .08);
+            position: relative;
+            z-index: 10;
+            opacity: 0;
+            transform: translateY(24px);
+        }
+
+        .document-wrapper.show {
+            animation: fadeUp .55s ease forwards;
         }
 
         .top-area {
             display: flex;
             justify-content: space-between;
             align-items: center;
-
             margin-bottom: 30px;
             gap: 20px;
         }
@@ -263,19 +275,15 @@
         .search-box input {
             width: 100%;
             padding: 12px 15px 12px 42px;
-
             border: 1px solid #E2E8F0;
             border-radius: 12px;
-
             background: white;
             transition: .3s;
         }
 
         .search-box input:focus {
             outline: none;
-
             border-color: #2563EB;
-
             box-shadow:
                 0 0 0 4px rgba(37, 99, 235, .1);
         }
@@ -287,18 +295,12 @@
         }
 
         .document-table thead th {
-
             background: #F8FAFC;
-
             color: #64748B;
-
             font-size: .9rem;
             font-weight: 600;
-
             padding: 18px;
-
             border: none;
-
             position: sticky;
             top: 0;
             z-index: 1;
@@ -321,6 +323,26 @@
         .document-table tbody tr {
             border-bottom: 1px solid #EEF2F7;
             transition: .25s;
+            opacity: 0;
+            transform: translateY(18px);
+        }
+
+        .document-table tbody tr.show {
+            animation: fadeUp .45s ease forwards;
+        }
+
+        @keyframes fadeUp {
+
+            from {
+                opacity: 0;
+                transform: translateY(24px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
         }
 
         .document-table tbody tr:nth-child(even) {
@@ -340,16 +362,12 @@
         .doc-icon {
             width: 50px;
             height: 50px;
-
             display: flex;
             align-items: center;
             justify-content: center;
-
             border-radius: 12px;
-
             background: #FEE2E2;
             color: #DC2626;
-
             font-size: 20px;
         }
 
@@ -361,54 +379,38 @@
         .badge-category {
             background: #DBEAFE;
             color: #1D4ED8;
-
             padding: 6px 14px;
-
             border-radius: 30px;
-
             font-size: .75rem;
         }
 
         .badge-status {
             background: #DCFCE7;
             color: #166534;
-
             padding: 6px 14px;
-
             border-radius: 30px;
-
             font-size: .75rem;
         }
 
         .btn-download {
-
             display: inline-flex;
             align-items: center;
             gap: 8px;
-
             padding: 9px 15px;
-
             border-radius: 10px;
-
             background:
                 linear-gradient(135deg,
                     #1E3A8A,
                     #2563EB);
-
             border: 1px solid rgba(255, 255, 255, .15);
-
             color: white;
             text-decoration: none;
-
             transition: .3s;
         }
 
         .btn-download:hover {
-
             transform: translateY(-2px);
-
             color: white;
-
             box-shadow:
                 0 8px 20px rgba(37, 99, 235, .3);
         }
@@ -426,5 +428,23 @@
 
         }
     </style>
+    @push('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
 
+                document.querySelector('.page-header')?.classList.add('show');
+
+                setTimeout(() => {
+                    document.querySelector('.document-wrapper')?.classList.add('show');
+                }, 120);
+
+                document.querySelectorAll('.document-table tbody tr').forEach((row, index) => {
+                    setTimeout(() => {
+                        row.classList.add('show');
+                    }, 250 + (index * 45));
+                });
+
+            });
+        </script>
+    @endpush
 @endsection
