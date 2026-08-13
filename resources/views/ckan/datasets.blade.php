@@ -803,29 +803,43 @@ class AutoSearch {
             // If empty, we don't add 'q' at all
             
             console.log('🔍 Search params:', params.toString());
-            
-            const response = await fetch(`${this.apiUrl}?${params}`, {
-                signal: this.abortController.signal,
-                headers: { 'X-Requested-With': 'XMLHttpRequest' }
-            });
-            
-            const result = await response.json();
-            
-            console.log('✅ Response:', {
-                success: result.success,
-                total: result.pagination?.total,
-                count: result.data?.length,
-            });
-            
+
+            // Timeout 90 detik: aborsi fetch jika server CKAN terlalu lama merespons
+            const timeoutId = setTimeout(() => this.abortController.abort(), 90000);
+
+            let result;
+            try {
+                const response = await fetch(`${this.apiUrl}?${params}`, {
+                    signal: this.abortController.signal,
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                });
+
+                result = await response.json();
+
+                console.log('✅ Response:', {
+                    success: result.success,
+                    total: result.pagination?.total,
+                    count: result.data?.length,
+                });
+            } finally {
+                clearTimeout(timeoutId);
+            }
+
             if (!result.success) {
                 throw new Error(result.error || 'Search failed');
             }
-            
+
             this.renderResults(result.data, result.pagination, '');
             
         } catch (error) {
             if (error.name === 'AbortError') return;
             console.error('Search error:', error);
+
+            // Berikan pesan yang lebih jelas daripada "Failed to fetch"
+            if (error instanceof TypeError && error.message === 'Failed to fetch') {
+                error.message = 'Gagal terhubung ke server CKAN. Silakan coba lagi (server mungkin sedang sibuk/tidak merespons).';
+            }
+
             this.showError(error.message);
         } finally {
             this.hideLoading();
@@ -931,12 +945,17 @@ class AutoSearch {
     
     renderPagination(pagination, resultsCount) {
         if (!this.paginationContainer) return;
-        
+
         const paginationEl = document.getElementById('paginationList');
         const infoEl = document.getElementById('paginationInfo');
-        
+
         if (!paginationEl || !infoEl) return;
-        
+
+        // Normalisasi agar current_page & last_page selalu bertipe number
+        // (backend terkadang mengembalikan string, menyebabkan strict comparison gagal)
+        pagination.current_page = parseInt(pagination.current_page, 10) || 1;
+        pagination.last_page = parseInt(pagination.last_page, 10) || 1;
+
         if (pagination.last_page <= 1) {
             this.paginationContainer.style.display = 'none';
             return;

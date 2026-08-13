@@ -792,8 +792,7 @@
                                             class="video-card-link">
                                             <div class="video-card fade-up">
                                                 <div class="ratio ratio-16x9">
-                                                    <iframe src="https://www.youtube.com/embed/{{ $item->video }}"
-                                                        allowfullscreen>
+                                                    <iframe src="https://www.youtube.com/embed/{{ $item->video }}" allowfullscreen>
                                                     </iframe>
                                                 </div>
 
@@ -1029,31 +1028,31 @@
 
             showLoading() {
                 this.resultsContainer.innerHTML = `
-                                                                                                <div class="autocomplete-loading">
-                                                                                                    <div class="spinner-border" role="status"></div>
-                                                                                                    <p class="mt-2 mb-0">Mencari...</p>
-                                                                                                </div>
-                                                                                            `;
+                                                                                                                        <div class="autocomplete-loading">
+                                                                                                                            <div class="spinner-border" role="status"></div>
+                                                                                                                            <p class="mt-2 mb-0">Mencari...</p>
+                                                                                                                        </div>
+                                                                                                                    `;
                 this.showDropdown();
             }
 
             showError() {
                 this.resultsContainer.innerHTML = `
-                                                                                                <div class="autocomplete-no-results">
-                                                                                                    <i class="fas fa-exclamation-circle"></i>
-                                                                                                    <p class="mb-0">Gagal memuat saran</p>
-                                                                                                </div>
-                                                                                            `;
+                                                                                                                        <div class="autocomplete-no-results">
+                                                                                                                            <i class="fas fa-exclamation-circle"></i>
+                                                                                                                            <p class="mb-0">Gagal memuat saran</p>
+                                                                                                                        </div>
+                                                                                                                    `;
             }
 
             renderSuggestions(suggestions) {
                 if (!suggestions || suggestions.length === 0) {
                     this.resultsContainer.innerHTML = `
-                                                                                                    <div class="autocomplete-no-results">
-                                                                                                        <i class="fas fa-search"></i>
-                                                                                                        <p class="mb-0">Tidak ada saran ditemukan</p>
-                                                                                                    </div>
-                                                                                                `;
+                                                                                                                            <div class="autocomplete-no-results">
+                                                                                                                                <i class="fas fa-search"></i>
+                                                                                                                                <p class="mb-0">Tidak ada saran ditemukan</p>
+                                                                                                                            </div>
+                                                                                                                        `;
                     this.showDropdown();
                     return;
                 }
@@ -1062,19 +1061,19 @@
 
                 suggestions.forEach((item, index) => {
                     html += `
-                                                                                                    <a href="{{ route('frontend.datasets') }}?q=${encodeURIComponent(item.title)}" 
-                                                                                                       class="autocomplete-item"
-                                                                                                       data-index="${index}">
-                                                                                                        <div class="autocomplete-item-icon">
-                                                                                                            <i class="fas fa-database"></i>
-                                                                                                        </div>
-                                                                                                        <div class="autocomplete-item-content">
-                                                                                                            <div class="autocomplete-item-title">${this.escapeHtml(item.title)}</div>
-                                                                                                            ${item.organization ? `<div class="autocomplete-item-org"><i class="fas fa-building"></i> ${this.escapeHtml(item.organization)}</div>` : ''}
-                                                                                                            <span class="autocomplete-item-type"><i class="fas fa-tag"></i> Dataset</span>
-                                                                                                        </div>
-                                                                                                    </a>
-                                                                                                `;
+                                                                                                                            <a href="{{ route('frontend.datasets') }}?q=${encodeURIComponent(item.title)}" 
+                                                                                                                               class="autocomplete-item"
+                                                                                                                               data-index="${index}">
+                                                                                                                                <div class="autocomplete-item-icon">
+                                                                                                                                    <i class="fas fa-database"></i>
+                                                                                                                                </div>
+                                                                                                                                <div class="autocomplete-item-content">
+                                                                                                                                    <div class="autocomplete-item-title">${this.escapeHtml(item.title)}</div>
+                                                                                                                                    ${item.organization ? `<div class="autocomplete-item-org"><i class="fas fa-building"></i> ${this.escapeHtml(item.organization)}</div>` : ''}
+                                                                                                                                    <span class="autocomplete-item-type"><i class="fas fa-tag"></i> Dataset</span>
+                                                                                                                                </div>
+                                                                                                                            </a>
+                                                                                                                        `;
                 });
 
                 this.resultsContainer.innerHTML = html;
@@ -1109,7 +1108,7 @@
         }
 
         // Initialize on page load
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             if (document.getElementById('heroSearchInput')) {
                 window.autocompleteSearch = new AutocompleteSearch({
                     inputId: 'heroSearchInput',
@@ -1124,7 +1123,7 @@
         });
 
         // ===== SCROLL ANIMATION =====
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
 
             // ===== Indikator video =====
             const carousel = document.getElementById("videoCarousel");
@@ -1142,7 +1141,7 @@
 
             setActive(0);
 
-            carousel.addEventListener("slid.bs.carousel", function(e) {
+            carousel.addEventListener("slid.bs.carousel", function (e) {
 
                 setActive(e.to);
 

@@ -36,7 +36,14 @@ class CkanService
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
         ])
+            ->connectTimeout(5)
             ->timeout($this->timeout)
+            ->retry($this->retryCount, $this->retryDelay, function ($exception, $request) {
+                // Retry on connection/timeout errors but not on validation errors (4xx)
+                return $exception instanceof \Illuminate\Http\Client\ConnectionException
+                    || ($exception instanceof \Illuminate\Http\Client\RequestException
+                        && $exception->response->status() >= 500);
+            }, false)
             ->asJson();
 
         // 🔐 Fix untuk HTTPS dengan self-signed certificate

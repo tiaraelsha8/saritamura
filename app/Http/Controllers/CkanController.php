@@ -227,7 +227,7 @@ class CkanController extends Controller
     {
         try {
             $query = $request->input('q', '');
-            $page = $request->input('page', 1);
+            $page = max(1, (int) $request->input('page', 1));
             $rows = 12;
 
             $result = $this->ckan->searchPackages($query, [
@@ -391,8 +391,8 @@ class CkanController extends Controller
         ]);
         try {
             $query = $request->input('q', '');
-            $page = $request->input('page', 1);
-            $perPage = $request->input('per_page', 10);
+            $page = max(1, (int) $request->input('page', 1));
+            $perPage = (int) $request->input('per_page', 10);
             $sort = $request->input('sort', 'metadata_modified desc');
 
             // ✅ Get filter arrays
@@ -592,8 +592,8 @@ class CkanController extends Controller
     public function apiGetData(string $datasetId, string $resourceId, Request $request)
     {
         try {
-            $page = $request->input('page', 1);
-            $limit = min($request->input('limit', 100), 1000);
+            $page = max(1, (int) $request->input('page', 1));
+            $limit = min((int) $request->input('limit', 100), 1000);
             $offset = ($page - 1) * $limit;
             $search = $request->input('search', '');
 
@@ -669,8 +669,8 @@ class CkanController extends Controller
                 $query = '';
             }
 
-            $page = $request->input('page', 1);
-            $perPage = $request->input('per_page', 10);
+            $page = max(1, (int) $request->input('page', 1));
+            $perPage = (int) $request->input('per_page', 10);
             $sort = $request->input('sort', 'metadata_modified desc');
 
             // Get filters
@@ -870,8 +870,8 @@ class CkanController extends Controller
             $organization = $this->ckan->getOrganization($id);
 
             // Get datasets from this organization
-            $page = $request->input('page', 1);
-            $perPage = $request->input('per_page', 12);
+            $page = max(1, (int) $request->input('page', 1));
+            $perPage = (int) $request->input('per_page', 12);
 
             $searchParams = [
                 'fq' => sprintf('organization:"%s"', $organization['name']),

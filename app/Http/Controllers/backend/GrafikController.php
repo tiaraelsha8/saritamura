@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Grafik;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Cache;
 
 class GrafikController extends Controller
 {
@@ -88,6 +89,9 @@ class GrafikController extends Controller
             'penulis' => $request->penulis,
             'foto' => $image->hashName(),
         ]);
+
+        // Bersihkan cache home agar infografis terbaru langsung tampil
+        Cache::forget('home_page_data');
 
         //redirect to index
         return redirect()->route('grafik.index')->with(['success' => 'Data Berhasil Disimpan!']);
@@ -173,7 +177,7 @@ class GrafikController extends Controller
 
             //upload new image
             $image = $request->file('foto');
-            $image->storeAs('bgrafika', $image->hashName());
+            $image->storeAs('grafik', $image->hashName());
 
             //update product with new image
             $grafik->update([
@@ -189,6 +193,9 @@ class GrafikController extends Controller
                 'penulis' => $request->penulis,
             ]);
         }
+
+        // Bersihkan cache home agar infografis terbaru langsung tampil
+        Cache::forget('home_page_data');
 
         //redirect to index
         return redirect()->route('grafik.index')->with(['success' => 'Data Berhasil Diubah!']);
@@ -225,6 +232,9 @@ class GrafikController extends Controller
         }
 
         $grafik->delete();
+
+        // Bersihkan cache home agar infografis terbaru langsung tampil
+        Cache::forget('home_page_data');
 
         return redirect()->route('grafik.index')->with(['success' => 'Grafik dan folder foto berhasil dihapus!']);
     }
