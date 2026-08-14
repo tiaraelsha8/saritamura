@@ -158,11 +158,32 @@ class CkanController extends Controller
     {
         try {
             $package = $this->ckan->getPackage($id);
+
+            if (!empty($package['organization']['id'])) {
+                try {
+                    $organization = $this->ckan->getOrganization($package['organization']['id']);
+
+                    $package['organization']['image_url'] =
+                        !empty($organization['image_display_url'])
+                        ? $organization['image_display_url']
+                        : ($organization['image_url'] ?? null);
+
+                    $package['organization']['description'] =
+                        $organization['description']
+                        ?? ($package['organization']['description'] ?? null);
+
+                } catch (\Exception $e) {
+                    // Tetap gunakan organization bawaan package_show
+                }
+            }
+
             return view('frontend.show', compact('package'));
+
         } catch (Exception $e) {
             abort(404, 'Dataset tidak ditemukan');
         }
     }
+
 
     /**
      * Show edit form
@@ -828,7 +849,7 @@ class CkanController extends Controller
                     'name' => $org['name'],
                     'title' => $org['title'] ?? $org['name'],
                     'description' => $org['description'] ?? 'Tidak ada deskripsi',
-                    'image_url' => $org['image_url'] ?? null,
+                    'image_url' => !empty($org['image_display_url']) ? $org['image_display_url'] : ($org['image_url'] ?? null),
                     'created' => $org['created'] ?? null,
                     'is_organization' => $org['is_organization'] ?? true,
                     'package_count' => $org['package_count'] ?? 0,
@@ -903,7 +924,7 @@ class CkanController extends Controller
                     'name' => $organization['name'],
                     'title' => $organization['title'] ?? $organization['name'],
                     'description' => $organization['description'] ?? 'Tidak ada deskripsi',
-                    'image_url' => $organization['image_url'] ?? null,
+                    'image_url' => !empty($organization['image_display_url']) ? $organization['image_display_url'] : ($organization['image_url'] ?? null),
                     'created' => $organization['created'] ?? null,
                     'package_count' => $organization['package_count'] ?? 0,
                     'extras' => $organization['extras'] ?? [],

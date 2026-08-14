@@ -152,7 +152,7 @@
         .description-text {
             line-height: 1.7;
             color: var(--text-primary);
-            white-space: pre-wrap;
+
         }
 
         /* ===== RESOURCES ===== */
@@ -568,7 +568,7 @@
                                 <h6 class="mb-3 text-muted"><i class="fas fa-tags"></i> Tag:</h6>
                                 <div class="tags-cloud">
                                     @foreach ($package['tags'] as $tag)
-                                        <a href="{{ route('ckan.datasets', ['q' => is_array($tag) ? $tag['name'] ?? $tag : $tag]) }}"
+                                        <a href="{{ route('frontend.datasets', ['q' => is_array($tag) ? $tag['name'] ?? $tag : $tag]) }}"
                                             class="tag-pill">
                                             {{ is_array($tag) ? ($tag['name'] ?? $tag) : $tag }}
                                         </a>
@@ -927,7 +927,7 @@
 
         // Track view (optional - untuk analytics)
         @auth
-            fetch('{{ route("ckan.track-view", $package["id"]) }}', {
+            fetch('{{ route("frontend.track-view", $package["id"]) }}', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

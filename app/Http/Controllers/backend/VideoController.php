@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Video;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Cache;
 
 class VideoController extends Controller
 {
@@ -46,6 +47,7 @@ class VideoController extends Controller
             'video' => $request->video,
         ]);
 
+        Cache::forget('home_page_data');
         //redirect to index
         return redirect()->route('video.index')->with(['success' => 'Data Berhasil Disimpan!']);
     }
@@ -93,6 +95,7 @@ class VideoController extends Controller
             'video' => $request->video,
         ]);
 
+        Cache::forget('home_page_data');
         //redirect to index
         return redirect()->route('video.index')->with(['success' => 'Data Berhasil Diubah!']);
     }
@@ -107,6 +110,8 @@ class VideoController extends Controller
 
         //delete video
         $videos->delete();
+
+        Cache::forget('home_page_data');
 
         //redirect to index
         return redirect()->route('video.index')->with(['success' => 'Data Berhasil Dihapus!']);

@@ -256,72 +256,110 @@
 
 @section('content')
     <div class="container py-4">
+
         <!-- Breadcrumb -->
         <nav aria-label="breadcrumb" class="mb-4">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ route('frontend.home') }}"><i class="fas fa-home"></i> Beranda</a>
+                <li class="breadcrumb-item">
+                    <a href="{{ route('frontend.home') }}">
+                        <i class="fas fa-home"></i> Beranda
+                    </a>
                 </li>
-                <li class="breadcrumb-item"><a href="{{ route('frontend.organizations') }}">Organisasi</a></li>
-                <li class="breadcrumb-item active">{{ $organization['title'] }}</li>
+
+                <li class="breadcrumb-item">
+                    <a href="{{ route('frontend.organizations') }}">
+                        Organisasi
+                    </a>
+                </li>
+
+                <li class="breadcrumb-item active">
+                    {{ $organization['title'] ?? 'Organisasi' }}
+                </li>
             </ol>
         </nav>
 
         <!-- Organization Header -->
         <header class="org-header">
             <div class="org-header-content">
+
                 <div class="org-logo-large">
-                    @if($organization['image_url'])
-                        <img src="{{ $organization['image_url'] }}" alt="{{ $organization['title'] }}"
+                    @if(!empty($organization['image_url']))
+                        <img src="{{ $organization['image_url'] }}" alt="{{ $organization['title'] ?? 'Organisasi' }}"
                             onerror="this.parentElement.innerHTML='<i class=\'fas fa-building\'></i>'">
                     @else
                         <i class="fas fa-building"></i>
                     @endif
                 </div>
+
                 <div class="org-info" style="flex: 1; min-width: 250px;">
-                    <h1>{{ $organization['title'] }}</h1>
+
+                    <h1>
+                        {{ $organization['title'] ?? 'Organisasi' }}
+                    </h1>
 
                     <div class="org-stats">
+
                         <div class="org-stat">
                             <i class="fas fa-database"></i>
-                            <span>{{ $organization['package_count'] ?? 0 }} dataset</span>
+                            <span>
+                                {{ $organization['package_count'] ?? 0 }} dataset
+                            </span>
                         </div>
-                        @if($organization['created'])
+
+                        @if(!empty($organization['created']))
                             <div class="org-stat">
                                 <i class="fas fa-calendar-alt"></i>
-                                <span>Bergabung {{ \Carbon\Carbon::parse($organization['created'])->format('M Y') }}</span>
+                                <span>
+                                    Bergabung
+                                    {{ \Carbon\Carbon::parse($organization['created'])->format('M Y') }}
+                                </span>
                             </div>
                         @endif
+
                     </div>
 
-                    <p class="org-description">
-                        {{ $organization['description'] }}
-                    </p>
+                    @if(!empty($organization['description']))
+                        <p class="org-description">
+                            {{ $organization['description'] }}
+                        </p>
+                    @endif
 
                     <div class="org-contact-grid">
-                        @if($organization['address'])
+
+                        @if(!empty($organization['address']))
                             <div class="contact-item">
                                 <i class="fas fa-map-marker-alt"></i>
                                 <span>{{ $organization['address'] }}</span>
                             </div>
                         @endif
-                        @if($organization['phone'])
+
+                        @if(!empty($organization['phone']))
                             <div class="contact-item">
                                 <i class="fas fa-phone"></i>
-                                <a href="tel:{{ $organization['phone'] }}">{{ $organization['phone'] }}</a>
+                                <a href="tel:{{ $organization['phone'] }}">
+                                    {{ $organization['phone'] }}
+                                </a>
                             </div>
                         @endif
-                        @if($organization['email'])
+
+                        @if(!empty($organization['email']))
                             <div class="contact-item">
                                 <i class="fas fa-envelope"></i>
-                                <a href="mailto:{{ $organization['email'] }}">{{ $organization['email'] }}</a>
+                                <a href="mailto:{{ $organization['email'] }}">
+                                    {{ $organization['email'] }}
+                                </a>
                             </div>
                         @endif
-                        @if($organization['website'])
+
+                        @if(!empty($organization['website']))
                             <div class="contact-item">
                                 <i class="fas fa-globe"></i>
-                                <a href="{{ $organization['website'] }}" target="_blank">Website</a>
+                                <a href="{{ $organization['website'] }}" target="_blank" rel="noopener noreferrer">
+                                    Website
+                                </a>
                             </div>
                         @endif
+
                     </div>
                 </div>
             </div>
@@ -329,109 +367,208 @@
 
         <!-- Datasets Section -->
         <section>
+
             <div class="section-header">
-                <h2><i class="fas fa-database"></i> Dataset dari {{ $organization['title'] }}</h2>
-                @if($pagination['total'] > 0)
+
+                <h2>
+                    <i class="fas fa-database"></i>
+                    Dataset dari {{ $organization['title'] ?? 'Organisasi' }}
+                </h2>
+
+                @if(($pagination['total'] ?? 0) > 0)
                     <span class="text-muted small">
                         {{ $pagination['total'] }} dataset ditemukan
                     </span>
                 @endif
+
             </div>
 
-            @forelse($datasets as $dataset)
+            @forelse($datasets ?? [] as $dataset)
+
                 <div class="dataset-card">
+
                     <h3 class="dataset-title">
                         <a href="{{ route('frontend.show', $dataset['id']) }}">
-                            {{ $dataset['title'] }}
+                            {{ $dataset['title'] ?? 'Dataset tanpa judul' }}
                         </a>
                     </h3>
-                    <p class="dataset-description">
-                        {{ $dataset['notes'] }}
-                    </p>
+
+                    @if(!empty($dataset['notes']))
+                        <p class="dataset-description">
+                            {{ $dataset['notes'] }}
+                        </p>
+                    @endif
 
                     @if(!empty($dataset['tags']))
                         <div class="dataset-tags">
+
                             @foreach(array_slice($dataset['tags'], 0, 3) as $tag)
                                 <span class="dataset-tag">
-                                    {{ is_array($tag) ? ($tag['name'] ?? $tag) : $tag }}
+                                    {{ is_array($tag) ? ($tag['name'] ?? '') : $tag }}
                                 </span>
                             @endforeach
+
                         </div>
                     @endif
 
                     <div class="dataset-meta">
-                        <div class="dataset-meta-item">
-                            <i class="fas fa-calendar-alt"></i>
-                            <span>{{ \Carbon\Carbon::parse($dataset['metadata_modified'])->format('d M Y') }}</span>
-                        </div>
-                        <div class="dataset-meta-item">
-                            <i class="fas fa-file"></i>
-                            <span>{{ $dataset['resource_count'] }} file</span>
-                        </div>
-                        @if($dataset['license_id'])
+
+                        @if(!empty($dataset['metadata_modified']))
                             <div class="dataset-meta-item">
-                                <i class="fas fa-certificate"></i>
-                                <span>{{ $dataset['license_id'] }}</span>
+                                <i class="fas fa-calendar-alt"></i>
+                                <span>
+                                    {{ \Carbon\Carbon::parse($dataset['metadata_modified'])->format('d M Y') }}
+                                </span>
                             </div>
                         @endif
+
+                        <div class="dataset-meta-item">
+                            <i class="fas fa-file"></i>
+                            <span>
+                                {{ $dataset['resource_count'] ?? 0 }} file
+                            </span>
+                        </div>
+
+                        @if(!empty($dataset['license_id']))
+                            <div class="dataset-meta-item">
+                                <i class="fas fa-certificate"></i>
+                                <span>
+                                    {{ $dataset['license_id'] }}
+                                </span>
+                            </div>
+                        @endif
+
                     </div>
                 </div>
+
             @empty
+
                 <div class="empty-datasets">
+
                     <i class="fas fa-inbox"></i>
-                    <h5>Belum ada dataset</h5>
-                    <p class="mb-3">{{ $organization['title'] }} belum mempublikasikan dataset.</p>
-                    @if(auth()->check() && auth()->user()->is_sysadmin)
+
+                    <h5>
+                        Belum ada dataset
+                    </h5>
+
+                    <p class="mb-3">
+                        {{ $organization['title'] ?? 'Organisasi' }}
+                        belum mempublikasikan dataset.
+                    </p>
+
+                    @if(auth()->check() && (auth()->user()->is_sysadmin ?? false))
                         <a href="{{ config('ckan.base_url') }}/dataset/new?owner_org={{ $organization['id'] }}" target="_blank"
-                            class="btn btn-primary">
-                            <i class="fas fa-plus"></i> Tambah Dataset
+                            rel="noopener noreferrer" class="btn btn-primary">
+                            <i class="fas fa-plus"></i>
+                            Tambah Dataset
                         </a>
                     @endif
+
                 </div>
+
             @endforelse
 
+
             <!-- Pagination -->
-            @if($pagination['total'] > 0 && $pagination['last_page'] > 1)
+            @if(
+                    ($pagination['total'] ?? 0) > 0 &&
+                    ($pagination['last_page'] ?? 1) > 1
+                )
+
                 <div class="pagination-container">
-                    <nav>
+
+                    <nav aria-label="Pagination dataset">
+
                         <ul class="pagination justify-content-center">
-                            @if($pagination['current_page'] > 1)
-                                <li class="page-item">
-                                    <a class="page-link"
-                                        href="{{ route('ckan.organization', [$organization['id'], 'page' => $pagination['current_page'] - 1]) }}">
-                                        <i class="fas fa-chevron-left"></i>
-                                    </a>
-                                </li>
+
+                            <!-- Previous -->
+                            @if(($pagination['current_page'] ?? 1) > 1)
+
+                                            <li class="page-item">
+                                                <a class="page-link" href="{{ route('frontend.organization', [
+                                    'id' => $organization['id'],
+                                    'page' => $pagination['current_page'] - 1
+                                ]) }}" aria-label="Halaman sebelumnya">
+                                                    <i class="fas fa-chevron-left"></i>
+                                                </a>
+                                            </li>
+
                             @else
-                                <li class="page-item disabled"><span class="page-link">←</span></li>
+
+                                <li class="page-item disabled">
+                                    <span class="page-link">
+                                        ←
+                                    </span>
+                                </li>
+
                             @endif
 
-                            @for($i = max(1, $pagination['current_page'] - 2); $i <= min($pagination['last_page'], $pagination['current_page'] + 2); $i++)
-                                <li class="page-item {{ $i == $pagination['current_page'] ? 'active' : '' }}">
-                                    <a class="page-link"
-                                        href="{{ route('ckan.organization', [$organization['id'], 'page' => $i]) }}">
-                                        {{ $i }}
-                                    </a>
-                                </li>
+
+                            <!-- Page Numbers -->
+                            @for(
+                                                $i = max(1, ($pagination['current_page'] ?? 1) - 2);
+                                                $i <= min(
+                                                    $pagination['last_page'] ?? 1,
+                                                    ($pagination['current_page'] ?? 1) + 2
+                                                );
+                                                $i++
+                                            )
+
+                                            <li class="page-item {{ $i == ($pagination['current_page'] ?? 1) ? 'active' : '' }}">
+
+                                                <a class="page-link" href="{{ route('frontend.organization', [
+                                    'id' => $organization['id'],
+                                    'page' => $i
+                                ]) }}">
+                                                    {{ $i }}
+                                                </a>
+
+                                            </li>
+
                             @endfor
 
-                            @if($pagination['current_page'] < $pagination['last_page'])
-                                <li class="page-item">
-                                    <a class="page-link"
-                                        href="{{ route('ckan.organization', [$organization['id'], 'page' => $pagination['current_page'] + 1]) }}">
-                                        <i class="fas fa-chevron-right"></i>
-                                    </a>
-                                </li>
+
+                            <!-- Next -->
+                            @if(
+                                                ($pagination['current_page'] ?? 1) <
+                                                ($pagination['last_page'] ?? 1)
+                                            )
+
+                                            <li class="page-item">
+                                                <a class="page-link" href="{{ route('frontend.organization', [
+                                    'id' => $organization['id'],
+                                    'page' => $pagination['current_page'] + 1
+                                ]) }}" aria-label="Halaman berikutnya">
+                                                    <i class="fas fa-chevron-right"></i>
+                                                </a>
+                                            </li>
+
                             @else
-                                <li class="page-item disabled"><span class="page-link">→</span></li>
+
+                                <li class="page-item disabled">
+                                    <span class="page-link">
+                                        →
+                                    </span>
+                                </li>
+
                             @endif
+
                         </ul>
+
                     </nav>
+
                     <small class="text-muted">
-                        Halaman {{ $pagination['current_page'] }} dari {{ $pagination['last_page'] }}
+                        Halaman
+                        {{ $pagination['current_page'] ?? 1 }}
+                        dari
+                        {{ $pagination['last_page'] ?? 1 }}
                     </small>
+
                 </div>
+
             @endif
+
         </section>
+
     </div>
 @endsection
