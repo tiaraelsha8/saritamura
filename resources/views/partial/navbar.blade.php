@@ -47,6 +47,13 @@
                         SIPD Walidata
                     </a>
                 </li>
+                @auth
+                    <li class="nav-item">
+                        <a class="nav-link custom-nav" href="{{ route('backend.dashboard') }}">
+                            Dashboard
+                        </a>
+                    </li>
+                @endauth
 
             </ul>
         </div>
