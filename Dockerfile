@@ -15,6 +15,11 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 COPY . /var/www/html
 
-RUN chmod -R 775 storage bootstrap/cache
+RUN chmod -R 777 storage bootstrap/cache
 
 RUN php artisan storage:link || true
+
+RUN apt install nano -y
+
+RUN composer install
+
