@@ -76,7 +76,7 @@ Route::prefix('ckan')
         Route::get('/search', 'search')->name('frontend.search');
         Route::get('/datasets', 'datasets')->name('frontend.datasets');
         Route::get('/dataset/{id}', 'show')->name('frontend.show');
-        
+
         // Datasets CRUD
         Route::get('/create', 'create')->name('frontend.create');
         Route::post('/store', 'store')->name('frontend.store');
@@ -118,9 +118,9 @@ Route::prefix('ckan')
 
         //sipd-walidata
         Route::controller(SipdWalidataController::class)->group(function () {
-            Route::get('/sipd-walidata', 'index')->name('frontend.sipd-walidata');
+            Route::get('/kebijakan', 'index')->name('frontend.sipd-walidata');
 
-            Route::get('/sipd-walidata/download/{id}', 'download')->name('download.sipd-walidata');
+            Route::get('/kebijakan/download/{id}', 'download')->name('download.sipd-walidata');
         });
     });
 

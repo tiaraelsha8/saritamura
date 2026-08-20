@@ -44,7 +44,7 @@
 
                 <li class="nav-item">
                     <a class="nav-link custom-nav" href="{{ route('frontend.sipd-walidata') }}">
-                        SIPD Walidata
+                        Kebijakan
                     </a>
                 </li>
                 @auth

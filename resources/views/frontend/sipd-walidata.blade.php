@@ -1,18 +1,18 @@
 @extends('layouts.app')
 
-@section('title', 'SIPD Walidata')
+@section('title', 'Kebijakan')
 
 @section('content')
 
     <header class="page-header">
         <div class="container">
-            <h1 class="section-title text-white">
+            <h2 class="section-title text-white">
                 <i class="fas fa-folder-open me-2"></i>
-                Dokumen SIPD Walidata
-            </h1>
+                Dokumen Kebijakan Satu Data Indonesia Kabupaten Murung Raya
+            </h2>
 
             <p class="subtitle mb-0">
-                Pusat dokumen dan pengelolaan data SIPD Walidata Kabupaten Murung Raya
+                Pusat Dokumen Kebijakan Satu Data Indonesia Kabupaten Murung Raya
             </p>
         </div>
     </header>
