@@ -29,11 +29,24 @@ class CkanController extends Controller
      */
     public function home()
     {
-        $data = Cache::remember('home_page_data', 600, function () {
+        $data = Cache::remember('home_page_data', 60, function () {
             try {
-                $stats = $this->ckan->getStatistics();
-                $recentPackages = $this->ckan->getRecentPackages(6);
-                $organizations = $this->ckan->getOrganizations();
+                // ✅ Parallel requests ke CKAN untuk cold-load yang cepat
+                $parallel = $this->ckan->getHomePageData();
+
+                // Normalisasi struktur hasil
+                $stats = $parallel['stats'] ?? [];
+                $recentPackages = $parallel['recent'] ?? [];
+                $organizations = $parallel['organizations'] ?? [];
+
+                // Fallback jika recently_changed_packages gagal
+                if (empty($recentPackages)) {
+                    try {
+                        $recentPackages = $this->ckan->getRecentPackages(6);
+                    } catch (\Exception $e) {
+                        $recentPackages = [];
+                    }
+                }
 
                 $videos = Video::latest()->get();
 
@@ -618,12 +631,10 @@ class CkanController extends Controller
             $offset = ($page - 1) * $limit;
             $search = $request->input('search', '');
 
-            // ✅ Server-side cache key
+            // ✅ Server-side cache key (60s TTL)
             $cacheKey = "ckan_api_data_{$resourceId}_{$page}_{$limit}_{$search}";
 
-            // Try cache first (30 seconds TTL)
             if (Cache::has($cacheKey)) {
-                \Log::info('API cache hit', ['key' => $cacheKey]);
                 return response()->json(Cache::get($cacheKey));
             }
 
@@ -655,8 +666,7 @@ class CkanController extends Controller
                 ],
             ];
 
-            // ✅ Cache response for 30 seconds
-            Cache::put($cacheKey, $response, 30);
+            Cache::put($cacheKey, $response, 60);
 
             return response()->json($response);
 

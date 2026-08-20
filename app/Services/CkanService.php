@@ -169,7 +169,7 @@ class CkanService
      */
     public function getPackage(string $id): array
     {
-        return $this->callApi('package_show', ['id' => $id], true, 600);
+        return $this->callApi('package_show', ['id' => $id], true, 60);
     }
 
 
@@ -185,7 +185,7 @@ class CkanService
             'include_dataset_count' => true,
         ];
 
-        return $this->callApi('organization_list', array_merge($defaultParams, $params), true, 1800);
+        return $this->callApi('organization_list', array_merge($defaultParams, $params), true, 60);
     }
 
     /**
@@ -200,7 +200,7 @@ class CkanService
             'include_datasets' => false,  // Fetch datasets separately for pagination
         ];
 
-        return $this->callApi('organization_show', array_merge($defaultParams, $params), true, 600);
+        return $this->callApi('organization_show', array_merge($defaultParams, $params), true, 60);
     }
 
     /**
@@ -211,7 +211,7 @@ class CkanService
         return $this->callApi('group_list', [
             'all_fields' => true,
             'include_extras' => true,
-        ], true, 3600);
+        ], true, 60);
     }
 
     /**
@@ -219,7 +219,7 @@ class CkanService
      */
     public function getResource(string $id): array
     {
-        return $this->callApi('resource_show', ['id' => $id], true, 600);
+        return $this->callApi('resource_show', ['id' => $id], true, 60);
     }
 
     /**
@@ -270,27 +270,78 @@ class CkanService
     }
 
     /**
+     * Get homepage data with parallel CKAN requests (fast cold load)
+     */
+    public function getHomePageData(): array
+    {
+        $skipVerify = str_starts_with($this->baseUrl, 'https://') && config('app.env') !== 'production';
+
+        $responses = Http::pool(function ($pool) use ($skipVerify) {
+            $clients = [];
+
+            $actions = [
+                'stats' => ['get_site_statistics', []],
+                'recent' => ['package_search', ['rows' => 6, 'sort' => 'metadata_modified desc']],
+                'organizations' => ['organization_list', ['all_fields' => true, 'include_extras' => true, 'include_dataset_count' => true]],
+            ];
+
+            foreach ($actions as $key => [$action, $params]) {
+                $request = $pool->as($key)
+                    ->withHeaders([
+                        'Authorization' => $this->apiKey,
+                        'Content-Type' => 'application/json',
+                        'Accept' => 'application/json',
+                    ])
+                    ->connectTimeout(5)
+                    ->timeout($this->timeout)
+                    ->asJson();
+
+                if ($skipVerify) {
+                    $request = $request->withOptions(['verify' => false]);
+                }
+
+                $clients[$key] = $request->post("{$this->baseUrl}/api/3/action/{$action}", $params);
+            }
+
+            return $clients;
+        });
+
+        $result = [];
+        foreach ($responses as $key => $response) {
+            $ok = $response->successful() && ($response->json()['success'] ?? false);
+            $result[$key] = $ok ? ($response->json()['result'] ?? []) : [];
+        }
+
+        // Normalize: recent pakai package_search -> ambil hasil dari 'results'
+        if (isset($result['recent']['results'])) {
+            $result['recent'] = $result['recent']['results'];
+        }
+
+        // Fallback: if stats call failed, fall back to getStatistics() with its own fallback chain
+        if (empty($result['stats'])) {
+            $result['stats'] = $this->getStatistics();
+        }
+
+        return $result;
+    }
+
+    /**
      * Get Recent Changed Packages
      */
     public function getRecentPackages(int $limit = 6): array
     {
         try {
-            return $this->callApi('recently_changed_packages', ['limit' => $limit], true, 300);
-        } catch (\Exception $e) {
-            // Fallback to package_search
-            try {
-                $result = $this->callApi('package_search', [
-                    'rows' => $limit,
-                    'sort' => 'metadata_modified desc',
-                ], true, 300);
+            $result = $this->callApi('package_search', [
+                'rows' => $limit,
+                'sort' => 'metadata_modified desc',
+            ], true, 60);
 
-                return $result['results'] ?? [];
-            } catch (\Exception $fallbackError) {
-                Log::error('Recent packages fallback failed', [
-                    'error' => $fallbackError->getMessage()
-                ]);
-                return [];
-            }
+            return $result['results'] ?? [];
+        } catch (\Exception $e) {
+            Log::error('Recent packages fetch failed', [
+                'error' => $e->getMessage()
+            ]);
+            return [];
         }
     }
 
@@ -315,11 +366,11 @@ class CkanService
 
         // Fallback
         try {
-            $packages = $this->callApi('package_search', ['rows' => 0], true, 300);
+            $packages = $this->callApi('package_search', ['rows' => 0], true, 60);
             $organizations = $this->callApi('organization_list', [
                 'all_fields' => true,
                 'include_extras' => true,
-            ], true, 3600);
+            ], true, 60);
 
             return [
                 'package_count' => $packages['count'] ?? 0,
@@ -423,7 +474,7 @@ class CkanService
         return $this->callApi('tag_list', [
             'query' => $query,
             'all_fields' => true,
-        ], true, 3600);
+        ], true, 60);
     }
 
     /**

@@ -166,6 +166,16 @@
             border-top: 5px solid var(--primary-color);
         }
 
+        .table-scroll {
+            width: 100%;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+        }
+
+        .table-scroll table {
+            margin-bottom: 0;
+        }
+
         .data-table tbody td {
             font-size: 0.9rem;
             color: var(--text-primary);
@@ -496,7 +506,7 @@
                     </div>
                 </div>
 
-                <div class="table-responsive">
+                <div class="table-scroll">
                     <table id="dataTable" class="table table-striped table-hover data-table" style="width: 100%;">
                         <thead><!-- Headers will be populated by JS --></thead>
                         <tbody><!-- Data will be populated by JS --></tbody>
@@ -733,7 +743,6 @@
             const columns = currentFields.map(field => ({
                 data: field.id,
                 title: field.label || field.id,
-                responsivePriority: 1,
                 render: function (data, type, row) {
                     if (data === null || data === undefined) return '<span class="text-muted">-</span>';
                     if (type === 'display' && typeof data === 'string' && data.length > 100) {
@@ -748,9 +757,11 @@
                 data: result.data,
                 columns: columns,
                 paging: false,
+                info: false,
                 searching: false,
                 ordering: true,
-                responsive: true,
+                responsive: false,
+                scrollX: true,
                 language: {
                     emptyTable: "Tidak ada data tersedia",
                     info: "Menampilkan _START_ - _END_ dari _TOTAL_ data",
