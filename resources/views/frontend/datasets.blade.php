@@ -377,28 +377,6 @@
             color: var(--primary-color);
         }
 
-        .dataset-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.4rem;
-            margin-bottom: 1rem;
-        }
-
-        .dataset-tag {
-            background: #DBEAFE;
-            color: var(--primary-color);
-            padding: 0.2rem 0.6rem;
-            border-radius: 30px;
-            font-size: .75rem;
-            font-weight: 500;
-            text-decoration: none;
-            transition: background 0.2s;
-        }
-
-        .dataset-tag:hover {
-            background: #cfe2ff;
-        }
-
         .dataset-footer {
             display: flex;
             justify-content: space-between;
@@ -619,31 +597,6 @@
                         </div>
                     </div>
 
-                    <!-- Tags Filter -->
-                    <div class="filter-card">
-                        <div class="card-header" data-bs-toggle="collapse" data-bs-target="#filterTags">
-                            <span><i class="fas fa-tags"></i> Tags</span>
-                            <i class="fas fa-chevron-down"></i>
-                        </div>
-                        <div id="filterTags" class="collapse show">
-                            <div class="card-body">
-                                @forelse($popularTags ?? [] as $tag)
-                                    <label class="filter-item">
-                                        <input type="checkbox" name="tags[]"
-                                            value="{{ is_array($tag) ? $tag['name'] ?? $tag : $tag }}"
-                                            id="tag-{{ is_array($tag) ? $tag['name'] ?? $tag : $tag }}"
-                                            {{ in_array(is_array($tag) ? $tag['name'] ?? $tag : $tag, $filters['tags'] ?? []) ? 'checked' : '' }}
-                                            onchange="applyFilter()">
-                                        <span>{{ is_array($tag) ? $tag['name'] ?? $tag : $tag }}</span>
-                                        <span class="filter-count">{{ $tag['count'] ?? 0 }}</span>
-                                    </label>
-                                @empty
-                                    <small class="text-muted">Memuat tags...</small>
-                                @endforelse
-                            </div>
-                        </div>
-                    </div>
-
                     <!-- Hidden inputs untuk preserve filters -->
                     <input type="hidden" name="q" id="filterQuery" value="{{ $filters['q'] ?? '' }}">
                     <input type="hidden" name="sort" id="filterSort" value="{{ $filters['sort'] ?? '' }}">
@@ -677,10 +630,6 @@
                                 {{ ($filters['sort'] ?? '') == 'title_string asc' ? 'selected' : '' }}>
                                 Judul A-Z
                             </option>
-                            <option value="views_recent desc"
-                                {{ ($filters['sort'] ?? '') == 'views_recent desc' ? 'selected' : '' }}>
-                                Paling Dilihat
-                            </option>
                         </select>
                         <select name="per_page" id="perPageSelect" class="form-select form-select-sm"
                             style="width: auto;" onchange="applyFilter()">
@@ -706,21 +655,6 @@
                             <p class="dataset-description">
                                 {{ $dataset['notes'] ?? 'Tidak ada deskripsi tersedia.' }}
                             </p>
-                            @if (!empty($dataset['tags']))
-                                <div class="dataset-tags">
-                                    @foreach (array_slice($dataset['tags'], 0, 4) as $tag)
-                                        <a href="{{ route('frontend.datasets', array_merge($filters, ['q' => is_array($tag) ? $tag['name'] ?? $tag : $tag])) }}"
-                                            class="dataset-tag">
-                                            {{ is_array($tag) ? $tag['name'] ?? $tag : $tag }}
-                                        </a>
-                                    @endforeach
-                                    @if (count($dataset['tags']) > 4)
-                                        <span class="dataset-tag" style="background: #dee2e6; color: #495057;">
-                                            +{{ count($dataset['tags']) - 4 }}
-                                        </span>
-                                    @endif
-                                </div>
-                            @endif
                             <div class="dataset-meta">
                                 <div class="dataset-meta-item">
                                     <i class="fas fa-calendar-alt"></i>
@@ -730,10 +664,6 @@
                                 <div class="dataset-meta-item">
                                     <i class="fas fa-file"></i>
                                     <span>{{ count($dataset['resources'] ?? []) }} resource</span>
-                                </div>
-                                <div class="dataset-meta-item">
-                                    <i class="fas fa-eye"></i>
-                                    <span>{{ $dataset['metadata_views'] ?? 0 }} views</span>
                                 </div>
                                 @if ($dataset['license_id'])
                                     <div class="dataset-meta-item">
@@ -950,7 +880,7 @@
 
                 if (this.filterForm) {
                     this.filterForm.addEventListener('change', (e) => {
-                        if (e.target.name === 'organizations[]' || e.target.name === 'tags[]' ||
+                        if (e.target.name === 'organizations[]' ||
                             e.target.id === 'sortSelect' || e.target.id === 'perPageSelect') {
                             this.applyFilters();
                         }
@@ -993,10 +923,6 @@
                 const orgs = Array.from(document.querySelectorAll('input[name="organizations[]"]:checked'))
                     .map(cb => cb.value).filter(v => v);
                 if (orgs.length > 0) filters.organizations = orgs;
-
-                const tags = Array.from(document.querySelectorAll('input[name="tags[]"]:checked'))
-                    .map(cb => cb.value).filter(v => v);
-                if (tags.length > 0) filters.tags = tags;
 
                 const sort = document.getElementById('filterSort')?.value;
                 const perPage = document.getElementById('filterPerPage')?.value;
@@ -1119,7 +1045,6 @@
                     const orgName = dataset.organization?.title || dataset.organization?.name ||
                         'Tanpa organisasi';
                     const resourceCount = dataset.resources?.length || 0;
-                    const views = dataset.metadata_views || 0;
                     const updated = dataset.metadata_modified ?
                         new Date(dataset.metadata_modified).toLocaleDateString('id-ID', {
                             day: 'numeric',
@@ -1139,9 +1064,6 @@
                         </div>
                         <div class="dataset-meta-item">
                             <i class="fas fa-file"></i><span>${resourceCount} resource</span>
-                        </div>
-                        <div class="dataset-meta-item">
-                            <i class="fas fa-eye"></i><span>${views.toLocaleString('id-ID')} views</span>
                         </div>
                     </div>
                     <div class="dataset-footer">

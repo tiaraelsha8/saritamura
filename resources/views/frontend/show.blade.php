@@ -523,10 +523,6 @@
                     <span>Diperbarui {{ \Carbon\Carbon::parse($package['metadata_modified'])->diffForHumans() }}</span>
                 </div>
 
-                <div class="meta-item">
-                    <i class="fas fa-eye"></i>
-                    <span>{{ number_format($package['metadata_views'] ?? 0) }} kali dilihat</span>
-                </div>
 
                 @if($package['license_id'])
                     <div class="meta-item">
@@ -744,12 +740,6 @@
                             </span>
                         </div>
 
-                        <div class="info-row">
-                            <span class="info-label">Dilihat</span>
-                            <span class="info-value">
-                                {{ number_format($package['metadata_views'] ?? 0) }} kali
-                            </span>
-                        </div>
 
                         @if($package['version'])
                             <div class="info-row">

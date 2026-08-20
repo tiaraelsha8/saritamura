@@ -424,9 +424,6 @@
                         <option value="title_string asc" {{ ($filters['sort'] ?? '') == 'title_string asc' ? 'selected' : '' }}>
                             Judul A-Z
                         </option>
-                        <option value="views_recent desc" {{ ($filters['sort'] ?? '') == 'views_recent desc' ? 'selected' : '' }}>
-                            Paling Dilihat
-                        </option>
                     </select>
                     <select name="per_page" id="perPageSelect" class="form-select form-select-sm" style="width: auto;" onchange="applyFilter()">
                         <option value="10" {{ ($filters['per_page'] ?? 10) == 10 ? 'selected' : '' }}>10/hal</option>
@@ -471,10 +468,6 @@
                         <div class="dataset-meta-item">
                             <i class="fas fa-file"></i>
                             <span>{{ count($dataset['resources'] ?? []) }} resource</span>
-                        </div>
-                        <div class="dataset-meta-item">
-                            <i class="fas fa-eye"></i>
-                            <span>{{ $dataset['metadata_views'] ?? 0 }} views</span>
                         </div>
                         @if($dataset['license_id'])
                         <div class="dataset-meta-item">
@@ -902,7 +895,6 @@ class AutoSearch {
         datasets.forEach(dataset => {
             const orgName = dataset.organization?.title || dataset.organization?.name || 'Tanpa organisasi';
             const resourceCount = dataset.resources?.length || 0;
-            const views = dataset.metadata_views || 0;
             const updated = dataset.metadata_modified ? 
                 new Date(dataset.metadata_modified).toLocaleDateString('id-ID', { 
                     day: 'numeric', month: 'short', year: 'numeric' 
@@ -920,9 +912,6 @@ class AutoSearch {
                         </div>
                         <div class="dataset-meta-item">
                             <i class="fas fa-file"></i><span>${resourceCount} resource</span>
-                        </div>
-                        <div class="dataset-meta-item">
-                            <i class="fas fa-eye"></i><span>${views.toLocaleString('id-ID')} views</span>
                         </div>
                     </div>
                     <div class="dataset-footer">
